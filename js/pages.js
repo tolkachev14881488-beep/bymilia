@@ -1,5 +1,5 @@
 import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
-import { PRODUCTS, WB_PRODUCT, getProduct, sku } from './products.js';
+import { PRODUCTS, getProduct, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine } from './cart.js';
 import { submitOrder } from './checkout.js';
 import { pageHref } from './layout.js';
@@ -21,17 +21,14 @@ export function renderProductGrid(container) {
   container.innerHTML = PRODUCTS.map(
     (p) => `
     <a class="product-card reveal" href="${pageHref(`/product.html?id=${p.id}`)}">
-      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}44">
+      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33; background: linear-gradient(165deg, #fff 30%, ${p.colorHex}28)">
         <span class="product-card-badge">6 размеров</span>
-        <img class="product-card-img" src="${p.image}" alt="${p.colorName} — ${WB_PRODUCT.name}" loading="lazy" width="400" height="400">
-        <span class="product-card-swatch" style="background:${p.colorHex}" title="${p.colorName}"></span>
+        <div class="product-card-shape" style="background: ${p.colorHex}"></div>
         <span class="product-card-cta">Смотреть →</span>
       </div>
       <div class="product-card-body">
         <h3>${p.colorName}</h3>
-        <p class="product-price">${p.price} ${SITE.currencyLabel}
-          ${p.oldPrice ? `<span class="product-price-old">${p.oldPrice} ${SITE.currencyLabel}</span>` : ''}
-        </p>
+        <p class="product-price">от ${p.price} ${SITE.currencyLabel}</p>
       </div>
     </a>
   `,
@@ -59,27 +56,17 @@ export function initProductPage() {
   let qty = 1;
 
   function render() {
-    const descFull = product.description.split('\n\n').map((t) => `<p>${t}</p>`).join('');
-
     root.innerHTML = `
       <nav class="breadcrumb container"><a href="${pageHref('/index.html')}">Главная</a> / <a href="${pageHref('/catalog.html')}">Каталог</a> / ${product.colorName}</nav>
       <div class="container product-layout">
-        <div class="product-gallery">
-          <img src="${product.image}" alt="${product.colorName}" class="product-gallery-img" width="600" height="600">
+        <div class="product-gallery" style="background: linear-gradient(180deg, #fff, ${product.colorHex}18)">
+          <div class="product-shape" style="background: ${product.colorHex}"></div>
         </div>
         <div class="product-panel">
           <span class="eyebrow">${SITE.brand}</span>
           <h1>${product.colorName}</h1>
-          <p class="product-meta">${WB_PRODUCT.name} · арт. ${WB_PRODUCT.articul}</p>
-          <p class="product-price product-price-lg">${product.price} ${SITE.currencyLabel}
-            <span class="product-price-old">${product.oldPrice} ${SITE.currencyLabel}</span>
-          </p>
-          <p class="product-rating">★ ${WB_PRODUCT.rating} · ${WB_PRODUCT.reviews} отзывов на <a href="${product.wbUrl}" target="_blank" rel="noopener">Wildberries</a></p>
-          <p class="product-desc-short">${product.description.split('\n\n')[0]}</p>
-          <details class="product-details">
-            <summary>Полное описание</summary>
-            <div class="product-details-body">${descFull}</div>
-          </details>
+          <p class="product-price" style="font-size:1.5rem">${product.price} ${SITE.currencyLabel}</p>
+          <p>${product.description}</p>
           <p><strong>Размер (длина стопы, см)</strong></p>
           <div class="size-picker" role="group" aria-label="Выбор размера"></div>
           <div class="qty-row">
@@ -91,7 +78,6 @@ export function initProductPage() {
             </div>
           </div>
           <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
-          <a class="btn btn-outline-orange btn-block" href="${product.wbUrl}" target="_blank" rel="noopener" style="margin-top:0.65rem">Купить на Wildberries</a>
           <ul class="feature-list">
             ${product.features.map((f) => `<li>${f}</li>`).join('')}
           </ul>
@@ -163,7 +149,7 @@ export function initCartPage() {
         if (!p) return '';
         return `
         <div class="cart-line" data-key="${line.key}">
-              <img class="cart-line-img" src="${p.image}" alt="" width="72" height="72">
+          <div class="cart-line-swatch" style="background:${p.colorHex}"></div>
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
