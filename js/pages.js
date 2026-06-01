@@ -62,9 +62,10 @@ export function initProductPage() {
         <div class="product-gallery" style="background: linear-gradient(180deg, #fff, ${product.colorHex}18)">
           <div class="product-shape" style="background: ${product.colorHex}"></div>
         </div>
-        <div>
+        <div class="product-panel">
+          <span class="eyebrow">${SITE.brand}</span>
           <h1>${product.colorName}</h1>
-          <p class="product-price" style="font-size:1.35rem">${product.price} ${SITE.currencyLabel}</p>
+          <p class="product-price" style="font-size:1.5rem">${product.price} ${SITE.currencyLabel}</p>
           <p>${product.description}</p>
           <p><strong>Размер (длина стопы, см)</strong></p>
           <div class="size-picker" role="group" aria-label="Выбор размера"></div>
@@ -76,7 +77,7 @@ export function initProductPage() {
               <button type="button" data-qty-plus aria-label="Больше">+</button>
             </div>
           </div>
-          <button class="btn btn-primary" type="button" data-add-cart>Добавить в корзину</button>
+          <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
           <ul class="feature-list">
             ${product.features.map((f) => `<li>${f}</li>`).join('')}
           </ul>

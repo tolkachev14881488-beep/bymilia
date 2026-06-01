@@ -25,7 +25,7 @@ export const PRODUCTS = [
   {
     id: 'raspberry',
     colorName: 'Солнечный оранж',
-    colorHex: '#ff7f00',
+    colorHex: '#ff5500',
     price: 44,
     skuPrefix: 'BM-ORG',
     description:
