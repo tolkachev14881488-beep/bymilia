@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>By Milia — сапожки для разогрева стоп</title>
+  <meta name="description" content="Сапожки для разогрева стоп для танцев. Розница и опт. Производство в Минске.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="assets/logo.png" type="image/png">
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="tag">Минск · для танцев</p>
+          <h1>Сапожки, которые согревают стопы перед выходом на сцену</h1>
+          <p class="lead">By Milia — для мам юных танцовщиц и тренеров коллективов. Четыре расцветки, шесть размеров, производство в Беларуси.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="catalog.html">Смотреть каталог</a>
+            <a class="btn btn-ghost" href="pages/wholesale.html">Опт от 10 пар</a>
+          </div>
+          <div class="hero-tags">
+            <span class="tag">Отправка в день заказа до 13:00</span>
+            <span class="tag">Самовывоз Панченко, 8</span>
+            <span class="tag">4 расцветки</span>
+          </div>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="hero-visual-inner">
+            <div class="hero-swatch"></div>
+            <p style="font-family:var(--font-display);font-size:1.25rem;margin:0">By Milia</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Каталог</h2>
+            <p class="lead" style="margin:0">Выберите расцветку и размер при оформлении</p>
+          </div>
+          <a href="catalog.html">Весь каталог →</a>
+        </div>
+        <div class="product-grid" id="home-products"></div>
+      </div>
+    </section>
+
+    <section class="section section-muted">
+      <div class="container">
+        <div class="info-cards">
+          <article class="info-card">
+            <h3>Для мам и танцовщиц</h3>
+            <p>Удобно надевать самостоятельно, согревают стопы в зале и на репетиции.</p>
+          </article>
+          <article class="info-card">
+            <h3>Для коллективов</h3>
+            <p>Опт от 10 пар, прайс для скачивания. Индивидуальная печать — с осени.</p>
+          </article>
+          <article class="info-card">
+            <h3>Доставка по Беларуси</h3>
+            <p>Европочта бесплатно от 50 руб., курьер по Минску от 150 руб.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script type="module">
+    import { initLayout } from './js/layout.js';
+    import { renderProductGrid } from './js/pages.js';
+    initLayout();
+    renderProductGrid(document.getElementById('home-products'));
+  </script>
+</body>
+</html>

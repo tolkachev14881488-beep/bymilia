@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Контакты — By Milia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <div class="page-hero"><div class="container"><h1>Контакты</h1></div></div>
+    <div class="container page-content prose" id="contacts-body"></div>
+  </main>
+  <div id="site-footer"></div>
+  <script type="module">
+    import { initLayout } from '../js/layout.js';
+    import { CONTACTS } from '../js/config.js';
+    initLayout();
+    document.getElementById('contacts-body').innerHTML = `
+      <p><strong>Телефон:</strong> <a href="tel:${CONTACTS.phoneRaw}">${CONTACTS.phone}</a></p>
+      <p><strong>Email:</strong> <a href="mailto:${CONTACTS.email}">${CONTACTS.email}</a></p>
+      <p><strong>WhatsApp:</strong> <a href="https://wa.me/${CONTACTS.whatsapp}" target="_blank" rel="noopener">Написать в WhatsApp</a></p>
+      <p><strong>Адрес самовывоза:</strong> ${CONTACTS.address}<br>${CONTACTS.pickupHours}</p>
+      <p><strong>Instagram:</strong> <a href="${CONTACTS.instagram}" target="_blank" rel="noopener">@bymilia</a></p>
+    `;
+  </script>
+</body>
+</html>

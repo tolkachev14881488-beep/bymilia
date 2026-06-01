@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Опт — By Milia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div id="site-header"></div>
+  <main>
+    <div class="page-hero"><div class="container"><h1>Оптовым клиентам</h1></div></div>
+    <div class="container page-content prose">
+      <p>Работаем с тренерами и коллективами. <strong>Минимальная партия — 10 пар.</strong> Регистрация на сайте не требуется.</p>
+      <p>Цены зависят от объёма и условий — скачайте актуальный прайс-лист:</p>
+      <p><a class="btn btn-primary" href="../assets/pricelist.pdf" download id="pricelist-btn">Скачать прайс (PDF)</a></p>
+      <p style="font-size:0.9rem;color:var(--ink-muted)" id="pricelist-hint">Добавьте файл <code>assets/pricelist.pdf</code> — кнопка заработает автоматически.</p>
+      <h2>Оптовая заявка</h2>
+      <p>Напишите нам в WhatsApp или на почту: укажите коллектив, расцветки, размеры и количество пар. Срок производства — от 14 дней.</p>
+      <p><a class="btn btn-ghost" href="../pages/contacts.html">Контакты</a></p>
+      <h2>Скоро</h2>
+      <p>Индивидуальная печать на сапожках для коллективов — планируем к осеннему сезону.</p>
+    </div>
+  </main>
+  <div id="site-footer"></div>
+  <script type="module">
+    import { initLayout } from '../js/layout.js';
+    initLayout();
+    fetch('../assets/pricelist.pdf', { method: 'HEAD' }).then((r) => {
+      if (!r.ok) {
+        const btn = document.getElementById('pricelist-btn');
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-ghost');
+        btn.removeAttribute('download');
+        btn.href = '../pages/contacts.html';
+        btn.textContent = 'Запросить прайс у менеджера';
+      }
+    }).catch(() => {});
+  </script>
+</body>
+</html>
