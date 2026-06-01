@@ -16,9 +16,17 @@ function showToast(text) {
   setTimeout(() => el.classList.remove('is-visible'), 2200);
 }
 
+const ASSET_CACHE_VERSION = '20260602';
+
+function productImageSrc(src, product) {
+  if (src.startsWith('http')) return src;
+  const v = product?.imageVersion || ASSET_CACHE_VERSION;
+  return `${asset(src)}?v=${encodeURIComponent(v)}`;
+}
+
 function productImageList(p) {
   const list = Array.isArray(p.images) && p.images.length ? p.images : p.image ? [p.image] : [];
-  return list.map((src) => (src.startsWith('http') ? src : asset(src)));
+  return list.map((src) => productImageSrc(src, p));
 }
 
 function productThumb(p) {
