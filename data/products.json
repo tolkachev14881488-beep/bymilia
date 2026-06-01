@@ -83,7 +83,12 @@
       "price": 77,
       "oldPrice": 175,
       "skuPrefix": "BM-216496169",
-      "image": "https://basket-14.wbbasket.ru/vol2164/part216496/216496169/images/c516x688/1.webp",
+      "image": "assets/products/classic-1.png",
+      "images": [
+        "assets/products/classic-1.png",
+        "assets/products/classic-2.png"
+      ],
+      "imageVersion": "1",
       "wbNm": 216496169,
       "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
       "wbPhoto": 1,
