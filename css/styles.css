@@ -1010,10 +1010,23 @@ body.nav-open {
   background: linear-gradient(180deg, #fff, var(--paper-2));
 }
 
-.product-card-body h3 {
+.product-card-body h3,
+.product-card-title {
   font-family: var(--font);
   font-size: 1.02rem;
   font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 0.35rem;
+}
+
+.product-card-shape--fallback[hidden],
+.product-shape--fallback[hidden] {
+  display: none !important;
+}
+
+.product-card-shape--fallback:not([hidden]),
+.product-shape--fallback:not([hidden]) {
+  display: block;
 }
 
 .product-price-wrap {

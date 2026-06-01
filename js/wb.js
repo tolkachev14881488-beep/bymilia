@@ -49,11 +49,37 @@ function basketHost(vol) {
   return '14';
 }
 
-export function wbImageUrl(nm, photoIndex = 1, size = 'big') {
+export function wbImageUrl(nm, photoIndex = 1, size = 'c516x688') {
   const vol = Math.floor(nm / 100000);
   const part = Math.floor(nm / 1000);
   const host = basketHost(vol);
   return `https://basket-${host}.wbbasket.ru/vol${vol}/part${part}/${nm}/images/${size}/${photoIndex}.webp`;
+}
+
+/** Подбирает рабочий URL фото (перебор basket-01…24) */
+export async function resolveWbImageUrl(nm, photoIndex = 1) {
+  const vol = Math.floor(nm / 100000);
+  const part = Math.floor(nm / 1000);
+  const sizes = ['c516x688', 'big', 'tm'];
+  const hosts = Array.from({ length: 24 }, (_, i) => String(i + 1).padStart(2, '0'));
+
+  const tryLoad = (url) =>
+    new Promise((resolve) => {
+      const img = new Image();
+      img.referrerPolicy = 'no-referrer';
+      img.onload = () => resolve(url);
+      img.onerror = () => resolve(null);
+      img.src = url;
+    });
+
+  for (const host of hosts) {
+    for (const size of sizes) {
+      const url = `https://basket-${host}.wbbasket.ru/vol${vol}/part${part}/${nm}/images/${size}/${photoIndex}.webp`;
+      const ok = await tryLoad(url);
+      if (ok) return ok;
+    }
+  }
+  return '';
 }
 
 function primaryHex(colors = []) {
@@ -82,7 +108,7 @@ export async function fetchWbProduct(nm) {
     price,
     oldPrice: oldPrice > price ? oldPrice : null,
     skuPrefix: `BM-${nm}`,
-    image: wbImageUrl(nm, 1),
+    image: await resolveWbImageUrl(nm, 1),
     wbNm: nm,
     wbUrl: `https://www.wildberries.by/catalog/${nm}/detail.aspx`,
     wbPhoto: 1,

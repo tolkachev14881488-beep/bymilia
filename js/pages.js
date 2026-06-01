@@ -17,15 +17,16 @@ function showToast(text) {
 }
 
 function productThumb(p) {
+  const shape = `<div class="product-card-shape product-card-shape--fallback" style="background: ${p.colorHex}" hidden></div>`;
   if (p.image) {
-    return `<img class="product-card-img" src="${p.image}" alt="${p.colorName}" loading="lazy" width="400" height="400">`;
+    return `${shape}<img class="product-card-img" src="${p.image}" alt="${p.colorName}" loading="lazy" width="400" height="400" referrerpolicy="no-referrer" onerror="this.hidden=true;this.previousElementSibling.hidden=false">`;
   }
   return `<div class="product-card-shape" style="background: ${p.colorHex}"></div>`;
 }
 
 function productGallery(p) {
   if (p.image) {
-    return `<img class="product-photo" src="${p.image}" alt="${p.colorName}" width="600" height="600">`;
+    return `<div class="product-shape product-shape--fallback" style="background: ${p.colorHex}" hidden></div><img class="product-photo" src="${p.image}" alt="${p.colorName}" width="600" height="600" referrerpolicy="no-referrer" onerror="this.hidden=true;this.previousElementSibling.hidden=false">`;
   }
   return `<div class="product-shape" style="background: ${p.colorHex}"></div>`;
 }
@@ -40,23 +41,26 @@ function formatPrice(p, large = false) {
 
 export function renderProductGrid(container) {
   if (!container) return;
+  if (!PRODUCTS.length) {
+    container.innerHTML =
+      '<p class="empty-state">Каталог пока пуст. Добавьте товары в админке.</p>';
+    return;
+  }
   container.innerHTML = PRODUCTS.map(
     (p) => `
-    <a class="product-card reveal" href="${pageHref(`/product.html?id=${p.id}`)}">
+    <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
       <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33; background: linear-gradient(165deg, #fff 30%, ${p.colorHex}28)">
         <span class="product-card-badge">6 размеров</span>
         ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
       </div>
       <div class="product-card-body">
-        <h3>${p.colorName}</h3>
+        <h3 class="product-card-title">${p.colorName}</h3>
         <p class="product-price-wrap">${formatPrice(p)}</p>
       </div>
     </a>
   `,
   ).join('');
-
-  import('./motion.js').then(({ observeReveals }) => observeReveals(container));
 }
 
 export function initProductPage() {
