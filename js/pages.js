@@ -72,7 +72,7 @@ export function renderProductGrid(container) {
   container.innerHTML = PRODUCTS.map(
     (p) => `
     <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
-      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33; background: linear-gradient(165deg, #fff 30%, ${p.colorHex}28)">
+      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33">
         <span class="product-card-badge">6 размеров</span>
         ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
@@ -109,7 +109,7 @@ export function initProductPage() {
     root.innerHTML = `
       <nav class="breadcrumb container"><a href="${pageHref('/index.html')}">Главная</a> / <a href="${pageHref('/catalog.html')}">Каталог</a> / ${product.colorName}</nav>
       <div class="container product-layout">
-        <div class="product-gallery" style="background: linear-gradient(180deg, #fff, ${product.colorHex}18)">
+        <div class="product-gallery">
           ${productGallery(product, galleryIndex)}
         </div>
         <div class="product-panel">
