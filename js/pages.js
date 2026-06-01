@@ -1,5 +1,5 @@
 import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
-import { PRODUCTS, getProduct, sku } from './products.js';
+import { PRODUCTS, WB_PRODUCT, getProduct, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine } from './cart.js';
 import { submitOrder } from './checkout.js';
 import { pageHref } from './layout.js';
@@ -16,27 +16,6 @@ function showToast(text) {
   setTimeout(() => el.classList.remove('is-visible'), 2200);
 }
 
-function renderCardMedia(product) {
-  if (product.image) {
-    return `<img class="product-card-img" src="${product.image}" alt="${product.colorName}" loading="lazy" width="400" height="400">`;
-  }
-  return `<div class="product-card-shape" style="background:${product.colorHex}"></div>`;
-}
-
-function renderGalleryMedia(product) {
-  if (product.image) {
-    return `<img src="${product.image}" alt="${product.colorName}" class="product-gallery-img" width="600" height="600">`;
-  }
-  return `<div class="product-gallery-fallback"><div class="product-shape" style="background:${product.colorHex}"></div></div>`;
-}
-
-function renderCartMedia(product) {
-  if (product.image) {
-    return `<img class="cart-line-img" src="${product.image}" alt="" width="72" height="72">`;
-  }
-  return `<div class="cart-line-swatch" style="background:${product.colorHex}"></div>`;
-}
-
 export function renderProductGrid(container) {
   if (!container) return;
   container.innerHTML = PRODUCTS.map(
@@ -44,13 +23,12 @@ export function renderProductGrid(container) {
     <a class="product-card reveal" href="${pageHref(`/product.html?id=${p.id}`)}">
       <div class="product-card-thumb" style="--card-glow: ${p.colorHex}44">
         <span class="product-card-badge">6 размеров</span>
-        ${renderCardMedia(p)}
+        <img class="product-card-img" src="${p.image}" alt="${p.colorName} — ${WB_PRODUCT.name}" loading="lazy" width="400" height="400">
         <span class="product-card-swatch" style="background:${p.colorHex}" title="${p.colorName}"></span>
         <span class="product-card-cta">Смотреть →</span>
       </div>
       <div class="product-card-body">
         <h3>${p.colorName}</h3>
-        <p class="product-subtitle">${p.subtitle}</p>
         <p class="product-price">${p.price} ${SITE.currencyLabel}
           ${p.oldPrice ? `<span class="product-price-old">${p.oldPrice} ${SITE.currencyLabel}</span>` : ''}
         </p>
@@ -87,15 +65,16 @@ export function initProductPage() {
       <nav class="breadcrumb container"><a href="${pageHref('/index.html')}">Главная</a> / <a href="${pageHref('/catalog.html')}">Каталог</a> / ${product.colorName}</nav>
       <div class="container product-layout">
         <div class="product-gallery">
-          ${renderGalleryMedia(product)}
+          <img src="${product.image}" alt="${product.colorName}" class="product-gallery-img" width="600" height="600">
         </div>
         <div class="product-panel">
           <span class="eyebrow">${SITE.brand}</span>
           <h1>${product.colorName}</h1>
-          <p class="product-meta">${product.subtitle} · арт. ${product.skuPrefix}</p>
+          <p class="product-meta">${WB_PRODUCT.name} · арт. ${WB_PRODUCT.articul}</p>
           <p class="product-price product-price-lg">${product.price} ${SITE.currencyLabel}
-            ${product.oldPrice ? `<span class="product-price-old">${product.oldPrice} ${SITE.currencyLabel}</span>` : ''}
+            <span class="product-price-old">${product.oldPrice} ${SITE.currencyLabel}</span>
           </p>
+          <p class="product-rating">★ ${WB_PRODUCT.rating} · ${WB_PRODUCT.reviews} отзывов на <a href="${product.wbUrl}" target="_blank" rel="noopener">Wildberries</a></p>
           <p class="product-desc-short">${product.description.split('\n\n')[0]}</p>
           <details class="product-details">
             <summary>Полное описание</summary>
@@ -112,6 +91,7 @@ export function initProductPage() {
             </div>
           </div>
           <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
+          <a class="btn btn-outline-orange btn-block" href="${product.wbUrl}" target="_blank" rel="noopener" style="margin-top:0.65rem">Купить на Wildberries</a>
           <ul class="feature-list">
             ${product.features.map((f) => `<li>${f}</li>`).join('')}
           </ul>
@@ -183,7 +163,7 @@ export function initCartPage() {
         if (!p) return '';
         return `
         <div class="cart-line" data-key="${line.key}">
-          ${renderCartMedia(p)}
+              <img class="cart-line-img" src="${p.image}" alt="" width="72" height="72">
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>

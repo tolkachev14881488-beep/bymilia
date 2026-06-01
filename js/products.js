@@ -1,81 +1,89 @@
 import { SIZES } from './config.js';
+import { wbImageUrl } from './wb.js';
 
-const BASE_DESCRIPTION = `Премиальные сапожки By Milia для разогрева стоп перед занятием и между номерами. Мягко удерживают тепло и не стесняют движения в зале.
+/** Данные с Wildberries: артикул 216496169 */
+export const WB_PRODUCT = {
+  nm: 216496169,
+  articul: '216496169',
+  name: 'Сапожки для разогрева чуни танцевальные',
+  brand: 'by Milia',
+  url: 'https://www.wildberries.by/catalog/216496169/detail.aspx',
+  rating: 4.9,
+  reviews: 753,
+  price: 2241,
+  oldPrice: 4500,
+};
 
-Снаружи используется плотная износостойкая ткань, внутри — мягкий флис и утеплитель. Подошва гибкая, с мягкой вставкой для изоляции от холодного пола.
+const DESCRIPTION = `Новинка! Премиальные сапожки для разогрева от белорусского бренда By Milia. Улучшают кровообращение, обеспечивают согревающий эффект и поддерживают мышцы в тонусе.
 
-Подходят для гимнастики, хореографии, балета и танцев. Можно надевать на носки, босую ногу, пуанты или балетки. Рекомендуем деликатную стирку до 40 °C.`;
+Чуни подходят для гимнастики, танцев, балета — между тренировками, на занятиях и репетициях. Снаружи плотный материал, не пропускает влагу. Подошва из прочной экокожи, вставка из вспененного материала изолирует от холодного пола. Внутри мягкий флис и синтепон 300 г/м².
 
-const COMMON_FEATURES = [
+Можно надевать на носки, босые ноги, пуанты или балетки — ориентируйтесь на длину стопы по размерной сетке. Стирка в деликатном режиме до 40 °C.
+
+Производитель: ООО «АР-ВИАМ», г. Минск, ул. Панченко, 8.`;
+
+const FEATURES = [
   'Состав: экокожа, флис, синтепон, плащевая ткань',
-  'Стелька ЭВА, гибкая нескользящая подошва',
-  'Застежка: резинка, комфортная посадка',
-  '6 размеров: 25–27, 28–30, 31–33, 34–36, 37–39, 40–42',
-  'Производство: Беларусь, г. Минск',
+  'Стелька ЭВА, подошва — искусственная кожа',
+  'Застёжка на резинке, гибкая нескользящая подошва',
+  'Беларусь · 6 размеров 25–42 см',
+  `${WB_PRODUCT.reviews} отзывов на Wildberries · ${WB_PRODUCT.rating} ★`,
 ];
 
+/** Расцветки = фото 1–5 на WB */
 export const PRODUCTS = [
   {
     id: 'black',
-    colorName: 'Черный',
+    colorName: 'Чёрный',
     colorHex: '#1c1c1c',
-    subtitle: 'Классика для тренировок и выступлений',
-    skuPrefix: 'BM-BLK',
-    price: 72,
-    oldPrice: 88,
-    image: null,
-    description: BASE_DESCRIPTION,
-    features: COMMON_FEATURES,
+    wbPhoto: 1,
+    skuPrefix: 'BM-216496169-BLK',
+    description: DESCRIPTION,
+    features: FEATURES,
   },
   {
     id: 'pink',
     colorName: 'Розовый',
     colorHex: '#f48fb1',
-    subtitle: 'Нежный оттенок для юных танцовщиц',
-    skuPrefix: 'BM-PNK',
-    price: 72,
-    oldPrice: 88,
-    image: null,
-    description: BASE_DESCRIPTION,
-    features: COMMON_FEATURES,
+    wbPhoto: 2,
+    skuPrefix: 'BM-216496169-PNK',
+    description: DESCRIPTION,
+    features: FEATURES,
   },
   {
     id: 'red',
     colorName: 'Красный',
     colorHex: '#e53935',
-    subtitle: 'Выразительный цвет для сцены',
-    skuPrefix: 'BM-RED',
-    price: 74,
-    oldPrice: 90,
-    image: null,
-    description: BASE_DESCRIPTION,
-    features: COMMON_FEATURES,
+    wbPhoto: 3,
+    skuPrefix: 'BM-216496169-RED',
+    description: DESCRIPTION,
+    features: FEATURES,
   },
   {
     id: 'yellow',
-    colorName: 'Желтый',
+    colorName: 'Жёлтый',
     colorHex: '#ffca28',
-    subtitle: 'Солнечный акцент в раздевалке',
-    skuPrefix: 'BM-YEL',
-    price: 72,
-    oldPrice: 88,
-    image: null,
-    description: BASE_DESCRIPTION,
-    features: COMMON_FEATURES,
+    wbPhoto: 4,
+    skuPrefix: 'BM-216496169-YEL',
+    description: DESCRIPTION,
+    features: FEATURES,
   },
   {
     id: 'white',
     colorName: 'Белый',
     colorHex: '#f5f5f0',
-    subtitle: 'Легкий светлый образ для коллектива',
-    skuPrefix: 'BM-WHT',
-    price: 72,
-    oldPrice: 88,
-    image: null,
-    description: BASE_DESCRIPTION,
-    features: COMMON_FEATURES,
+    wbPhoto: 5,
+    skuPrefix: 'BM-216496169-WHT',
+    description: DESCRIPTION,
+    features: FEATURES,
   },
-];
+].map((p) => ({
+  ...p,
+  price: WB_PRODUCT.price,
+  oldPrice: WB_PRODUCT.oldPrice,
+  image: wbImageUrl(WB_PRODUCT.nm, p.wbPhoto),
+  wbUrl: WB_PRODUCT.url,
+}));
 
 export function getProduct(id) {
   return PRODUCTS.find((p) => p.id === id);
