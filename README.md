@@ -38,7 +38,7 @@ npx --yes serve .
 - `index.html` — главная
 - `catalog.html`, `product.html`, `cart.html`
 - `pages/` — информационные страницы
-- `css/styles.css` — стили (акцент: малиновый `#c9185b`)
+- `css/styles.css` — стили (акцент: оранжевый `#ff7f00`, тёплая палитра)
 
 ## Заказ
 

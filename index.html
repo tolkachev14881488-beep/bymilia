@@ -5,70 +5,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>By Milia — сапожки для разогрева стоп</title>
   <meta name="description" content="Сапожки для разогрева стоп для танцев. Розница и опт. Производство в Минске.">
+  <meta name="theme-color" content="#ff7f00">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="assets/logo.png" type="image/png">
 </head>
-<body>
+<body class="page-home">
+  <div class="grain" aria-hidden="true"></div>
   <div id="site-header"></div>
 
   <main>
     <section class="hero">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <div class="hero-blob hero-blob-3"></div>
+      </div>
       <div class="container hero-grid">
-        <div>
-          <p class="tag">Минск · для танцев</p>
-          <h1>Сапожки, которые согревают стопы перед выходом на сцену</h1>
-          <p class="lead">By Milia — для мам юных танцовщиц и тренеров коллективов. Четыре расцветки, шесть размеров, производство в Беларуси.</p>
+        <div class="hero-copy reveal">
+          <span class="eyebrow">Производство в Минске · для танцев</span>
+          <h1>Тепло для стоп <em>перед</em> выходом на сцену</h1>
+          <p class="lead">By Milia создаёт сапожки для разогрева — для мам юных танцовщиц и тренеров, которые заботятся о комфорте в зале.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="catalog.html">Смотреть каталог</a>
-            <a class="btn btn-ghost" href="pages/wholesale.html">Опт от 10 пар</a>
+            <a class="btn btn-primary btn-glow" href="catalog.html">Выбрать расцветку</a>
+            <a class="btn btn-glass" href="pages/wholesale.html">Опт от 10 пар</a>
           </div>
           <div class="hero-tags">
-            <span class="tag">Отправка в день заказа до 13:00</span>
-            <span class="tag">Самовывоз Панченко, 8</span>
-            <span class="tag">4 расцветки</span>
+            <span class="tag"><span class="tag-dot"></span>Отправка до 13:00 — в тот же день</span>
+            <span class="tag"><span class="tag-dot"></span>4 расцветки · 6 размеров</span>
+            <span class="tag"><span class="tag-dot"></span>Самовывоз Панченко, 8</span>
           </div>
         </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="hero-visual-inner">
-            <div class="hero-swatch"></div>
-            <p style="font-family:var(--font-display);font-size:1.25rem;margin:0">By Milia</p>
+        <div class="hero-stage reveal reveal-delay-2" aria-hidden="true">
+          <div class="hero-card">
+            <div class="hero-orbit">
+              <div class="boot-float boot-a" style="--boot:#1c1c1c"></div>
+              <div class="boot-float boot-b" style="--boot:#ff7f00"></div>
+              <div class="boot-float boot-c" style="--boot:#ffc9a8"></div>
+            </div>
+            <p class="hero-card-label">By Milia</p>
+            <p class="hero-card-sub">Согревают · не стесняют · в зале узнаваемы</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track">
+        <span>тепло</span><span>уют</span><span>танцы</span><span>разогрев</span><span>by milia</span>
+        <span>тепло</span><span>уют</span><span>танцы</span><span>разогрев</span><span>by milia</span>
+      </div>
+    </div>
+
+    <section class="stats">
+      <div class="container stats-grid reveal">
+        <div class="stat">
+          <span class="stat-num">4</span>
+          <span class="stat-label">расцветки</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">6</span>
+          <span class="stat-label">размеров</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">10+</span>
+          <span class="stat-label">пар для опта</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">1</span>
+          <span class="stat-label">день — розничная отправка</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-catalog">
       <div class="container">
-        <div class="section-head">
+        <div class="section-head reveal">
           <div>
-            <h2>Каталог</h2>
-            <p class="lead" style="margin:0">Выберите расцветку и размер при оформлении</p>
+            <span class="eyebrow eyebrow-dark">Коллекция</span>
+            <h2>Выберите свой цвет</h2>
+            <p class="lead section-lead">Каждая расцветка — в шести размерах. Цена фиксирована, доставка по всей Беларуси.</p>
           </div>
-          <a href="catalog.html">Весь каталог →</a>
+          <a class="link-arrow" href="catalog.html">Весь каталог</a>
         </div>
         <div class="product-grid" id="home-products"></div>
       </div>
     </section>
 
-    <section class="section section-muted">
+    <section class="section section-benefits">
       <div class="container">
-        <div class="info-cards">
-          <article class="info-card">
-            <h3>Для мам и танцовщиц</h3>
-            <p>Удобно надевать самостоятельно, согревают стопы в зале и на репетиции.</p>
-          </article>
-          <article class="info-card">
-            <h3>Для коллективов</h3>
-            <p>Опт от 10 пар, прайс для скачивания. Индивидуальная печать — с осени.</p>
-          </article>
-          <article class="info-card">
-            <h3>Доставка по Беларуси</h3>
-            <p>Европочта бесплатно от 50 руб., курьер по Минску от 150 руб.</p>
-          </article>
+        <div class="benefits-layout">
+          <div class="benefits-intro reveal">
+            <span class="eyebrow eyebrow-dark">Почему нас выбирают</span>
+            <h2>Сделано с заботой о маленьких танцовщицах</h2>
+            <p class="lead">Мы знаем ритм зала: быстрый разогрев, узнаваемые цвета в раздевалке, понятный сервис для мам и тренеров.</p>
+          </div>
+          <div class="info-cards">
+            <article class="info-card reveal reveal-delay-1">
+              <span class="info-icon" aria-hidden="true">♥</span>
+              <h3>Для мам и дочек</h3>
+              <p>Легко надеть самостоятельно. Согревают стопы на репетиции и между номерами.</p>
+            </article>
+            <article class="info-card reveal reveal-delay-2">
+              <span class="info-icon" aria-hidden="true">✦</span>
+              <h3>Для коллективов</h3>
+              <p>Опт от 10 пар, прайс для скачивания. С осени — печать логотипа коллектива.</p>
+            </article>
+            <article class="info-card reveal reveal-delay-3">
+              <span class="info-icon" aria-hidden="true">◎</span>
+              <h3>Доставка по РБ</h3>
+              <p>Европочта бесплатно от 50 руб., курьер по Минску от 150 руб., самовывоз.</p>
+            </article>
+          </div>
         </div>
+      </div>
+    </section>
+
+    <section class="cta-banner reveal">
+      <div class="container cta-inner">
+        <div>
+          <h2>Готовы заказать?</h2>
+          <p>Добавьте в корзину — менеджер подтвердит заказ в WhatsApp в течение рабочего дня.</p>
+        </div>
+        <a class="btn btn-white" href="catalog.html">Перейти в каталог</a>
       </div>
     </section>
   </main>

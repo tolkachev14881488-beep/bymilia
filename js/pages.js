@@ -20,9 +20,11 @@ export function renderProductGrid(container) {
   if (!container) return;
   container.innerHTML = PRODUCTS.map(
     (p) => `
-    <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
-      <div class="product-card-thumb" style="background: linear-gradient(180deg, #fff 40%, ${p.colorHex}22)">
+    <a class="product-card reveal" href="${pageHref(`/product.html?id=${p.id}`)}">
+      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33; background: linear-gradient(165deg, #fff 30%, ${p.colorHex}28)">
+        <span class="product-card-badge">6 размеров</span>
         <div class="product-card-shape" style="background: ${p.colorHex}"></div>
+        <span class="product-card-cta">Смотреть →</span>
       </div>
       <div class="product-card-body">
         <h3>${p.colorName}</h3>
@@ -31,6 +33,8 @@ export function renderProductGrid(container) {
     </a>
   `,
   ).join('');
+
+  import('./motion.js').then(({ observeReveals }) => observeReveals(container));
 }
 
 export function initProductPage() {

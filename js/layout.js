@@ -113,6 +113,13 @@ export function initLayout() {
   if (headerSlot) headerSlot.innerHTML = renderHeader();
   if (footerSlot) footerSlot.innerHTML = renderFooter();
 
+  try {
+    const { initMotion } = await import('./motion.js');
+    initMotion();
+  } catch {
+    /* motion optional */
+  }
+
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.site-nav');
   toggle?.addEventListener('click', () => {
