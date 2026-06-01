@@ -1,48 +1,84 @@
 {
   "products": [
     {
-      "id": "black",
-      "colorName": "Классический чёрный",
+      "id": "wb-black",
+      "colorName": "Чёрный",
       "colorHex": "#1c1c1c",
-      "price": 42,
-      "skuPrefix": "BM-BLK",
-      "image": "",
+      "price": 72,
+      "oldPrice": 175,
+      "skuPrefix": "BM-230183062",
+      "image": "https://basket-16.wbbasket.ru/vol2301/part230183/230183062/images/big/1.webp",
+      "wbNm": 230183062,
+      "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx",
+      "wbPhoto": 1,
       "published": true,
-      "description": "Сапожки для разогрева стоп перед занятиями и между номерами. Мягкий верх, удобная посадка на ножку.",
-      "features": ["6 размеров", "Для зала и репетиций", "Легко надевать самостоятельно"]
+      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "features": [
+        "6 размеров · 25–42 см",
+        "На WB: черный",
+        "670 отзывов · рейтинг 5",
+        "Заказ на сайте или на Wildberries"
+      ]
     },
     {
-      "id": "rose",
-      "colorName": "Персиковый",
-      "colorHex": "#ffc9a8",
-      "price": 42,
-      "skuPrefix": "BM-PCH",
-      "image": "",
+      "id": "wb-tropical",
+      "colorName": "Тропический принт",
+      "colorHex": "#4fc3f7",
+      "price": 77,
+      "oldPrice": 175,
+      "skuPrefix": "BM-216515622",
+      "image": "https://basket-16.wbbasket.ru/vol2165/part216515/216515622/images/big/1.webp",
+      "wbNm": 216515622,
+      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx",
+      "wbPhoto": 1,
       "published": true,
-      "description": "Мягкий персиковый оттенок — тёплый и нежный. Идеален для юных танцовщиц и повседневных репетиций.",
-      "features": ["6 размеров", "Популярный цвет в коллективах", "Стирка по инструкции на бирке"]
+      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "features": [
+        "6 размеров · 25–42 см",
+        "На WB: голубой, розовый, оранжевый, синий, черный",
+        "200 отзывов · рейтинг 5",
+        "Заказ на сайте или на Wildberries"
+      ]
     },
     {
-      "id": "raspberry",
-      "colorName": "Солнечный оранж",
+      "id": "wb-bright",
+      "colorName": "Яркий принт",
+      "colorHex": "#ffca28",
+      "price": 77,
+      "oldPrice": 175,
+      "skuPrefix": "BM-471902869",
+      "image": "https://basket-14.wbbasket.ru/vol4719/part471902/471902869/images/big/1.webp",
+      "wbNm": 471902869,
+      "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
+      "wbPhoto": 1,
+      "published": true,
+      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "features": [
+        "6 размеров · 25–42 см",
+        "На WB: желтый, фиолетовый, голубой, оранжевый",
+        "62 отзывов · рейтинг 5",
+        "Заказ на сайте или на Wildberries"
+      ]
+    },
+    {
+      "id": "wb-classic",
+      "colorName": "Классика · 5 цветов",
       "colorHex": "#ff5500",
-      "price": 44,
-      "skuPrefix": "BM-ORG",
-      "image": "",
+      "price": 77,
+      "oldPrice": 175,
+      "skuPrefix": "BM-216496169",
+      "image": "https://basket-16.wbbasket.ru/vol2164/part216496/216496169/images/big/1.webp",
+      "wbNm": 216496169,
+      "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
+      "wbPhoto": 1,
       "published": true,
-      "description": "Фирменный яркий оранж By Milia — как на golden hour. Хорошо видны в раздевалке, не перепутаешь с чужой парой.",
-      "features": ["6 размеров", "Фирменная расцветка", "Отличный подарок к началу сезона"]
-    },
-    {
-      "id": "lilac",
-      "colorName": "Терракотовый",
-      "colorHex": "#e86a3a",
-      "price": 42,
-      "skuPrefix": "BM-TER",
-      "image": "",
-      "published": true,
-      "description": "Глубокий терракотовый тон — спокойный и стильный. Подходит для тренировок и выступлений.",
-      "features": ["6 размеров", "Универсальный цвет", "Производство By Milia, Минск"]
+      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "features": [
+        "6 размеров · 25–42 см",
+        "На WB: розовый, черный, красный, желтый, белый",
+        "753 отзывов · рейтинг 4.9",
+        "Заказ на сайте или на Wildberries"
+      ]
     }
   ]
 }

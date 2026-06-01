@@ -49,8 +49,19 @@
       <div id="alert-box"></div>
 
       <section class="admin-panel is-active" data-panel="products">
-        <p class="hint">Добавляйте расцветки, цены, фото (URL) и описания. Скрытые товары не показываются в каталоге.</p>
-        <button type="button" class="btn btn-primary btn-sm" id="add-product-btn">+ Новый товар</button>
+        <p class="hint">Каталог подтягивается с Wildberries. Можно обновить цены и фото одной кнопкой.</p>
+        <div class="wb-import-box" style="margin-bottom:1.25rem;padding:1rem;border:1px solid var(--admin-border);border-radius:12px;background:#fff9f4">
+          <h3 style="margin:0 0 0.5rem;font-size:1rem">Импорт с Wildberries</h3>
+          <div class="field">
+            <label for="wb-urls">Ссылки на карточки (по одной на строку)</label>
+            <textarea id="wb-urls" rows="5">https://www.wildberries.by/catalog/230183062/detail.aspx
+https://www.wildberries.by/catalog/216515622/detail.aspx
+https://www.wildberries.by/catalog/471902869/detail.aspx
+https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
+          </div>
+          <button type="button" class="btn btn-primary btn-sm" id="wb-import-btn">Загрузить с WB</button>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="add-product-btn">+ Новый товар вручную</button>
         <div class="product-list" id="product-list"></div>
         <div class="product-editor hidden" id="product-editor"></div>
       </section>

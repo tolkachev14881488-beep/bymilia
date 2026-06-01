@@ -1,4 +1,5 @@
 import { loadSiteData, getSiteData, getProductsRaw } from '../js/data-store.js';
+import { fetchWbCatalog, DEFAULT_WB_URLS } from '../js/wb.js';
 import { loadGithubSettings, saveGithubSettings, publishToGithub } from './github-publish.js';
 
 const AUTH_KEY = 'bymilia-admin-auth';
@@ -186,6 +187,8 @@ function openProductEditor(id) {
       <div class="field"><label>Цена</label><input name="price" type="number" min="0" step="0.01" value="${p.price}"></div>
       <div class="field"><label>Артикул (префикс)</label><input name="skuPrefix" value="${esc(p.skuPrefix)}"></div>
       <div class="field"><label>Фото (URL)</label><input name="image" value="${esc(p.image || '')}" placeholder="https://… или assets/…"></div>
+      <div class="field"><label>Ссылка Wildberries</label><input name="wbUrl" value="${esc(p.wbUrl || '')}"></div>
+      <div class="field"><label>Артикул WB (nm)</label><input name="wbNm" type="number" value="${p.wbNm || ''}"></div>
       <div class="field"><label>Показывать в каталоге</label>
         <select name="published"><option value="true" ${p.published !== false ? 'selected' : ''}>Да</option><option value="false" ${p.published === false ? 'selected' : ''}>Нет</option></select>
       </div>
@@ -219,6 +222,8 @@ function saveProductFromForm(oldId) {
     price: parseFloat(get('price')) || 0,
     skuPrefix: get('skuPrefix'),
     image: get('image'),
+    wbUrl: get('wbUrl'),
+    wbNm: get('wbNm') ? Number(get('wbNm')) : undefined,
     published: get('published') !== 'false',
     description: get('description'),
     features: get('features')
@@ -238,6 +243,24 @@ function deleteProduct(id) {
   renderProductList();
   document.getElementById('product-editor').classList.add('hidden');
 }
+
+document.getElementById('wb-import-btn')?.addEventListener('click', async () => {
+  const raw = document.getElementById('wb-urls')?.value ?? '';
+  const urls = raw
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  try {
+    showAlert('Загружаем данные с Wildberries…', 'info');
+    draft.products = await fetchWbCatalog(urls.length ? urls : DEFAULT_WB_URLS);
+    saveDraftToStorage();
+    renderProductList();
+    document.getElementById('product-editor')?.classList.add('hidden');
+    showAlert(`Импортировано ${draft.products.length} товаров. Не забудьте опубликовать.`, 'ok');
+  } catch (e) {
+    showAlert(`Ошибка WB: ${esc(e.message)}`, 'err');
+  }
+});
 
 document.getElementById('add-product-btn').addEventListener('click', () => {
   const id = `color-${Date.now()}`;

@@ -30,6 +30,14 @@ function productGallery(p) {
   return `<div class="product-shape" style="background: ${p.colorHex}"></div>`;
 }
 
+function formatPrice(p, large = false) {
+  const cls = large ? 'product-price product-price--lg' : 'product-price';
+  if (p.oldPrice && p.oldPrice > p.price) {
+    return `<span class="product-price-old">${p.oldPrice} ${SITE.currencyLabel}</span> <span class="${cls}">${p.price} ${SITE.currencyLabel}</span>`;
+  }
+  return `<span class="${cls}">${p.price} ${SITE.currencyLabel}</span>`;
+}
+
 export function renderProductGrid(container) {
   if (!container) return;
   container.innerHTML = PRODUCTS.map(
@@ -42,7 +50,7 @@ export function renderProductGrid(container) {
       </div>
       <div class="product-card-body">
         <h3>${p.colorName}</h3>
-        <p class="product-price">от ${p.price} ${SITE.currencyLabel}</p>
+        <p class="product-price-wrap">${formatPrice(p)}</p>
       </div>
     </a>
   `,
@@ -79,7 +87,8 @@ export function initProductPage() {
         <div class="product-panel">
           <span class="eyebrow">${SITE.brand}</span>
           <h1>${product.colorName}</h1>
-          <p class="product-price" style="font-size:1.5rem">${product.price} ${SITE.currencyLabel}</p>
+          <p class="product-price-wrap product-price-wrap--lg">${formatPrice(product, true)}</p>
+          ${product.wbNm ? `<p class="product-meta">Артикул WB: ${product.wbNm}</p>` : ''}
           <p>${product.description}</p>
           <p><strong>Размер (длина стопы, см)</strong></p>
           <div class="size-picker" role="group" aria-label="Выбор размера"></div>
@@ -92,6 +101,7 @@ export function initProductPage() {
             </div>
           </div>
           <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
+          ${product.wbUrl ? `<a class="btn btn-outline-orange btn-lg btn-block" href="${product.wbUrl}" target="_blank" rel="noopener noreferrer">Купить на Wildberries</a>` : ''}
           <ul class="feature-list">
             ${product.features.map((f) => `<li>${f}</li>`).join('')}
           </ul>
