@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
+<body data-page="where-to-buy">
   <div id="site-header"></div>
   <main>
     <div class="page-hero"><div class="container"><h1>Где купить</h1></div></div>
@@ -22,11 +22,10 @@
     </div>
   </main>
   <div id="site-footer"></div>
-  <script type="module">
-    import { initLayout } from '../js/layout.js';
-    import { CONTACTS } from '../js/config.js';
-    initLayout();
-    document.getElementById('wb-link').href = CONTACTS.wildberries;
+    <script type="module">
+    import { boot } from '../js/init.js';
+    import { injectPageContent } from '../js/content-page.js';
+    boot(() => injectPageContent());
   </script>
 </body>
 </html>

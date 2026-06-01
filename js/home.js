@@ -1,0 +1,126 @@
+import { getHomepage, getPublishedProducts } from './data-store.js';
+import { pageHref } from './layout.js';
+
+export function renderHomepage() {
+  const hp = getHomepage();
+  if (!hp.hero) return;
+
+  const hero = hp.hero;
+  setHtml('[data-home="hero-eyebrow"]', hero.eyebrow);
+  setHtml('[data-home="hero-title"]', hero.titleHtml);
+  setHtml('[data-home="hero-lead"]', hero.lead);
+  setText('[data-home="hero-card-label"]', hero.cardLabel);
+  setText('[data-home="hero-card-sub"]', hero.cardSub);
+
+  const tagsEl = document.querySelector('[data-home="hero-tags"]');
+  if (tagsEl && hero.tags?.length) {
+    tagsEl.innerHTML = hero.tags
+      .map((t) => `<span class="tag"><span class="tag-dot"></span>${escapeHtml(t)}</span>`)
+      .join('');
+  }
+
+  const paletteEl = document.querySelector('[data-home="palette"]');
+  if (paletteEl) {
+    const products = getPublishedProducts();
+    paletteEl.innerHTML = products
+      .map(
+        (p) =>
+          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(p.colorName)}</span>`,
+      )
+      .join('');
+  }
+
+  const marqueeEl = document.querySelector('[data-home="marquee"]');
+  if (marqueeEl && hp.marquee?.length) {
+    const items = [...hp.marquee, ...hp.marquee];
+    marqueeEl.innerHTML = items.map((w) => `<span>${escapeHtml(w)}</span>`).join('');
+  }
+
+  const bentoEl = document.querySelector('[data-home="bento"]');
+  if (bentoEl && hp.bento?.length) {
+    bentoEl.innerHTML = hp.bento
+      .map(
+        (card) => `
+      <article class="bento-card bento-${card.variant || 'small'}">
+        <span class="bento-num">${escapeHtml(card.num || '')}</span>
+        <h3>${escapeHtml(card.title || '')}</h3>
+        <p>${escapeHtml(card.text || '')}</p>
+      </article>`,
+      )
+      .join('');
+  }
+
+  const steps = hp.steps;
+  if (steps) {
+    setText('[data-home="steps-eyebrow"]', steps.eyebrow);
+    setText('[data-home="steps-title"]', steps.title);
+    setText('[data-home="steps-lead"]', steps.lead);
+    const stepsGrid = document.querySelector('[data-home="steps-grid"]');
+    if (stepsGrid && steps.items?.length) {
+      stepsGrid.innerHTML = steps.items
+        .map(
+          (item, i) => `
+        <article class="step-card reveal reveal-delay-${Math.min(i + 1, 3)}">
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.text)}</p>
+        </article>`,
+        )
+        .join('');
+    }
+  }
+
+  const cat = hp.catalogSection;
+  if (cat) {
+    setText('[data-home="catalog-eyebrow"]', cat.eyebrow);
+    setText('[data-home="catalog-title"]', cat.title);
+    setText('[data-home="catalog-lead"]', cat.lead);
+  }
+
+  const ben = hp.benefits;
+  if (ben) {
+    setText('[data-home="benefits-eyebrow"]', ben.eyebrow);
+    setText('[data-home="benefits-title"]', ben.title);
+    setText('[data-home="benefits-lead"]', ben.lead);
+    const cardsEl = document.querySelector('[data-home="benefits-cards"]');
+    if (cardsEl && ben.cards?.length) {
+      cardsEl.innerHTML = ben.cards
+        .map(
+          (c, i) => `
+        <article class="info-card reveal reveal-delay-${Math.min(i + 1, 3)}">
+          <span class="info-icon" aria-hidden="true">${escapeHtml(c.icon || '✦')}</span>
+          <h3>${escapeHtml(c.title)}</h3>
+          <p>${escapeHtml(c.text)}</p>
+        </article>`,
+        )
+        .join('');
+    }
+  }
+
+  const cta = hp.cta;
+  if (cta) {
+    setText('[data-home="cta-title"]', cta.title);
+    setText('[data-home="cta-text"]', cta.text);
+  }
+
+  import('./motion.js').then(({ observeReveals }) => {
+    document.querySelectorAll('[data-home="bento"], [data-home="steps-grid"], [data-home="benefits-cards"]').forEach(observeReveals);
+  });
+}
+
+function setText(sel, text) {
+  const el = document.querySelector(sel);
+  if (el && text != null) el.textContent = text;
+}
+
+function setHtml(sel, html) {
+  const el = document.querySelector(sel);
+  if (el && html != null) el.innerHTML = html;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}

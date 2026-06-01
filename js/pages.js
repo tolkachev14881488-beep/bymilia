@@ -16,6 +16,20 @@ function showToast(text) {
   setTimeout(() => el.classList.remove('is-visible'), 2200);
 }
 
+function productThumb(p) {
+  if (p.image) {
+    return `<img class="product-card-img" src="${p.image}" alt="${p.colorName}" loading="lazy" width="400" height="400">`;
+  }
+  return `<div class="product-card-shape" style="background: ${p.colorHex}"></div>`;
+}
+
+function productGallery(p) {
+  if (p.image) {
+    return `<img class="product-photo" src="${p.image}" alt="${p.colorName}" width="600" height="600">`;
+  }
+  return `<div class="product-shape" style="background: ${p.colorHex}"></div>`;
+}
+
 export function renderProductGrid(container) {
   if (!container) return;
   container.innerHTML = PRODUCTS.map(
@@ -23,7 +37,7 @@ export function renderProductGrid(container) {
     <a class="product-card reveal" href="${pageHref(`/product.html?id=${p.id}`)}">
       <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33; background: linear-gradient(165deg, #fff 30%, ${p.colorHex}28)">
         <span class="product-card-badge">6 размеров</span>
-        <div class="product-card-shape" style="background: ${p.colorHex}"></div>
+        ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
       </div>
       <div class="product-card-body">
@@ -60,7 +74,7 @@ export function initProductPage() {
       <nav class="breadcrumb container"><a href="${pageHref('/index.html')}">Главная</a> / <a href="${pageHref('/catalog.html')}">Каталог</a> / ${product.colorName}</nav>
       <div class="container product-layout">
         <div class="product-gallery" style="background: linear-gradient(180deg, #fff, ${product.colorHex}18)">
-          <div class="product-shape" style="background: ${product.colorHex}"></div>
+          ${productGallery(product)}
         </div>
         <div class="product-panel">
           <span class="eyebrow">${SITE.brand}</span>
@@ -149,7 +163,7 @@ export function initCartPage() {
         if (!p) return '';
         return `
         <div class="cart-line" data-key="${line.key}">
-          <div class="cart-line-swatch" style="background:${p.colorHex}"></div>
+          <div class="cart-line-swatch" style="${p.image ? `background:url('${p.image}') center/cover` : `background:${p.colorHex}`}"></div>
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>

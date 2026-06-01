@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body>
+<body data-page="wholesale">
   <div id="site-header"></div>
   <main>
     <div class="page-hero"><div class="container"><h1>Оптовым клиентам</h1></div></div>
@@ -24,19 +24,10 @@
     </div>
   </main>
   <div id="site-footer"></div>
-  <script type="module">
-    import { initLayout } from '../js/layout.js';
-    initLayout();
-    fetch('../assets/pricelist.pdf', { method: 'HEAD' }).then((r) => {
-      if (!r.ok) {
-        const btn = document.getElementById('pricelist-btn');
-        btn.classList.remove('btn-primary');
-        btn.classList.add('btn-ghost');
-        btn.removeAttribute('download');
-        btn.href = '../pages/contacts.html';
-        btn.textContent = 'Запросить прайс у менеджера';
-      }
-    }).catch(() => {});
+    <script type="module">
+    import { boot } from '../js/init.js';
+    import { injectPageContent } from '../js/content-page.js';
+    boot(() => injectPageContent());
   </script>
 </body>
 </html>

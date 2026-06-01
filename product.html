@@ -14,10 +14,9 @@
   <main id="product-root"></main>
   <div id="site-footer"></div>
   <script type="module">
-    import { initLayout } from './js/layout.js';
+    import { boot } from './js/init.js';
     import { initProductPage } from './js/pages.js';
-    initLayout();
-    initProductPage();
+    boot(() => initProductPage());
   </script>
 </body>
 </html>
