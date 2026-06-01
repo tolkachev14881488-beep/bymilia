@@ -63,10 +63,8 @@ function hintForTokenError(message, owner, repo) {
   const m = String(message).toLowerCase();
   if (m.includes('not accessible') || m.includes('resource not accessible')) {
     return (
-      `Токен не видит репозиторий ${owner}/${repo}. ` +
-      `Создайте новый токен: Classic → галочка «repo» (полный доступ к репозиториям) ` +
-      `ИЛИ Fine-grained → Repository access: Only selected → выберите «bymilia» → Permissions → Contents: Read and write. ` +
-      `Токен должен быть от аккаунта ${owner}.`
+      `Токен не видит ${owner}/${repo}. Создайте Classic-токен (галочка repo) ` +
+      `от аккаунта ${owner}: github.com/settings/tokens/new?scopes=repo`
     );
   }
   if (m.includes('bad credentials') || resStatus401(m)) return 'Неверный или просроченный токен. Создайте новый.';
@@ -87,6 +85,13 @@ export async function verifyGithubConnection({ token, owner, repo, branch }) {
     throw new Error(hintForTokenError(msg, owner, repo));
   }
   const user = await userRes.json();
+
+  if (user.login && user.login.toLowerCase() !== owner.toLowerCase()) {
+    throw new Error(
+      `Токен от аккаунта «${user.login}», а репозиторий у «${owner}». ` +
+        `Создайте токен, войдя в GitHub как ${owner}, или добавьте ${user.login} в Collaborators репозитория.`,
+    );
+  }
 
   const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
     headers: githubHeaders(token),

@@ -26,10 +26,12 @@ async function sha256(text) {
 
 function showAlert(message, type = 'info') {
   const box = document.getElementById('alert-box');
-  box.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  const safe = esc(message).replace(/\n/g, '<br>');
+  box.innerHTML = `<div class="alert alert-${type} alert--${type}">${safe}</div>`;
+  const ms = type === 'err' ? 14000 : 6000;
   setTimeout(() => {
     box.innerHTML = '';
-  }, 6000);
+  }, ms);
 }
 
 function slugId(name) {
@@ -674,6 +676,25 @@ function loadPublishForm() {
   document.getElementById(id)?.addEventListener('change', persistGithubForm);
 });
 
+document.getElementById('check-token-btn')?.addEventListener('click', async () => {
+  persistGithubForm();
+  const cfg = readGithubForm();
+  if (!cfg.token) {
+    showAlert('Вставьте токен', 'err');
+    return;
+  }
+  try {
+    setPublishUi('publishing');
+    const info = await verifyGithubConnection(cfg);
+    showGithubConnected(info);
+    setPublishUi('ok', `OK: ${info.login}`);
+    showAlert(`Токен подходит. Аккаунт: ${info.login}, репозиторий: ${info.repoFullName}`, 'ok');
+  } catch (e) {
+    setPublishUi('err');
+    showAlert(e.message, 'err');
+  }
+});
+
 document.getElementById('test-github-btn')?.addEventListener('click', async () => {
   persistGithubForm();
   const cfg = readGithubForm();
@@ -685,10 +706,10 @@ document.getElementById('test-github-btn')?.addEventListener('click', async () =
     setPublishUi('publishing');
     const info = await verifyGithubConnection(cfg);
     showGithubConnected(info);
-    await queuePublish({ successMessage: `Подключено как ${info.login}. Контент на сайте.` });
+    await queuePublish({ successMessage: `Опубликовано (${info.login}). Сайт обновится за 1–2 мин.` });
   } catch (e) {
     setPublishUi('err');
-    showAlert(esc(e.message), 'err');
+    showAlert(e.message, 'err');
   }
 });
 
