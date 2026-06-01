@@ -96,7 +96,17 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
       </section>
 
       <section class="admin-panel" data-panel="publish">
-        <p class="hint">Один раз укажите токен GitHub — дальше каждое сохранение в админке автоматически обновляет сайт (репозиторий <code>bymilia</code>, ветка <code>main</code>).</p>
+        <p class="hint">Репозиторий сайта: <strong>tolkachev14881488-beep/bymilia</strong> (ветка <code>main</code>). После подключения токена каждое сохранение сразу обновляет сайт.</p>
+        <div class="gh-setup-box">
+          <h3>Как создать токен (если ошибка «Resource not accessible»)</h3>
+          <ol>
+            <li>Войдите в GitHub под аккаунтом <strong>tolkachev14881488-beep</strong></li>
+            <li><a href="https://github.com/settings/tokens/new?scopes=repo&amp;description=ByMilia%20CMS" target="_blank" rel="noopener">Classic token</a> → включите <code>repo</code> → Generate → скопируйте <code>ghp_…</code></li>
+            <li>Или <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">Fine-grained</a> → Repository: только <strong>bymilia</strong> → Contents: <strong>Read and write</strong></li>
+            <li>Вставьте токен ниже → «Проверить и опубликовать»</li>
+          </ol>
+        </div>
+        <p id="gh-connected" class="gh-connected hidden"></p>
         <div class="field-grid">
           <div class="field">
             <label for="gh-owner">Владелец (GitHub)</label>
@@ -114,7 +124,7 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
         <div class="field">
           <label for="gh-token">Personal Access Token</label>
           <input id="gh-token" type="password" placeholder="github_pat_… или ghp_…" autocomplete="off">
-          <p class="hint">Права: <code>Contents: Read and write</code> для репозитория. Токен хранится только в этом браузере.</p>
+          <p class="hint">Classic: scope <code>repo</code>. Fine-grained: репозиторий <code>bymilia</code> + Contents Read and write. Токен только в этом браузере.</p>
         </div>
         <div class="admin-actions" style="margin-top:1rem">
           <button type="button" class="btn btn-primary" id="test-github-btn">Проверить и опубликовать</button>

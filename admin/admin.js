@@ -7,6 +7,7 @@ import {
   publishSiteContent,
   saveGithubSettings,
   uploadBinaryFiles,
+  verifyGithubConnection,
 } from './github-publish.js';
 import { initProductModeration } from './product-moderation.js';
 
@@ -246,6 +247,13 @@ function updateGithubBanner() {
   const el = document.getElementById('github-banner');
   if (!el) return;
   el.classList.toggle('hidden', isGithubConfigured());
+}
+
+function showGithubConnected(info) {
+  const el = document.getElementById('gh-connected');
+  if (!el || !info) return;
+  el.textContent = `GitHub: ${info.login} → ${info.repoFullName} (ветка ${info.defaultBranch || 'main'})`;
+  el.classList.remove('hidden');
 }
 
 document.querySelectorAll('.admin-nav-btn[data-tab]').forEach((btn) => {
@@ -668,11 +676,20 @@ function loadPublishForm() {
 
 document.getElementById('test-github-btn')?.addEventListener('click', async () => {
   persistGithubForm();
-  if (!isGithubConfigured()) {
+  const cfg = readGithubForm();
+  if (!cfg.token || !cfg.owner || !cfg.repo) {
     showAlert('Заполните токен, владельца и репозиторий', 'err');
     return;
   }
-  await queuePublish({ successMessage: 'Подключение работает. Контент на сайте.' });
+  try {
+    setPublishUi('publishing');
+    const info = await verifyGithubConnection(cfg);
+    showGithubConnected(info);
+    await queuePublish({ successMessage: `Подключено как ${info.login}. Контент на сайте.` });
+  } catch (e) {
+    setPublishUi('err');
+    showAlert(esc(e.message), 'err');
+  }
 });
 
 document.getElementById('download-json-btn').addEventListener('click', () => {

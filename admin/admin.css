@@ -178,6 +178,49 @@ body {
   display: none;
 }
 
+.gh-setup-box {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.15rem;
+  border-radius: 12px;
+  border: 1px solid #ffd4b0;
+  background: #fff9f4;
+}
+
+.gh-setup-box h3 {
+  margin: 0 0 0.65rem;
+  font-size: 0.95rem;
+}
+
+.gh-setup-box ol {
+  margin: 0;
+  padding-left: 1.2rem;
+  font-size: 0.88rem;
+  color: var(--admin-ink);
+}
+
+.gh-setup-box li {
+  margin-bottom: 0.4rem;
+}
+
+.gh-setup-box a {
+  color: var(--admin-accent);
+  font-weight: 700;
+}
+
+.gh-connected {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  background: #e6f7ed;
+  color: #1a7a3a;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.gh-connected.hidden {
+  display: none;
+}
+
 .admin-panel {
   display: none;
   background: var(--admin-panel);
