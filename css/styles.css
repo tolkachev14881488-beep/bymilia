@@ -144,14 +144,19 @@ p {
   margin-bottom: 0.5rem;
 }
 
-/* Reveal */
+/* Reveal — без JS контент виден сразу */
 .reveal {
+  opacity: 1;
+  transform: none;
+}
+
+html.js .reveal:not(.is-visible) {
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
 }
 
-.reveal.is-visible {
+html.js .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
 }

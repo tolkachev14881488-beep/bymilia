@@ -28,6 +28,8 @@ export function observeReveals(root = document) {
 }
 
 export function initMotion() {
+  document.documentElement.classList.add('js');
+
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (prefersReduced) {
     document.querySelectorAll('.reveal').forEach((el) => el.classList.add('is-visible'));
