@@ -14,7 +14,7 @@ export const CONTACTS = {
   instagram: 'https://instagram.com/',
   address: 'г. Минск, ул. Панченко, 8',
   pickupHours: '9:00–18:00, по предварительной договорённости',
-  wildberries: 'https://www.wildberries.ru/',
+  wildberries: 'https://www.wildberries.by/catalog/216496169/detail.aspx',
 };
 
 export const DELIVERY = {
