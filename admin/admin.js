@@ -43,8 +43,8 @@ function slugId(name) {
 
 async function verifyPassword(password) {
   const hash = await sha256(password);
-  const stored = draft?.admin?.passwordHash || getSiteData().admin?.passwordHash;
-  return hash === stored;
+  const stored = getSiteData().admin?.passwordHash;
+  return Boolean(stored && hash === stored);
 }
 
 function loadDraftFromStorage() {
@@ -92,14 +92,14 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const password = document.getElementById('password').value;
   await loadSiteData();
-  const stored = loadDraftFromStorage();
-  if (stored) draft = stored;
-  else buildDraftFromServer();
   if (await verifyPassword(password)) {
+    sessionStorage.removeItem(DRAFT_KEY);
     sessionStorage.setItem(AUTH_KEY, '1');
+    buildDraftFromServer();
     showApp();
   } else {
-    showAlert('Неверный пароль', 'err');
+    sessionStorage.removeItem(DRAFT_KEY);
+    showAlert('Неверный пароль. Сейчас: bymilia2026', 'err');
   }
 });
 
@@ -755,6 +755,10 @@ function applySetupFromHash() {
     repo: 'bymilia',
     branch: 'main',
   });
+  if (gh && cms) {
+    sessionStorage.setItem(AUTH_KEY, '1');
+    sessionStorage.removeItem(DRAFT_KEY);
+  }
   history.replaceState(null, '', location.pathname + location.search);
 }
 
@@ -765,11 +769,9 @@ applySetupFromHash();
 (async () => {
   if (sessionStorage.getItem(AUTH_KEY) === '1') {
     await loadSiteData();
-    draft = loadDraftFromStorage() || null;
-    if (!draft) buildDraftFromServer();
+    sessionStorage.removeItem(DRAFT_KEY);
+    buildDraftFromServer();
     showApp();
-    if (!isGithubConfigured()) {
-      setTimeout(() => document.querySelector('[data-tab="publish"]')?.click(), 300);
-    }
+    return;
   }
 })();
