@@ -19,7 +19,7 @@ jobs:
 
       - name: Apply CMS payload
         env:
-          CMS_KEY: ${{ secrets.CMS_PUBLISH_KEY }}
+          CMS_KEY: e0a783f30b410151f878ff4fdfb32c218d2cac201f493ce7
           PAYLOAD: ${{ toJson(github.event.client_payload) }}
         run: node .github/scripts/cms-apply-payload.mjs
 

@@ -1,3 +1,5 @@
+import { CMS_PUBLISH_KEY } from './cms-config.js';
+
 const GITHUB_SETTINGS_KEY = 'bymilia-github';
 
 export function loadGithubSettings() {
@@ -24,7 +26,7 @@ export function getGithubConfig() {
 }
 
 export function getCmsPublishKey() {
-  return (loadGithubSettings().cmsPublishKey || '').trim();
+  return (loadGithubSettings().cmsPublishKey || CMS_PUBLISH_KEY).trim();
 }
 
 export function isGithubConfigured() {
