@@ -119,9 +119,28 @@ export function initLayout() {
 
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.site-nav');
-  toggle?.addEventListener('click', () => {
-    const open = nav.classList.toggle('is-open');
+
+  function setNavOpen(open) {
+    if (!nav || !toggle) return;
+    nav.classList.toggle('is-open', open);
     toggle.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('nav-open', open);
+  }
+
+  toggle?.addEventListener('click', () => {
+    setNavOpen(!nav.classList.contains('is-open'));
+  });
+
+  nav?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setNavOpen(false));
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setNavOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.matchMedia('(min-width: 901px)').matches) setNavOpen(false);
   });
 
   window.addEventListener('cart-updated', () => {
