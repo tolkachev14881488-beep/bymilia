@@ -51,9 +51,9 @@
           </div>
         </div>
       </div>
-      <div id="github-banner" class="github-banner hidden">
-        Подключите GitHub-токен в разделе «Подключение» — без него сайт не обновится.
-        <button type="button" class="btn btn-secondary btn-sm" data-goto-publish>Подключить</button>
+      <div id="github-banner" class="github-banner">
+        Для публикации на компьютере в папке <code>sapozhki</code> выполните:
+        <code>node scripts/cms-publish-server.mjs</code> и не закрывайте окно.
       </div>
       <div id="alert-box"></div>
 
@@ -98,7 +98,7 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
       </section>
 
       <section class="admin-panel" data-panel="publish">
-        <p class="hint">Публикация идёт автоматически через GitHub Actions (<strong>tolkachev14881488-beep/bymilia</strong>). Ручной токен нужен только если автонастройка не сработала.</p>
+        <p class="hint">Основной способ: локальный сервер <code>node scripts/cms-publish-server.mjs</code>. Токен GitHub — запасной вариант.</p>
         <p id="gh-connected" class="gh-connected hidden"></p>
         <div class="field-grid">
           <div class="field">

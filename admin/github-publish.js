@@ -209,6 +209,40 @@ export async function publishToGithub({ token, owner, repo, branch, siteJson, pr
   return results;
 }
 
+const LOCAL_PUBLISH_URL = 'http://127.0.0.1:4567';
+
+export async function isLocalPublishAvailable() {
+  try {
+    const res = await fetch(`${LOCAL_PUBLISH_URL}/health`, { signal: AbortSignal.timeout(1200) });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Публикация через git на этом компьютере (без GitHub API) */
+export async function publishViaLocalServer({ siteJson, productsJson, uploads = [] }) {
+  const binaryFiles = [];
+  for (const { path, file } of uploads) {
+    binaryFiles.push({ path, base64: await fileToBase64(file) });
+  }
+  const res = await fetch(`${LOCAL_PUBLISH_URL}/publish`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ siteJson, productsJson, binaryFiles }),
+  });
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    /* ignore */
+  }
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || 'Локальный сервер публикации не ответил');
+  }
+  return data.message;
+}
+
 /** Публикация через GitHub Actions (не нужен Contents API на токене) */
 export async function publishViaActions({ token, owner, repo, cmsKey, siteJson, productsJson, uploads = [] }) {
   const binaryFiles = [];
@@ -234,12 +268,19 @@ export async function publishViaActions({ token, owner, repo, cmsKey, siteJson, 
   }
 }
 
-/** Публикует контент сайта, используя сохранённые настройки GitHub */
+/** Публикует контент сайта */
 export async function publishSiteContent({ siteJson, productsJson, uploads = [] }) {
+  if (await isLocalPublishAvailable()) {
+    const message = await publishViaLocalServer({ siteJson, productsJson, uploads });
+    return { mode: 'local', message };
+  }
+
   const cfg = getGithubConfig();
   const cmsKey = getCmsPublishKey();
   if (!cfg.token || !cfg.owner || !cfg.repo) {
-    throw new Error('Подключите GitHub: один раз откройте ссылку настройки из Cursor');
+    throw new Error(
+      'Запустите на компьютере: node scripts/cms-publish-server.mjs — затем снова «Сохранить» в админке.',
+    );
   }
   if (cmsKey) {
     await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
@@ -247,6 +288,15 @@ export async function publishSiteContent({ siteJson, productsJson, uploads = [] 
   }
   if (uploads.length) await uploadBinaryFiles(uploads);
   return publishToGithub({ ...cfg, siteJson, productsJson });
+}
+
+export function downloadPublishPayload(payload) {
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'cms-publish-payload.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 
 export function fileToBase64(file) {
