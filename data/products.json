@@ -57,7 +57,12 @@
       "price": 77,
       "oldPrice": 175,
       "skuPrefix": "BM-471902869",
-      "image": "",
+      "image": "assets/products/bright-1.png",
+      "images": [
+        "assets/products/bright-1.png",
+        "assets/products/bright-2.png",
+        "assets/products/bright-3.png"
+      ],
       "wbNm": 471902869,
       "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
       "wbPhoto": 1,
