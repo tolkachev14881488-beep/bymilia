@@ -1,6 +1,6 @@
 # By Milia — сайт (MVP)
 
-Статический сайт с каталогом (4 расцветки × 6 размеров), корзиной и заявкой в WhatsApp + email.
+Статический сайт с каталогом (5 расцветок × 6 размеров), корзиной и заявкой в WhatsApp + email.
 
 **Сайт:** https://tolkachev14881488-beep.github.io/bymilia/
 
@@ -19,7 +19,6 @@ npx --yes serve .
 Файл **`js/config.js`**:
 
 - `CONTACTS.phone`, `phoneRaw`, `whatsapp`, `email`
-- `CONTACTS.wildberries` — ссылка на магазин WB
 - `CONTACTS.instagram`
 
 Файл **`js/products.js`**:

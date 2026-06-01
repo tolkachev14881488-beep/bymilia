@@ -1,5 +1,5 @@
 import { CONTACTS, DELIVERY_OPTIONS, SITE } from './config.js';
-import { getProduct, sku, SIZES, WB_PRODUCT } from './products.js';
+import { getProduct, sku, SIZES } from './products.js';
 import { getCart, cartTotal, clearCart } from './cart.js';
 
 function formatLine(line) {
@@ -17,7 +17,6 @@ export function buildOrderMessage(formData) {
 
   return [
     `Заказ ${SITE.brand}`,
-    `Артикул WB: ${WB_PRODUCT.articul}`,
     '',
     ...lines,
     '',
