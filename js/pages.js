@@ -2,7 +2,7 @@ import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
 import { PRODUCTS, getProduct, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine } from './cart.js';
 import { submitOrder } from './checkout.js';
-import { pageHref } from './layout.js';
+import { asset, pageHref } from './layout.js';
 
 function showToast(text) {
   let el = document.querySelector('.toast');
@@ -16,19 +16,42 @@ function showToast(text) {
   setTimeout(() => el.classList.remove('is-visible'), 2200);
 }
 
+function productImageList(p) {
+  const list = Array.isArray(p.images) && p.images.length ? p.images : p.image ? [p.image] : [];
+  return list.map((src) => (src.startsWith('http') ? src : asset(src)));
+}
+
 function productThumb(p) {
   const shape = `<div class="product-card-shape product-card-shape--fallback" style="background: ${p.colorHex}" hidden></div>`;
-  if (p.image) {
-    return `${shape}<img class="product-card-img" src="${p.image}" alt="${p.colorName}" loading="lazy" width="400" height="400" referrerpolicy="no-referrer" onerror="this.hidden=true;this.previousElementSibling.hidden=false">`;
+  const imgs = productImageList(p);
+  if (imgs[0]) {
+    const ref = imgs[0].startsWith('http') ? ' referrerpolicy="no-referrer"' : '';
+    return `${shape}<img class="product-card-img" src="${imgs[0]}" alt="${p.colorName}" loading="lazy" width="400" height="400"${ref} onerror="this.hidden=true;this.previousElementSibling.hidden=false">`;
   }
   return `<div class="product-card-shape" style="background: ${p.colorHex}"></div>`;
 }
 
-function productGallery(p) {
-  if (p.image) {
-    return `<div class="product-shape product-shape--fallback" style="background: ${p.colorHex}" hidden></div><img class="product-photo" src="${p.image}" alt="${p.colorName}" width="600" height="600" referrerpolicy="no-referrer" onerror="this.hidden=true;this.previousElementSibling.hidden=false">`;
+function productGallery(p, activeIndex = 0) {
+  const imgs = productImageList(p);
+  if (!imgs.length) {
+    return `<div class="product-shape" style="background: ${p.colorHex}"></div>`;
   }
-  return `<div class="product-shape" style="background: ${p.colorHex}"></div>`;
+  const idx = Math.min(activeIndex, imgs.length - 1);
+  const ref = imgs[idx].startsWith('http') ? ' referrerpolicy="no-referrer"' : '';
+  const thumbs =
+    imgs.length > 1
+      ? `<div class="product-gallery-thumbs" role="tablist" aria-label="Фото товара">${imgs
+          .map(
+            (src, i) =>
+              `<button type="button" class="product-thumb-btn ${i === idx ? 'is-active' : ''}" data-gallery-idx="${i}" role="tab" aria-selected="${i === idx}"><img src="${src}" alt=""></button>`,
+          )
+          .join('')}</div>`
+      : '';
+  return `
+    <div class="product-shape product-shape--fallback" style="background: ${p.colorHex}" hidden></div>
+    <img class="product-photo" src="${imgs[idx]}" alt="${p.colorName}" width="600" height="600"${ref} data-gallery-main onerror="this.hidden=true;this.previousElementSibling.hidden=false">
+    ${thumbs}
+  `;
 }
 
 function formatPrice(p, large = false) {
@@ -80,13 +103,14 @@ export function initProductPage() {
 
   let selectedSize = null;
   let qty = 1;
+  let galleryIndex = 0;
 
   function render() {
     root.innerHTML = `
       <nav class="breadcrumb container"><a href="${pageHref('/index.html')}">Главная</a> / <a href="${pageHref('/catalog.html')}">Каталог</a> / ${product.colorName}</nav>
       <div class="container product-layout">
         <div class="product-gallery" style="background: linear-gradient(180deg, #fff, ${product.colorHex}18)">
-          ${productGallery(product)}
+          ${productGallery(product, galleryIndex)}
         </div>
         <div class="product-panel">
           <span class="eyebrow">${SITE.brand}</span>
@@ -118,6 +142,13 @@ export function initProductPage() {
       (s) =>
         `<button type="button" class="size-btn ${selectedSize === s.id ? 'is-active' : ''}" data-size="${s.id}">${s.label}</button>`,
     ).join('');
+
+    root.querySelectorAll('[data-gallery-idx]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        galleryIndex = Number(btn.dataset.galleryIdx);
+        render();
+      });
+    });
 
     picker.querySelectorAll('[data-size]').forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -177,7 +208,7 @@ export function initCartPage() {
         if (!p) return '';
         return `
         <div class="cart-line" data-key="${line.key}">
-          <div class="cart-line-swatch" style="${p.image ? `background:url('${p.image}') center/cover` : `background:${p.colorHex}`}"></div>
+          <div class="cart-line-swatch" style="${productImageList(p)[0] ? `background:url('${productImageList(p)[0]}') center/cover` : `background:${p.colorHex}`}"></div>
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>

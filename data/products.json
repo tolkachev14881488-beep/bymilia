@@ -7,7 +7,12 @@
       "price": 72,
       "oldPrice": 175,
       "skuPrefix": "BM-230183062",
-      "image": "https://basket-15.wbbasket.ru/vol2301/part230183/230183062/images/c516x688/1.webp",
+      "image": "assets/products/black-front.png",
+      "images": [
+        "assets/products/black-front.png",
+        "assets/products/black-side.png",
+        "assets/products/black-sole.png"
+      ],
       "wbNm": 230183062,
       "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx",
       "wbPhoto": 1,
