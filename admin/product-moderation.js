@@ -16,8 +16,8 @@ export function previewImageSrc(path) {
 
 function productThumb(p) {
   const src = p.image || (Array.isArray(p.images) && p.images[0]) || '';
-  if (!src) return `<div class="mod-card-thumb mod-card-thumb--empty" style="background:${p.colorHex || '#eee'}"></div>`;
-  return `<img class="mod-card-thumb" src="${esc(previewImageSrc(src))}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'mod-card-thumb mod-card-thumb--empty',style:'background:${p.colorHex || '#eee'}'}))">`;
+  if (!src) return `<div class="mod-card-thumb mod-card-thumb--empty" style="background:${esc(p.colorHex || '#eee')}"></div>`;
+  return `<img class="mod-card-thumb" src="${esc(previewImageSrc(src))}" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling?.classList.remove('hidden')"><div class="mod-card-thumb mod-card-thumb--empty hidden" style="background:${esc(p.colorHex || '#eee')}"></div>`;
 }
 
 export function initProductModeration({ root, editorRoot, getProducts, setProducts, onSaveProduct, onQuickPublish, onDelete }) {
@@ -99,16 +99,16 @@ export function initProductModeration({ root, editorRoot, getProducts, setProduc
         <button type="button" class="mod-card-hit" data-select="${esc(p.id)}">
           ${productThumb(p)}
           <div class="mod-card-body">
-            <strong>${esc(p.colorName)}</strong>
+            <strong class="mod-card-title">${esc(p.colorName)}</strong>
             <span class="mod-card-price">${p.price} руб.${p.oldPrice ? ` <s>${p.oldPrice}</s>` : ''}</span>
             <span class="mod-card-id">${esc(p.id)}</span>
           </div>
         </button>
         <div class="mod-card-actions">
-          <button type="button" class="btn btn-secondary btn-sm" title="${hidden ? 'Показать' : 'Скрыть'}" data-toggle="${esc(p.id)}">${hidden ? '👁' : '—'}</button>
-          <button type="button" class="btn btn-secondary btn-sm" data-move="${esc(p.id)}" data-dir="-1" title="Выше">↑</button>
-          <button type="button" class="btn btn-secondary btn-sm" data-move="${esc(p.id)}" data-dir="1" title="Ниже">↓</button>
-          <a class="btn btn-secondary btn-sm" href="../product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener" title="На сайте">↗</a>
+          <button type="button" class="btn btn-secondary btn-sm" data-toggle="${esc(p.id)}">${hidden ? 'Показать' : 'Скрыть'}</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-move="${esc(p.id)}" data-dir="-1" aria-label="Выше">↑</button>
+          <button type="button" class="btn btn-secondary btn-sm" data-move="${esc(p.id)}" data-dir="1" aria-label="Ниже">↓</button>
+          <a class="btn btn-secondary btn-sm" href="../product.html?id=${encodeURIComponent(p.id)}" target="_blank" rel="noopener">Сайт</a>
         </div>
       </article>
     `;

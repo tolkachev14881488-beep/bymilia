@@ -57,24 +57,26 @@
       </div>
       <div id="alert-box"></div>
 
-      <section class="admin-panel is-active" data-panel="products">
-        <div class="mod-panel-head">
-          <p class="hint" style="margin:0">Каталог: превью, скрытие, порядок, загрузка фото. Сохранение сразу на сайт.</p>
-          <button type="button" class="btn btn-secondary btn-sm" id="add-product-btn">+ Новый товар</button>
-        </div>
-        <details class="mod-details mod-wb-import">
-          <summary>Импорт цен с Wildberries</summary>
-          <div class="field" style="margin-top:0.75rem">
-            <textarea id="wb-urls" rows="4">https://www.wildberries.by/catalog/230183062/detail.aspx
+      <section class="admin-panel admin-panel--catalog is-active" data-panel="products">
+        <div class="mod-catalog-shell">
+          <div class="mod-panel-head">
+            <p class="hint mod-panel-hint">Каталог: превью, скрытие, порядок, фото. Сохранение = публикация на сайт.</p>
+            <button type="button" class="btn btn-primary btn-sm" id="add-product-btn">+ Новый товар</button>
+          </div>
+          <details class="mod-details mod-wb-import">
+            <summary>Импорт цен с Wildberries</summary>
+            <div class="field mod-wb-field">
+              <textarea id="wb-urls" rows="4">https://www.wildberries.by/catalog/230183062/detail.aspx
 https://www.wildberries.by/catalog/216515622/detail.aspx
 https://www.wildberries.by/catalog/471902869/detail.aspx
 https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="wb-import-btn">Загрузить с WB</button>
+          </details>
+          <div class="mod-layout">
+            <aside class="mod-layout-list" id="product-moderation-list" aria-label="Список товаров"></aside>
+            <div class="mod-layout-editor" id="product-moderation-editor" aria-label="Редактор товара"></div>
           </div>
-          <button type="button" class="btn btn-secondary btn-sm" id="wb-import-btn">Загрузить с WB</button>
-        </details>
-        <div class="mod-layout">
-          <div class="mod-layout-list" id="product-moderation-list"></div>
-          <div class="mod-layout-editor" id="product-moderation-editor"></div>
         </div>
       </section>
 

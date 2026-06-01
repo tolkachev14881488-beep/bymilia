@@ -52,7 +52,7 @@ body {
 
 .admin-app {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: 240px minmax(0, 1fr);
   min-height: 100vh;
 }
 
@@ -106,7 +106,8 @@ body {
 
 .admin-main {
   padding: 1.25rem clamp(1rem, 3vw, 2rem) 2rem;
-  overflow-x: hidden;
+  min-width: 0;
+  overflow-x: auto;
 }
 
 .admin-topbar {
@@ -304,37 +305,66 @@ body {
   font-size: 0.85rem;
 }
 
+.admin-panel--catalog {
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.mod-catalog-shell {
+  background: var(--admin-panel);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  padding: 1.25rem;
+  min-width: 0;
+}
+
 .mod-panel-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 1rem;
+}
+
+.mod-panel-hint {
+  margin: 0;
+  flex: 1 1 220px;
+  max-width: 52rem;
 }
 
 .mod-wb-import {
   margin-bottom: 1rem;
 }
 
+.mod-wb-field {
+  margin-top: 0.75rem;
+}
+
 .mod-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 340px) 1fr;
+  grid-template-columns: minmax(300px, 400px) minmax(0, 1fr);
   gap: 1.25rem;
   align-items: start;
-  min-height: 420px;
+  width: 100%;
+  min-width: 0;
 }
 
 .mod-layout-list {
-  max-height: calc(100vh - 220px);
+  min-width: 0;
+  max-height: min(72vh, 720px);
   overflow: auto;
-  padding-right: 0.25rem;
+  padding-right: 0.35rem;
+  border-right: 1px solid var(--admin-border);
+  padding-bottom: 0.5rem;
 }
 
 .mod-layout-editor {
+  min-width: 0;
   position: sticky;
-  top: 1rem;
-  max-height: calc(100vh - 180px);
+  top: 0.5rem;
+  max-height: min(78vh, 760px);
   overflow: auto;
 }
 
@@ -366,11 +396,16 @@ body {
 }
 
 .mod-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
   border: 2px solid var(--admin-border);
   border-radius: 14px;
   overflow: hidden;
   background: #fff;
   transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 0.35rem 0.35rem 0.35rem 0;
 }
 
 .mod-card.is-active {
@@ -384,9 +419,11 @@ body {
 
 .mod-card-hit {
   display: flex;
+  align-items: center;
   gap: 0.75rem;
   width: 100%;
-  padding: 0.65rem;
+  min-width: 0;
+  padding: 0.5rem 0.35rem 0.5rem 0.65rem;
   border: none;
   background: none;
   text-align: left;
@@ -415,9 +452,13 @@ body {
   min-width: 0;
 }
 
-.mod-card-body strong {
+.mod-card-title {
+  display: block;
   font-size: 0.92rem;
   line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .mod-card-price {
@@ -439,9 +480,16 @@ body {
 
 .mod-card-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  padding: 0 0.5rem 0.5rem;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.35rem 0.35rem 0.35rem 0;
+  flex-shrink: 0;
+}
+
+.mod-card-actions .btn-sm {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.72rem;
+  white-space: nowrap;
 }
 
 .mod-editor-empty {
@@ -564,9 +612,18 @@ body {
   border-top: 1px solid var(--admin-border);
 }
 
-@media (max-width: 960px) {
+@media (max-width: 1180px) {
   .mod-layout {
     grid-template-columns: 1fr;
+  }
+
+  .mod-layout-list {
+    max-height: none;
+    border-right: none;
+    border-bottom: 1px solid var(--admin-border);
+    padding-right: 0;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   .mod-layout-editor {
@@ -574,8 +631,14 @@ body {
     max-height: none;
   }
 
-  .mod-layout-list {
-    max-height: none;
+  .mod-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mod-card-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0 0.65rem 0.65rem;
   }
 }
 
@@ -629,21 +692,19 @@ body {
   }
 
   .admin-sidebar {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .admin-sidebar h1 {
-    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
   }
 
   .admin-nav-btn {
-    width: auto;
+    width: 100%;
   }
 
   .admin-sidebar-footer {
-    width: 100%;
-    margin-top: 0;
+    margin-top: 0.5rem;
+  }
+
+  .mod-catalog-shell {
+    padding: 1rem;
   }
 }
