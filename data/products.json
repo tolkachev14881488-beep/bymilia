@@ -27,7 +27,7 @@
     },
     {
       "id": "wb-tropical",
-      "colorName": "Сапожки для разогрева By Milia",
+      "colorName": "Тропический принт",
       "colorHex": "#4fc3f7",
       "price": 77,
       "oldPrice": 175,
@@ -48,8 +48,7 @@
         "На WB: голубой, розовый, оранжевый, синий, черный",
         "200 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
-      ],
-      "imageVersion": "2"
+      ]
     },
     {
       "id": "wb-bright",
