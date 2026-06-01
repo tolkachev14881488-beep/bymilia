@@ -23,9 +23,13 @@ export function getGithubConfig() {
   };
 }
 
+export function getCmsPublishKey() {
+  return (loadGithubSettings().cmsPublishKey || '').trim();
+}
+
 export function isGithubConfigured() {
   const { token, owner, repo } = getGithubConfig();
-  return Boolean(token && owner && repo);
+  return Boolean(token && owner && repo && getCmsPublishKey());
 }
 
 function authHeader(token) {
@@ -79,12 +83,22 @@ function resStatus401(m) {
 export async function verifyGithubConnection({ token, owner, repo, branch }) {
   if (!token) throw new Error('Введите Personal Access Token');
 
+  const cmsKey = getCmsPublishKey();
   const userRes = await fetch('https://api.github.com/user', { headers: githubHeaders(token) });
   if (!userRes.ok) {
     const msg = await parseGhError(userRes);
     throw new Error(hintForTokenError(msg, owner, repo));
   }
   const user = await userRes.json();
+
+  if (cmsKey) {
+    return {
+      login: user.login,
+      repoFullName: `${owner}/${repo}`,
+      defaultBranch: branch || 'main',
+      mode: 'actions',
+    };
+  }
 
   if (user.login && user.login.toLowerCase() !== owner.toLowerCase()) {
     throw new Error(
@@ -193,13 +207,44 @@ export async function publishToGithub({ token, owner, repo, branch, siteJson, pr
   return results;
 }
 
-/** Публикует контент сайта, используя сохранённые настройки GitHub */
-export async function publishSiteContent({ siteJson, productsJson, extraFiles = [] }) {
-  const cfg = getGithubConfig();
-  if (!cfg.token || !cfg.owner || !cfg.repo) {
-    throw new Error('Подключите GitHub: укажите токен в разделе «Подключение»');
+/** Публикация через GitHub Actions (не нужен Contents API на токене) */
+export async function publishViaActions({ token, owner, repo, cmsKey, siteJson, productsJson, uploads = [] }) {
+  const binaryFiles = [];
+  for (const { path, file } of uploads) {
+    binaryFiles.push({ path, base64: await fileToBase64(file) });
   }
-  return publishToGithub({ ...cfg, siteJson, productsJson, extraFiles });
+  const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/dispatches`, {
+    method: 'POST',
+    headers: githubHeaders(token, { 'Content-Type': 'application/json' }),
+    body: JSON.stringify({
+      event_type: 'cms_publish',
+      client_payload: {
+        key: cmsKey,
+        siteJson,
+        productsJson,
+        binaryFiles: binaryFiles.slice(0, 8),
+      },
+    }),
+  });
+  if (!res.ok) {
+    const msg = await parseGhError(res);
+    throw new Error(hintForTokenError(msg, owner, repo));
+  }
+}
+
+/** Публикует контент сайта, используя сохранённые настройки GitHub */
+export async function publishSiteContent({ siteJson, productsJson, uploads = [] }) {
+  const cfg = getGithubConfig();
+  const cmsKey = getCmsPublishKey();
+  if (!cfg.token || !cfg.owner || !cfg.repo) {
+    throw new Error('Подключите GitHub: один раз откройте ссылку настройки из Cursor');
+  }
+  if (cmsKey) {
+    await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
+    return { mode: 'actions' };
+  }
+  if (uploads.length) await uploadBinaryFiles(uploads);
+  return publishToGithub({ ...cfg, siteJson, productsJson });
 }
 
 export function fileToBase64(file) {

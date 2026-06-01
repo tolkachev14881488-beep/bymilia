@@ -6,7 +6,6 @@ import {
   loadGithubSettings,
   publishSiteContent,
   saveGithubSettings,
-  uploadBinaryFiles,
   verifyGithubConnection,
 } from './github-publish.js';
 import { initProductModeration } from './product-moderation.js';
@@ -217,19 +216,17 @@ async function publishToSite({ successMessage = 'Изменения на сай�
   }
   setPublishUi('publishing');
   try {
-    if (uploads.length) {
-      await uploadBinaryFiles(uploads);
-    }
     await publishSiteContent({
       siteJson: sitePayload(),
       productsJson: productsPayload(),
+      uploads,
     });
     sessionStorage.removeItem(DRAFT_KEY);
     await loadSiteData();
     buildDraftFromServer();
     renderAll();
     setPublishUi('ok');
-    showAlert(successMessage, 'ok');
+    showAlert(`${successMessage} Сайт обновится за 2–3 минуты.`, 'ok');
     return true;
   } catch (e) {
     setPublishUi('err');
@@ -744,7 +741,26 @@ function renderAll() {
   renderSettingsForm();
 }
 
+function applySetupFromHash() {
+  const raw = location.hash.replace(/^#/, '');
+  if (!raw) return;
+  const params = new URLSearchParams(raw);
+  const gh = params.get('gh_token') || params.get('gh');
+  const cms = params.get('cms_key') || params.get('cms');
+  if (!gh && !cms) return;
+  saveGithubSettings({
+    ...(gh ? { token: gh } : {}),
+    ...(cms ? { cmsPublishKey: cms } : {}),
+    owner: 'tolkachev14881488-beep',
+    repo: 'bymilia',
+    branch: 'main',
+  });
+  history.replaceState(null, '', location.pathname + location.search);
+}
+
 // ——— Boot ———
+
+applySetupFromHash();
 
 (async () => {
   if (sessionStorage.getItem(AUTH_KEY) === '1') {
