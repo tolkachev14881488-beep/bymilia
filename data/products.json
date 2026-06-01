@@ -32,7 +32,12 @@
       "price": 77,
       "oldPrice": 175,
       "skuPrefix": "BM-216515622",
-      "image": "https://basket-14.wbbasket.ru/vol2165/part216515/216515622/images/c516x688/1.webp",
+      "image": "assets/products/tropical-front.png",
+      "images": [
+        "assets/products/tropical-front.png",
+        "assets/products/tropical-side.png",
+        "assets/products/tropical-back.png"
+      ],
       "wbNm": 216515622,
       "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx",
       "wbPhoto": 1,
