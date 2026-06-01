@@ -23,9 +23,9 @@ npx --yes serve .
 
 ### Один раз: подключить GitHub
 
-1. [Personal Access Token](https://github.com/settings/tokens) → **Fine-grained** или Classic с правом записи в репозиторий `bymilia`
-2. Админка → **«Подключение»** → токен, владелец `tolkachev14881488-beep`, репозиторий `bymilia`, ветка `main`
-3. **«Проверить и опубликовать»** — дальше токен хранится в браузере, публиковать вручную не нужно
+1. [Personal Access Token](https://github.com/settings/tokens) → право **Contents: Read and write** для `bymilia`
+2. Админка → **«Подключение»** → вставьте токен → **«Проверить и опубликовать»**
+3. Дальше в разделе **«Каталог»**: карточки товаров, drag-and-drop фото, скрытие, порядок ↑↓ — всё сразу на сайт
 
 Резерв: **«Скачать JSON»** и `git push`.
 

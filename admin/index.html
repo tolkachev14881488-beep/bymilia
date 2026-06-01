@@ -58,21 +58,24 @@
       <div id="alert-box"></div>
 
       <section class="admin-panel is-active" data-panel="products">
-        <p class="hint">Любое «Сохранить» сразу обновляет живой сайт. Импорт с Wildberries тоже публикуется автоматически.</p>
-        <div class="wb-import-box" style="margin-bottom:1.25rem;padding:1rem;border:1px solid var(--admin-border);border-radius:12px;background:#fff9f4">
-          <h3 style="margin:0 0 0.5rem;font-size:1rem">Импорт с Wildberries</h3>
-          <div class="field">
-            <label for="wb-urls">Ссылки на карточки (по одной на строку)</label>
-            <textarea id="wb-urls" rows="5">https://www.wildberries.by/catalog/230183062/detail.aspx
+        <div class="mod-panel-head">
+          <p class="hint" style="margin:0">Каталог: превью, скрытие, порядок, загрузка фото. Сохранение сразу на сайт.</p>
+          <button type="button" class="btn btn-secondary btn-sm" id="add-product-btn">+ Новый товар</button>
+        </div>
+        <details class="mod-details mod-wb-import">
+          <summary>Импорт цен с Wildberries</summary>
+          <div class="field" style="margin-top:0.75rem">
+            <textarea id="wb-urls" rows="4">https://www.wildberries.by/catalog/230183062/detail.aspx
 https://www.wildberries.by/catalog/216515622/detail.aspx
 https://www.wildberries.by/catalog/471902869/detail.aspx
 https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
           </div>
-          <button type="button" class="btn btn-primary btn-sm" id="wb-import-btn">Загрузить с WB</button>
+          <button type="button" class="btn btn-secondary btn-sm" id="wb-import-btn">Загрузить с WB</button>
+        </details>
+        <div class="mod-layout">
+          <div class="mod-layout-list" id="product-moderation-list"></div>
+          <div class="mod-layout-editor" id="product-moderation-editor"></div>
         </div>
-        <button type="button" class="btn btn-secondary btn-sm" id="add-product-btn">+ Новый товар вручную</button>
-        <div class="product-list" id="product-list"></div>
-        <div class="product-editor hidden" id="product-editor"></div>
       </section>
 
       <section class="admin-panel" data-panel="homepage">

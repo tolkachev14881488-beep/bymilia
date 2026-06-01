@@ -6,15 +6,17 @@ import {
   loadGithubSettings,
   publishSiteContent,
   saveGithubSettings,
+  uploadBinaryFiles,
 } from './github-publish.js';
+import { initProductModeration } from './product-moderation.js';
 
 const AUTH_KEY = 'bymilia-admin-auth';
 const DRAFT_KEY = 'bymilia-cms-draft';
 
 let draft = null;
-let editingProductId = null;
 let publishChain = Promise.resolve();
 let publishUiState = 'idle';
+let productModeration = null;
 
 async function sha256(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -107,16 +109,59 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 function showApp() {
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('app').classList.remove('hidden');
+  initProductModerationPanel();
   renderAll();
   loadPublishForm();
   updateGithubBanner();
   setPublishUi('idle');
 }
 
+function initProductModerationPanel() {
+  const listRoot = document.getElementById('product-moderation-list');
+  const editorRoot = document.getElementById('product-moderation-editor');
+  if (!listRoot || !editorRoot) return;
+
+  productModeration = initProductModeration({
+    root: listRoot,
+    editorRoot,
+    getProducts: () => draft.products,
+    setProducts: (list) => {
+      draft.products = list;
+      saveDraftToStorage();
+    },
+    onSaveProduct: saveProductFromModeration,
+    onQuickPublish: (msg) => queuePublish({ successMessage: msg }),
+    onDelete: deleteProduct,
+  });
+}
+
+async function saveProductFromModeration(oldId, data) {
+  const uploads = data._pendingUploads || [];
+  const { _pendingUploads, ...product } = data;
+  const idx = draft.products.findIndex((x) => x.id === oldId);
+  if (idx < 0) return;
+  const newId = product.id || oldId;
+  if (newId !== oldId && draft.products.some((x) => x.id === newId)) {
+    showAlert('Такой ID уже есть', 'err');
+    return;
+  }
+  const version = String(Number(draft.products[idx].imageVersion || 1) + 1);
+  draft.products[idx] = { ...product, id: newId, imageVersion: version };
+  saveDraftToStorage();
+  const ok = await publishToSite({
+    uploads,
+    successMessage: uploads.length
+      ? `Товар и ${uploads.length} фото опубликованы на сайте.`
+      : 'Товар опубликован на сайте.',
+  });
+  if (ok) productModeration?.select(newId);
+  else productModeration?.refresh();
+}
+
 // ——— Tabs ———
 
 const titles = {
-  products: 'Товары',
+  products: 'Каталог',
   homepage: 'Главная',
   pages: 'Страницы',
   settings: 'Настройки',
@@ -158,7 +203,7 @@ async function collectAllForms() {
   if (document.getElementById('st-brand')) await collectSettings();
 }
 
-async function publishToSite({ successMessage = 'Изменения на сайте. Обновление 1–2 мин.' } = {}) {
+async function publishToSite({ successMessage = 'Изменения на сайте. Обновление 1–2 мин.', uploads = [] } = {}) {
   await collectAllForms();
   persistGithubForm();
   if (!isGithubConfigured()) {
@@ -169,6 +214,9 @@ async function publishToSite({ successMessage = 'Изменения на сай�
   }
   setPublishUi('publishing');
   try {
+    if (uploads.length) {
+      await uploadBinaryFiles(uploads);
+    }
     await publishSiteContent({
       siteJson: sitePayload(),
       productsJson: productsPayload(),
@@ -235,110 +283,11 @@ function collectActiveForms() {
 
 // ——— Products ———
 
-function renderProductList() {
-  const el = document.getElementById('product-list');
-  el.innerHTML = draft.products
-    .map(
-      (p) => `
-    <div class="product-row">
-      <div>
-        <strong>${esc(p.colorName)}</strong>
-        <span class="product-row-meta">${esc(p.id)} · ${p.price} руб. ${p.published === false ? '· скрыт' : ''}</span>
-      </div>
-      <div>
-        <button type="button" class="btn btn-secondary btn-sm" data-edit="${esc(p.id)}">Изменить</button>
-        <button type="button" class="btn btn-danger btn-sm" data-del="${esc(p.id)}">Удалить</button>
-      </div>
-    </div>`,
-    )
-    .join('');
-
-  el.querySelectorAll('[data-edit]').forEach((btn) => {
-    btn.addEventListener('click', () => openProductEditor(btn.dataset.edit));
-  });
-  el.querySelectorAll('[data-del]').forEach((btn) => {
-    btn.addEventListener('click', () => deleteProduct(btn.dataset.del));
-  });
-}
-
-function openProductEditor(id) {
-  editingProductId = id;
-  const p = draft.products.find((x) => x.id === id);
-  if (!p) return;
-  const box = document.getElementById('product-editor');
-  box.classList.remove('hidden');
-  box.innerHTML = `
-    <h3>Редактирование: ${esc(p.colorName)}</h3>
-    <div class="field-grid">
-      <div class="field"><label>ID (латиница)</label><input name="id" value="${esc(p.id)}"></div>
-      <div class="field"><label>Название</label><input name="colorName" value="${esc(p.colorName)}"></div>
-      <div class="field"><label>Цвет (hex)</label><input name="colorHex" value="${esc(p.colorHex)}"></div>
-      <div class="field"><label>Цена</label><input name="price" type="number" min="0" step="0.01" value="${p.price}"></div>
-      <div class="field"><label>Артикул (префикс)</label><input name="skuPrefix" value="${esc(p.skuPrefix)}"></div>
-      <div class="field"><label>Главное фото (путь или URL)</label><input name="image" value="${esc(p.image || '')}" placeholder="assets/products/…"></div>
-      <div class="field"><label>Галерея (по одному пути на строку)</label><textarea name="images" rows="3" placeholder="assets/products/…">${esc((p.images || []).join('\n'))}</textarea></div>
-      <div class="field"><label>Ссылка Wildberries</label><input name="wbUrl" value="${esc(p.wbUrl || '')}"></div>
-      <div class="field"><label>Артикул WB (nm)</label><input name="wbNm" type="number" value="${p.wbNm || ''}"></div>
-      <div class="field"><label>Показывать в каталоге</label>
-        <select name="published"><option value="true" ${p.published !== false ? 'selected' : ''}>Да</option><option value="false" ${p.published === false ? 'selected' : ''}>Нет</option></select>
-      </div>
-    </div>
-    <div class="field"><label>Описание</label><textarea name="description">${esc(p.description)}</textarea></div>
-    <div class="field"><label>Особенности (по одной на строку)</label><textarea name="features">${esc((p.features || []).join('\n'))}</textarea></div>
-    <button type="button" class="btn btn-primary btn-sm" id="save-product-btn">Сохранить товар</button>
-    <button type="button" class="btn btn-secondary btn-sm" id="close-product-btn">Закрыть</button>
-  `;
-  box.querySelector('#save-product-btn').addEventListener('click', () => saveProductFromForm(p.id));
-  box.querySelector('#close-product-btn').addEventListener('click', () => {
-    box.classList.add('hidden');
-    editingProductId = null;
-  });
-}
-
-async function saveProductFromForm(oldId) {
-  const box = document.getElementById('product-editor');
-  const get = (n) => box.querySelector(`[name="${n}"]`)?.value?.trim() ?? '';
-  const idx = draft.products.findIndex((x) => x.id === oldId);
-  if (idx < 0) return;
-  const newId = get('id') || oldId;
-  if (newId !== oldId && draft.products.some((x) => x.id === newId)) {
-    showAlert('Такой ID уже есть', 'err');
-    return;
-  }
-  const prev = draft.products[idx];
-  const gallery = get('images')
-    .split('\n')
-    .map((s) => s.trim())
-    .filter(Boolean);
-  draft.products[idx] = {
-    ...prev,
-    id: newId,
-    colorName: get('colorName'),
-    colorHex: get('colorHex') || '#ff5500',
-    price: parseFloat(get('price')) || 0,
-    skuPrefix: get('skuPrefix'),
-    image: get('image'),
-    images: gallery.length ? gallery : prev.images,
-    wbUrl: get('wbUrl'),
-    wbNm: get('wbNm') ? Number(get('wbNm')) : undefined,
-    published: get('published') !== 'false',
-    description: get('description'),
-    features: get('features')
-      .split('\n')
-      .map((s) => s.trim())
-      .filter(Boolean),
-  };
-  saveDraftToStorage();
-  renderProductList();
-  await queuePublish({ successMessage: 'Товар опубликован на сайте.' });
-}
-
 async function deleteProduct(id) {
   if (!confirm('Удалить товар?')) return;
   draft.products = draft.products.filter((p) => p.id !== id);
   saveDraftToStorage();
-  renderProductList();
-  document.getElementById('product-editor').classList.add('hidden');
+  productModeration?.refresh();
   await queuePublish({ successMessage: 'Товар удалён с сайта.' });
 }
 
@@ -352,8 +301,7 @@ document.getElementById('wb-import-btn')?.addEventListener('click', async () => 
     showAlert('Загружаем данные с Wildberries…', 'info');
     draft.products = await fetchWbCatalog(urls.length ? urls : DEFAULT_WB_URLS);
     saveDraftToStorage();
-    renderProductList();
-    document.getElementById('product-editor')?.classList.add('hidden');
+    productModeration?.refresh();
     await queuePublish({ successMessage: `Импортировано ${draft.products.length} товаров и опубликовано на сайте.` });
   } catch (e) {
     showAlert(`Ошибка WB: ${esc(e.message)}`, 'err');
@@ -374,8 +322,8 @@ document.getElementById('add-product-btn').addEventListener('click', () => {
     features: ['6 размеров'],
   });
   saveDraftToStorage();
-  renderProductList();
-  openProductEditor(id);
+  productModeration?.refresh();
+  productModeration?.select(id);
 });
 
 // ——— Homepage ———
@@ -752,7 +700,7 @@ function esc(s) {
 }
 
 function renderAll() {
-  renderProductList();
+  productModeration?.refresh();
   renderHomepageForm();
   renderPagesPanel();
   renderSettingsForm();
@@ -766,5 +714,8 @@ function renderAll() {
     draft = loadDraftFromStorage() || null;
     if (!draft) buildDraftFromServer();
     showApp();
+    if (!isGithubConfigured()) {
+      setTimeout(() => document.querySelector('[data-tab="publish"]')?.click(), 300);
+    }
   }
 })();

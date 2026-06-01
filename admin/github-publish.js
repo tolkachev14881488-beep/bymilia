@@ -46,10 +46,10 @@ async function getFileMeta({ token, owner, repo, path, branch }) {
   return res.json();
 }
 
-async function putFile({ token, owner, repo, path, branch, content, message, sha }) {
+async function putFile({ token, owner, repo, path, branch, content, message, sha, encoding = 'utf8' }) {
   const body = {
     message,
-    content: toBase64Utf8(content),
+    content: encoding === 'base64' ? content : toBase64Utf8(content),
     branch,
   };
   if (sha) body.sha = sha;
@@ -102,10 +102,40 @@ export async function publishToGithub({ token, owner, repo, branch, siteJson, pr
 }
 
 /** Публикует контент сайта, используя сохранённые настройки GitHub */
-export async function publishSiteContent({ siteJson, productsJson, extraFiles }) {
+export async function publishSiteContent({ siteJson, productsJson, extraFiles = [] }) {
   const cfg = getGithubConfig();
   if (!cfg.token || !cfg.owner || !cfg.repo) {
     throw new Error('Подключите GitHub: укажите токен в разделе «Подключение»');
   }
   return publishToGithub({ ...cfg, siteJson, productsJson, extraFiles });
+}
+
+export function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result).split(',')[1]);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Загружает бинарные файлы (фото) в репозиторий */
+export async function uploadBinaryFiles(files, { messagePrefix = 'CMS: product photo' } = {}) {
+  const cfg = getGithubConfig();
+  if (!cfg.token) throw new Error('Подключите GitHub-токен');
+  const uploaded = [];
+  for (const { path, file } of files) {
+    const base64 = await fileToBase64(file);
+    const meta = await getFileMeta({ ...cfg, path });
+    await putFile({
+      ...cfg,
+      path,
+      content: base64,
+      encoding: 'base64',
+      message: `${messagePrefix} ${path}`,
+      sha: meta?.sha,
+    });
+    uploaded.push(path);
+  }
+  return uploaded;
 }
