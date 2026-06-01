@@ -9,7 +9,23 @@ export function loadGithubSettings() {
 }
 
 export function saveGithubSettings(settings) {
-  localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify(settings));
+  const prev = loadGithubSettings();
+  localStorage.setItem(GITHUB_SETTINGS_KEY, JSON.stringify({ ...prev, ...settings }));
+}
+
+export function getGithubConfig() {
+  const s = loadGithubSettings();
+  return {
+    token: (s.token || '').trim(),
+    owner: (s.owner || 'tolkachev14881488-beep').trim(),
+    repo: (s.repo || 'bymilia').trim(),
+    branch: (s.branch || 'main').trim(),
+  };
+}
+
+export function isGithubConfigured() {
+  const { token, owner, repo } = getGithubConfig();
+  return Boolean(token && owner && repo);
 }
 
 function toBase64Utf8(str) {
@@ -60,10 +76,11 @@ async function putFile({ token, owner, repo, path, branch, content, message, sha
 }
 
 /** Публикует data/site.json и data/products.json в репозиторий */
-export async function publishToGithub({ token, owner, repo, branch, siteJson, productsJson }) {
+export async function publishToGithub({ token, owner, repo, branch, siteJson, productsJson, extraFiles = [] }) {
   const files = [
     { path: 'data/site.json', content: JSON.stringify(siteJson, null, 2) + '\n' },
     { path: 'data/products.json', content: JSON.stringify(productsJson, null, 2) + '\n' },
+    ...extraFiles,
   ];
   const results = [];
   for (const file of files) {
@@ -82,4 +99,13 @@ export async function publishToGithub({ token, owner, repo, branch, siteJson, pr
     );
   }
   return results;
+}
+
+/** Публикует контент сайта, используя сохранённые настройки GitHub */
+export async function publishSiteContent({ siteJson, productsJson, extraFiles }) {
+  const cfg = getGithubConfig();
+  if (!cfg.token || !cfg.owner || !cfg.repo) {
+    throw new Error('Подключите GitHub: укажите токен в разделе «Подключение»');
+  }
+  return publishToGithub({ ...cfg, siteJson, productsJson, extraFiles });
 }

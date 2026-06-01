@@ -101,6 +101,8 @@ function renderFooter() {
           <a href="${pageHref('/pages/offer.html')}">Оферта</a>
           ·
           <a href="${pageHref('/pages/privacy.html')}">Конфиденциальность</a>
+          ·
+          <a href="${pageHref('/admin/index.html')}">Админка</a>
         </p>
       </div>
     </footer>

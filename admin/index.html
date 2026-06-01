@@ -14,24 +14,26 @@
   <div id="login-screen" class="admin-login">
     <form class="login-card" id="login-form">
       <h1>By Milia — админка</h1>
-      <p>Управление товарами и текстами сайта</p>
+      <p>Редактируйте каталог и тексты — изменения сразу попадают на сайт</p>
       <div class="field">
         <label for="password">Пароль</label>
         <input id="password" type="password" autocomplete="current-password" required>
       </div>
       <button class="btn btn-primary" type="submit" style="width:100%">Войти</button>
-      <p class="hint" style="margin:1rem 0 0">По умолчанию: <code>bymilia2026</code> — смените в разделе «Настройки»</p>
+      <p class="hint" style="margin:1rem 0 0">По умолчанию: <code>bymilia2026</code> — смените в «Настройки»</p>
+      <p class="hint" style="margin-top:0.75rem"><a href="../index.html">← На сайт</a></p>
     </form>
   </div>
 
   <div id="app" class="admin-app hidden">
     <aside class="admin-sidebar">
       <h1>By Milia CMS</h1>
+      <p class="admin-sidebar-note">Сохранение = публикация на сайт</p>
       <button type="button" class="admin-nav-btn is-active" data-tab="products">Товары</button>
       <button type="button" class="admin-nav-btn" data-tab="homepage">Главная</button>
       <button type="button" class="admin-nav-btn" data-tab="pages">Страницы</button>
       <button type="button" class="admin-nav-btn" data-tab="settings">Настройки</button>
-      <button type="button" class="admin-nav-btn" data-tab="publish">Публикация</button>
+      <button type="button" class="admin-nav-btn" data-tab="publish">Подключение</button>
       <div class="admin-sidebar-footer">
         <a class="btn btn-secondary btn-sm" href="../index.html" target="_blank" rel="noopener">Открыть сайт</a>
         <button type="button" class="btn btn-secondary btn-sm" id="logout-btn" style="margin-top:0.5rem;width:100%">Выйти</button>
@@ -41,15 +43,22 @@
     <div class="admin-main">
       <div class="admin-topbar">
         <h2 id="panel-title">Товары</h2>
-        <div class="admin-actions">
-          <button type="button" class="btn btn-secondary btn-sm" id="reload-btn">Обновить с сайта</button>
-          <button type="button" class="btn btn-primary btn-sm" id="save-draft-btn">Сохранить черновик</button>
+        <div class="admin-topbar-right">
+          <span class="publish-status" id="publish-status" data-state="idle">—</span>
+          <div class="admin-actions">
+            <button type="button" class="btn btn-secondary btn-sm" id="reload-btn">С сайта</button>
+            <button type="button" class="btn btn-primary btn-sm" id="publish-now-btn">Опубликовать всё</button>
+          </div>
         </div>
+      </div>
+      <div id="github-banner" class="github-banner hidden">
+        Подключите GitHub-токен в разделе «Подключение» — без него сайт не обновится.
+        <button type="button" class="btn btn-secondary btn-sm" data-goto-publish>Подключить</button>
       </div>
       <div id="alert-box"></div>
 
       <section class="admin-panel is-active" data-panel="products">
-        <p class="hint">Каталог подтягивается с Wildberries. Можно обновить цены и фото одной кнопкой.</p>
+        <p class="hint">Любое «Сохранить» сразу обновляет живой сайт. Импорт с Wildberries тоже публикуется автоматически.</p>
         <div class="wb-import-box" style="margin-bottom:1.25rem;padding:1rem;border:1px solid var(--admin-border);border-radius:12px;background:#fff9f4">
           <h3 style="margin:0 0 0.5rem;font-size:1rem">Импорт с Wildberries</h3>
           <div class="field">
@@ -67,7 +76,7 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
       </section>
 
       <section class="admin-panel" data-panel="homepage">
-        <p class="hint">Тексты главной страницы. В заголовке можно использовать HTML, например &lt;em&gt;перед&lt;/em&gt;.</p>
+        <p class="hint">Тексты главной. В заголовке можно HTML, например &lt;em&gt;перед&lt;/em&gt;.</p>
         <div id="homepage-form"></div>
       </section>
 
@@ -84,7 +93,7 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
       </section>
 
       <section class="admin-panel" data-panel="publish">
-        <p class="hint">Чтобы изменения появились на сайте для всех, опубликуйте JSON в GitHub (репозиторий bymilia) или скачайте файлы и загрузите вручную.</p>
+        <p class="hint">Один раз укажите токен GitHub — дальше каждое сохранение в админке автоматически обновляет сайт (репозиторий <code>bymilia</code>, ветка <code>main</code>).</p>
         <div class="field-grid">
           <div class="field">
             <label for="gh-owner">Владелец (GitHub)</label>
@@ -102,11 +111,11 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
         <div class="field">
           <label for="gh-token">Personal Access Token</label>
           <input id="gh-token" type="password" placeholder="github_pat_… или ghp_…" autocomplete="off">
-          <p class="hint">Нужны права <code>repo</code> на запись. Токен хранится только в браузере.</p>
+          <p class="hint">Права: <code>Contents: Read and write</code> для репозитория. Токен хранится только в этом браузере.</p>
         </div>
         <div class="admin-actions" style="margin-top:1rem">
-          <button type="button" class="btn btn-primary" id="publish-github-btn">Опубликовать на сайт</button>
-          <button type="button" class="btn btn-secondary" id="download-json-btn">Скачать JSON</button>
+          <button type="button" class="btn btn-primary" id="test-github-btn">Проверить и опубликовать</button>
+          <button type="button" class="btn btn-secondary" id="download-json-btn">Скачать JSON (резерв)</button>
         </div>
       </section>
     </div>

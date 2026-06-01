@@ -67,8 +67,16 @@ body {
 
 .admin-sidebar h1 {
   font-size: 1.1rem;
+  margin: 0 0 0.35rem;
+  padding: 0 0.5rem;
+}
+
+.admin-sidebar-note {
   margin: 0 0 1rem;
   padding: 0 0.5rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .admin-nav-btn {
@@ -115,10 +123,59 @@ body {
   font-size: 1.35rem;
 }
 
+.admin-topbar-right {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .admin-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+}
+
+.publish-status {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #e8e8ee;
+  color: var(--admin-muted);
+  white-space: nowrap;
+}
+
+.publish-status[data-state='ok'] {
+  background: #e6f7ed;
+  color: #1a7a3a;
+}
+
+.publish-status[data-state='publishing'] {
+  background: #fff3e6;
+  color: #b35a00;
+}
+
+.publish-status[data-state='err'] {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.github-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: #fff3e6;
+  border: 1px solid #ffd4b0;
+  font-size: 0.9rem;
+}
+
+.github-banner.hidden {
+  display: none;
 }
 
 .admin-panel {

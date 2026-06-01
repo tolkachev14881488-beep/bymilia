@@ -1,12 +1,20 @@
 import { loadSiteData, getSiteData, getProductsRaw } from '../js/data-store.js';
 import { fetchWbCatalog, DEFAULT_WB_URLS } from '../js/wb.js';
-import { loadGithubSettings, saveGithubSettings, publishToGithub } from './github-publish.js';
+import {
+  getGithubConfig,
+  isGithubConfigured,
+  loadGithubSettings,
+  publishSiteContent,
+  saveGithubSettings,
+} from './github-publish.js';
 
 const AUTH_KEY = 'bymilia-admin-auth';
 const DRAFT_KEY = 'bymilia-cms-draft';
 
 let draft = null;
 let editingProductId = null;
+let publishChain = Promise.resolve();
+let publishUiState = 'idle';
 
 async function sha256(text) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
@@ -101,6 +109,8 @@ function showApp() {
   document.getElementById('app').classList.remove('hidden');
   renderAll();
   loadPublishForm();
+  updateGithubBanner();
+  setPublishUi('idle');
 }
 
 // ——— Tabs ———
@@ -110,8 +120,85 @@ const titles = {
   homepage: 'Главная',
   pages: 'Страницы',
   settings: 'Настройки',
-  publish: 'Публикация',
+  publish: 'Подключение',
 };
+
+function setPublishUi(state, detail = '') {
+  publishUiState = state;
+  const el = document.getElementById('publish-status');
+  if (!el) return;
+  const labels = {
+    idle: isGithubConfigured() ? 'На сайте' : 'Нужен токен GitHub',
+    publishing: 'Публикуем…',
+    ok: 'Опубликовано',
+    err: 'Ошибка публикации',
+  };
+  el.textContent = detail || labels[state] || state;
+  el.dataset.state = state;
+}
+
+function readGithubForm() {
+  return {
+    token: document.getElementById('gh-token')?.value?.trim() || '',
+    owner: document.getElementById('gh-owner')?.value?.trim() || '',
+    repo: document.getElementById('gh-repo')?.value?.trim() || '',
+    branch: document.getElementById('gh-branch')?.value?.trim() || 'main',
+  };
+}
+
+function persistGithubForm() {
+  saveGithubSettings(readGithubForm());
+  updateGithubBanner();
+  setPublishUi(isGithubConfigured() ? 'idle' : 'idle');
+}
+
+async function collectAllForms() {
+  if (document.getElementById('hp-hero-title')) collectHomepage();
+  if (document.getElementById('page-select')) collectPage();
+  if (document.getElementById('st-brand')) await collectSettings();
+}
+
+async function publishToSite({ successMessage = 'Изменения на сайте. Обновление 1–2 мин.' } = {}) {
+  await collectAllForms();
+  persistGithubForm();
+  if (!isGithubConfigured()) {
+    setPublishUi('err', 'Нужен токен');
+    showAlert('Один раз укажите GitHub-токен в разделе «Подключение» — дальше всё публикуется автоматически.', 'err');
+    document.querySelector('[data-tab="publish"]')?.click();
+    return false;
+  }
+  setPublishUi('publishing');
+  try {
+    await publishSiteContent({
+      siteJson: sitePayload(),
+      productsJson: productsPayload(),
+    });
+    sessionStorage.removeItem(DRAFT_KEY);
+    await loadSiteData();
+    buildDraftFromServer();
+    renderAll();
+    setPublishUi('ok');
+    showAlert(successMessage, 'ok');
+    return true;
+  } catch (e) {
+    setPublishUi('err');
+    showAlert(`Не удалось опубликовать: ${esc(e.message)}`, 'err');
+    return false;
+  }
+}
+
+function queuePublish(options) {
+  publishChain = publishChain
+    .then(() => publishToSite(options))
+    .catch(() => {});
+  return publishChain;
+}
+
+function updateGithubBanner() {
+  const el = document.getElementById('github-banner');
+  if (!el) return;
+  el.classList.toggle('hidden', isGithubConfigured());
+}
 
 document.querySelectorAll('.admin-nav-btn[data-tab]').forEach((btn) => {
   btn.addEventListener('click', () => {
@@ -122,10 +209,12 @@ document.querySelectorAll('.admin-nav-btn[data-tab]').forEach((btn) => {
   });
 });
 
-document.getElementById('save-draft-btn').addEventListener('click', () => {
-  collectActiveForms();
-  saveDraftToStorage();
-  showAlert('Черновик сохранён в браузере', 'ok');
+document.getElementById('publish-now-btn')?.addEventListener('click', () => {
+  queuePublish({ successMessage: 'Весь контент опубликован на сайте.' });
+});
+
+document.querySelector('[data-goto-publish]')?.addEventListener('click', () => {
+  document.querySelector('.admin-nav-btn[data-tab="publish"]')?.click();
 });
 
 document.getElementById('reload-btn').addEventListener('click', async () => {
@@ -186,7 +275,8 @@ function openProductEditor(id) {
       <div class="field"><label>Цвет (hex)</label><input name="colorHex" value="${esc(p.colorHex)}"></div>
       <div class="field"><label>Цена</label><input name="price" type="number" min="0" step="0.01" value="${p.price}"></div>
       <div class="field"><label>Артикул (префикс)</label><input name="skuPrefix" value="${esc(p.skuPrefix)}"></div>
-      <div class="field"><label>Фото (URL)</label><input name="image" value="${esc(p.image || '')}" placeholder="https://… или assets/…"></div>
+      <div class="field"><label>Главное фото (путь или URL)</label><input name="image" value="${esc(p.image || '')}" placeholder="assets/products/…"></div>
+      <div class="field"><label>Галерея (по одному пути на строку)</label><textarea name="images" rows="3" placeholder="assets/products/…">${esc((p.images || []).join('\n'))}</textarea></div>
       <div class="field"><label>Ссылка Wildberries</label><input name="wbUrl" value="${esc(p.wbUrl || '')}"></div>
       <div class="field"><label>Артикул WB (nm)</label><input name="wbNm" type="number" value="${p.wbNm || ''}"></div>
       <div class="field"><label>Показывать в каталоге</label>
@@ -205,7 +295,7 @@ function openProductEditor(id) {
   });
 }
 
-function saveProductFromForm(oldId) {
+async function saveProductFromForm(oldId) {
   const box = document.getElementById('product-editor');
   const get = (n) => box.querySelector(`[name="${n}"]`)?.value?.trim() ?? '';
   const idx = draft.products.findIndex((x) => x.id === oldId);
@@ -215,13 +305,20 @@ function saveProductFromForm(oldId) {
     showAlert('Такой ID уже есть', 'err');
     return;
   }
+  const prev = draft.products[idx];
+  const gallery = get('images')
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean);
   draft.products[idx] = {
+    ...prev,
     id: newId,
     colorName: get('colorName'),
     colorHex: get('colorHex') || '#ff5500',
     price: parseFloat(get('price')) || 0,
     skuPrefix: get('skuPrefix'),
     image: get('image'),
+    images: gallery.length ? gallery : prev.images,
     wbUrl: get('wbUrl'),
     wbNm: get('wbNm') ? Number(get('wbNm')) : undefined,
     published: get('published') !== 'false',
@@ -233,15 +330,16 @@ function saveProductFromForm(oldId) {
   };
   saveDraftToStorage();
   renderProductList();
-  showAlert('Товар сохранён в черновик', 'ok');
+  await queuePublish({ successMessage: 'Товар опубликован на сайте.' });
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
   if (!confirm('Удалить товар?')) return;
   draft.products = draft.products.filter((p) => p.id !== id);
   saveDraftToStorage();
   renderProductList();
   document.getElementById('product-editor').classList.add('hidden');
+  await queuePublish({ successMessage: 'Товар удалён с сайта.' });
 }
 
 document.getElementById('wb-import-btn')?.addEventListener('click', async () => {
@@ -256,7 +354,7 @@ document.getElementById('wb-import-btn')?.addEventListener('click', async () => 
     saveDraftToStorage();
     renderProductList();
     document.getElementById('product-editor')?.classList.add('hidden');
-    showAlert(`Импортировано ${draft.products.length} товаров. Не забудьте опубликовать.`, 'ok');
+    await queuePublish({ successMessage: `Импортировано ${draft.products.length} товаров и опубликовано на сайте.` });
   } catch (e) {
     showAlert(`Ошибка WB: ${esc(e.message)}`, 'err');
   }
@@ -349,10 +447,10 @@ function renderHomepageForm() {
     hp.benefits.cards.push({ icon: '✦', title: '', text: '' });
     renderBenefitCards();
   });
-  document.getElementById('hp-save').addEventListener('click', () => {
+  document.getElementById('hp-save').addEventListener('click', async () => {
     collectHomepage();
     saveDraftToStorage();
-    showAlert('Главная сохранена в черновик', 'ok');
+    await queuePublish({ successMessage: 'Главная опубликована на сайте.' });
   });
 }
 
@@ -526,10 +624,10 @@ function renderPageForm(pageId) {
     <div class="field"><label>HTML-контент</label><textarea id="pg-html" style="min-height:280px">${esc(page.html)}</textarea></div>
     <button type="button" class="btn btn-primary btn-sm" id="pg-save">Сохранить страницу</button>
   `;
-  document.getElementById('pg-save').addEventListener('click', () => {
+  document.getElementById('pg-save').addEventListener('click', async () => {
     collectPage();
     saveDraftToStorage();
-    showAlert('Страница сохранена', 'ok');
+    await queuePublish({ successMessage: 'Страница опубликована на сайте.' });
   });
 }
 
@@ -577,7 +675,7 @@ function renderSettingsForm() {
   document.getElementById('st-save').addEventListener('click', async () => {
     await collectSettings();
     saveDraftToStorage();
-    showAlert('Настройки сохранены', 'ok');
+    await queuePublish({ successMessage: 'Настройки опубликованы на сайте.' });
   });
 }
 
@@ -616,32 +714,17 @@ function loadPublishForm() {
   document.getElementById('gh-token').value = s.token || '';
 }
 
-document.getElementById('publish-github-btn').addEventListener('click', async () => {
-  collectActiveForms();
-  const token = document.getElementById('gh-token').value.trim();
-  const owner = document.getElementById('gh-owner').value.trim();
-  const repo = document.getElementById('gh-repo').value.trim();
-  const branch = document.getElementById('gh-branch').value.trim() || 'main';
-  if (!token || !owner || !repo) {
-    showAlert('Укажите токен, владельца и репозиторий', 'err');
+['gh-token', 'gh-owner', 'gh-repo', 'gh-branch'].forEach((id) => {
+  document.getElementById(id)?.addEventListener('change', persistGithubForm);
+});
+
+document.getElementById('test-github-btn')?.addEventListener('click', async () => {
+  persistGithubForm();
+  if (!isGithubConfigured()) {
+    showAlert('Заполните токен, владельца и репозиторий', 'err');
     return;
   }
-  saveGithubSettings({ token, owner, repo, branch });
-  try {
-    showAlert('Публикация…', 'info');
-    await publishToGithub({
-      token,
-      owner,
-      repo,
-      branch,
-      siteJson: sitePayload(),
-      productsJson: productsPayload(),
-    });
-    sessionStorage.removeItem(DRAFT_KEY);
-    showAlert('Опубликовано! Сайт обновится через 1–3 минуты.', 'ok');
-  } catch (e) {
-    showAlert(`Ошибка: ${esc(e.message)}`, 'err');
-  }
+  await queuePublish({ successMessage: 'Подключение работает. Контент на сайте.' });
 });
 
 document.getElementById('download-json-btn').addEventListener('click', () => {
