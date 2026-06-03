@@ -38,6 +38,58 @@ export function pageHref(href) {
   return inPagesDir() ? `../${clean}` : clean;
 }
 
+function getMapCoords() {
+  const lat = Number(CONTACTS.mapLat) || 53.882715;
+  const lon = Number(CONTACTS.mapLon) || 27.424353;
+  return { lat, lon };
+}
+
+export function googleMapsRouteUrl() {
+  const { lat, lon } = getMapCoords();
+  return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+}
+
+export function yandexMapsRouteUrl() {
+  const { lat, lon } = getMapCoords();
+  return `https://yandex.by/maps/?rtext=~${lat},${lon}&rtt=auto`;
+}
+
+function mapEmbedUrl() {
+  const { lat, lon } = getMapCoords();
+  return `https://yandex.ru/map-widget/v1/?ll=${encodeURIComponent(`${lon},${lat}`)}&z=16&pt=${encodeURIComponent(`${lon},${lat},pm2rdm`)}&l=map`;
+}
+
+function renderFooterMap() {
+  const { lat, lon } = getMapCoords();
+  const googleRoute = googleMapsRouteUrl();
+  const yandexRoute = yandexMapsRouteUrl();
+  const yandexPoint = `https://yandex.by/maps/?pt=${lon},${lat}&z=17&l=map`;
+
+  return `
+      <div class="footer-map-block">
+        <div class="footer-map-copy">
+          <p class="footer-heading">Самовывоз</p>
+          <p class="footer-map-address">${CONTACTS.address}</p>
+          <p class="footer-map-hours">${CONTACTS.pickupHours || ''}</p>
+          <div class="footer-map-links">
+            <a class="footer-map-link" href="${googleRoute}" target="_blank" rel="noopener noreferrer">Маршрут в Google Картах</a>
+            <a class="footer-map-link" href="${yandexRoute}" target="_blank" rel="noopener noreferrer">Маршрут в Яндекс Картах</a>
+          </div>
+        </div>
+        <div class="footer-map-wrap">
+          <iframe
+            class="footer-map-frame"
+            title="Карта — ${CONTACTS.address}"
+            src="${mapEmbedUrl()}"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+          <a class="footer-map-open" href="${yandexPoint}" target="_blank" rel="noopener noreferrer">Открыть на карте</a>
+        </div>
+      </div>`;
+}
+
 function renderHeader() {
   const count = cartCount();
   const home = pageHref('/index.html');
@@ -116,6 +168,9 @@ function renderFooter() {
             <li>${CONTACTS.pickupHours || ''}</li>
           </ul>
         </div>
+      </div>
+      <div class="container">
+        ${renderFooterMap()}
       </div>
       <div class="container footer-bottom">
         <p>© ${year} ${SITE.brand}</p>
