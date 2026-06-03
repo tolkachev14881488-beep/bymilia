@@ -6,6 +6,8 @@ import { submitOrder } from './checkout.js';
 import { asset, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
+const SIZE_BADGE = 'Размер 25–42';
+
 export function initCatalogSeo() {
   applySeo({
     title: 'Каталог сапожек By Milia — 4 расцветки, размеры 25–42 см',
@@ -113,7 +115,7 @@ export function renderProductGrid(container) {
     (p) => `
     <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
       <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33">
-        <span class="product-card-badge">6 размеров</span>
+        <span class="product-card-badge">${SIZE_BADGE}</span>
         ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
       </div>
