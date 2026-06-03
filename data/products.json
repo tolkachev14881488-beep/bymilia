@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "wb-black",
-      "colorName": "Чёрный",
+      "colorName": "Сапожки By Milia",
       "colorHex": "#1c1c1c",
       "price": 72,
       "oldPrice": 175,
@@ -23,7 +23,8 @@
         "На WB: черный",
         "670 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
-      ]
+      ],
+      "imageVersion": "2"
     },
     {
       "id": "wb-tropical",
