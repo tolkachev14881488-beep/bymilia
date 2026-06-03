@@ -14,6 +14,6 @@ alwaysApply: true
    - `git push origin main`.
 3. После push сообщи ссылку: https://tolkachev14881488-beep.github.io/bymilia/
 4. Не делать `git push --force` и не amend уже запушенных коммитов без явной просьбы.
-5. При правках CSS увеличивай `styles.css?v=` в затронутых HTML.
+5. При правках CSS увеличивай `styles.css?v=` в затронутых HTML через Node (`fs.writeFileSync` с UTF-8), не через PowerShell `Set-Content` без кодировки UTF-8.
 
 Исключение: если пользователь явно просит только черновик / без публикации.
