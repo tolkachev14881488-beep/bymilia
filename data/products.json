@@ -53,7 +53,7 @@
     },
     {
       "id": "wb-bright",
-      "colorName": "Сапожки By Milia",
+      "colorName": "Яркий принт",
       "colorHex": "#ffca28",
       "price": 77,
       "oldPrice": 175,
@@ -64,7 +64,7 @@
         "assets/products/bright-comic-2.png",
         "assets/products/bright-comic-3.png"
       ],
-      "imageVersion": "3",
+      "imageVersion": "2",
       "wbNm": 471902869,
       "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
       "wbPhoto": 1,
@@ -79,7 +79,7 @@
     },
     {
       "id": "wb-classic",
-      "colorName": "Классика · 5 цветов",
+      "colorName": "Сапожки By Milia",
       "colorHex": "#ff5500",
       "price": 77,
       "oldPrice": 175,
@@ -89,7 +89,7 @@
         "assets/products/classic-1.png",
         "assets/products/classic-2.png"
       ],
-      "imageVersion": "1",
+      "imageVersion": "2",
       "wbNm": 216496169,
       "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
       "wbPhoto": 1,
