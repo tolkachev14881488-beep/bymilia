@@ -91,6 +91,28 @@ function productsPayload() {
   return { products: draft.products };
 }
 
+/** Не публиковать пустой черновик — иначе сайт «обнуляется» */
+function validateDraftBeforePublish() {
+  const published = (draft.products || []).filter((p) => p.published !== false);
+  if (published.length < 1) {
+    throw new Error(
+      'В каталоге нет товаров. Нажмите «С сайта», проверьте товары и сохраните снова.',
+    );
+  }
+  const pageIds = Object.keys(draft.pages || {});
+  if (pageIds.length < 5) {
+    throw new Error(
+      'Тексты страниц пустые. Нажмите «С сайта» — иначе пропадут Опт, Доставка и др.',
+    );
+  }
+  const hero = draft.homepage?.hero || {};
+  if (!String(hero.titleHtml || '').trim() && !String(hero.lead || '').trim()) {
+    throw new Error(
+      'Главная страница пустая. Нажмите «С сайта» перед публикацией.',
+    );
+  }
+}
+
 // ——— Auth ———
 
 document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -213,6 +235,7 @@ async function collectAllForms() {
 
 async function publishToSite({ successMessage = 'Опубликовано.', uploads = [] } = {}) {
   await collectAllForms();
+  validateDraftBeforePublish();
   persistGithubForm();
   const payload = { siteJson: sitePayload(), productsJson: productsPayload() };
   setPublishUi('publishing');

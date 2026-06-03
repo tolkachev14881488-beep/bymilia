@@ -24,6 +24,14 @@ const products = JSON.parse(fs.readFileSync(path.join(root, 'data/products.json'
 if (!site.site?.brand) fail('site.json', 'missing brand');
 else ok('site.json');
 
+const pageCount = Object.keys(site.pages || {}).length;
+if (pageCount < 5) fail('site.json', `pages empty (${pageCount})`);
+else ok(`site.json pages (${pageCount})`);
+
+const hero = site.homepage?.hero || {};
+if (!hero.titleHtml?.trim() && !hero.lead?.trim()) fail('site.json', 'homepage hero empty');
+else ok('site.json homepage');
+
 const list = products.products || [];
 if (list.length < 1) fail('products.json', 'empty products');
 else ok(`products.json (${list.length} items)`);

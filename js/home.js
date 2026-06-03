@@ -4,9 +4,9 @@ import { applySeo } from './seo.js';
 
 export function renderHomepage() {
   const hp = getHomepage();
-  if (!hp.hero) return;
+  const hero = hp?.hero;
+  if (!hero?.titleHtml?.trim() && !hero?.lead?.trim()) return;
 
-  const hero = hp.hero;
   setHtml('[data-home="hero-eyebrow"]', hero.eyebrow);
   setHtml('[data-home="hero-title"]', hero.titleHtml);
   setHtml('[data-home="hero-lead"]', hero.lead);
