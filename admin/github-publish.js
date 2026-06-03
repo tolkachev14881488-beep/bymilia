@@ -76,15 +76,29 @@ async function parseGhError(res) {
   return msg;
 }
 
-function hintForTokenError(message, owner, repo) {
+function throwGhError(res, token, owner, repo) {
+  return parseGhError(res).then((msg) => {
+    throw new Error(hintForTokenError(msg, owner, repo, token));
+  });
+}
+
+const LOCAL_PUBLISH_HINT =
+  'Проще без токена: в папке sapozhki запустите node scripts/cms-publish-server.mjs (или двойной клик start-cms-publish.bat) и снова «Сохранить» в админке.';
+
+function hintForTokenError(message, owner, repo, token = '') {
   const m = String(message).toLowerCase();
   if (m.includes('not accessible') || m.includes('resource not accessible')) {
+    const isFineGrained = String(token).startsWith('github_pat_');
+    const tokenHelp = isFineGrained
+      ? `Fine-grained: репозиторий ${repo}, права Contents + Actions + Metadata (Read and write).`
+      : `Classic-токен от ${owner} с галочкой repo: https://github.com/settings/tokens/new?scopes=repo`;
     return (
-      `Токен не видит ${owner}/${repo}. Создайте Classic-токен (галочка repo) ` +
-      `от аккаунта ${owner}: github.com/settings/tokens/new?scopes=repo`
+      `Токен не может публиковать в ${owner}/${repo}. ${tokenHelp}\n\n${LOCAL_PUBLISH_HINT}`
     );
   }
-  if (m.includes('bad credentials') || resStatus401(m)) return 'Неверный или просроченный токен. Создайте новый.';
+  if (m.includes('bad credentials') || resStatus401(m)) {
+    return `Неверный или просроченный токен. ${LOCAL_PUBLISH_HINT}`;
+  }
   return message;
 }
 
@@ -98,18 +112,34 @@ export async function verifyGithubConnection({ token, owner, repo, branch }) {
 
   const cmsKey = getCmsPublishKey();
   const userRes = await fetch('https://api.github.com/user', { headers: githubHeaders(token) });
-  if (!userRes.ok) {
-    const msg = await parseGhError(userRes);
-    throw new Error(hintForTokenError(msg, owner, repo));
-  }
+  if (!userRes.ok) await throwGhError(userRes, token, owner, repo);
   const user = await userRes.json();
 
+  const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+    headers: githubHeaders(token),
+  });
+  if (!repoRes.ok) await throwGhError(repoRes, token, owner, repo);
+  const repoData = await repoRes.json();
+
   if (cmsKey) {
+    const canDispatch =
+      !repoData.permissions ||
+      repoData.permissions.admin ||
+      repoData.permissions.maintain ||
+      repoData.permissions.push;
+    const contentsRes = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/contents/data/site.json?ref=${encodeURIComponent(branch || repoData.default_branch || 'main')}`,
+      { headers: githubHeaders(token) },
+    );
+    const canWriteContents = contentsRes.ok || contentsRes.status === 404;
+    if (contentsRes.status === 403) await throwGhError(contentsRes, token, owner, repo);
     return {
       login: user.login,
-      repoFullName: `${owner}/${repo}`,
-      defaultBranch: branch || 'main',
-      mode: 'actions',
+      repoFullName: repoData.full_name,
+      defaultBranch: branch || repoData.default_branch || 'main',
+      mode: canDispatch ? 'actions' : 'contents',
+      canDispatch,
+      canWriteContents,
     };
   }
 
@@ -119,15 +149,6 @@ export async function verifyGithubConnection({ token, owner, repo, branch }) {
         `Создайте токен, войдя в GitHub как ${owner}, или добавьте ${user.login} в Collaborators репозитория.`,
     );
   }
-
-  const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
-    headers: githubHeaders(token),
-  });
-  if (!repoRes.ok) {
-    const msg = await parseGhError(repoRes);
-    throw new Error(hintForTokenError(msg, owner, repo));
-  }
-  const repoData = await repoRes.json();
 
   const branchRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches/${encodeURIComponent(branch)}`, {
     headers: githubHeaders(token),
@@ -142,13 +163,7 @@ export async function verifyGithubConnection({ token, owner, repo, branch }) {
     `https://api.github.com/repos/${owner}/${repo}/contents/${testPath}?ref=${encodeURIComponent(branch)}`,
     { headers: githubHeaders(token) },
   );
-  if (contentsRes.status === 403) {
-    const msg = await parseGhError(contentsRes);
-    throw new Error(
-      hintForTokenError(msg, owner, repo) ||
-        'Нет прав Contents: Read and write — без них админка не может обновлять сайт.',
-    );
-  }
+  if (contentsRes.status === 403) await throwGhError(contentsRes, token, owner, repo);
 
   return {
     login: user.login,
@@ -166,10 +181,7 @@ async function getFileMeta({ token, owner, repo, path, branch }) {
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
   const res = await fetch(url, { headers: githubHeaders(token) });
   if (res.status === 404) return null;
-  if (!res.ok) {
-    const msg = await parseGhError(res);
-    throw new Error(hintForTokenError(msg, owner, repo));
-  }
+  if (!res.ok) await throwGhError(res, token, owner, repo);
   return res.json();
 }
 
@@ -185,16 +197,13 @@ async function putFile({ token, owner, repo, path, branch, content, message, sha
     headers: githubHeaders(token, { 'Content-Type': 'application/json' }),
     body: JSON.stringify(body),
   });
-  if (!res.ok) {
-    const msg = await parseGhError(res);
-    throw new Error(hintForTokenError(msg, owner, repo));
-  }
+  if (!res.ok) await throwGhError(res, token, owner, repo);
   return res.json();
 }
 
 /** Публикует data/site.json и data/products.json в репозиторий */
-export async function publishToGithub({ token, owner, repo, branch, siteJson, productsJson, extraFiles = [] }) {
-  await verifyGithubConnection({ token, owner, repo, branch });
+export async function publishToGithub({ token, owner, repo, branch, siteJson, productsJson, extraFiles = [], skipVerify = false }) {
+  if (!skipVerify) await verifyGithubConnection({ token, owner, repo, branch });
 
   const files = [
     { path: 'data/site.json', content: JSON.stringify(siteJson, null, 2) + '\n' },
@@ -273,10 +282,18 @@ export async function publishViaActions({ token, owner, repo, cmsKey, siteJson, 
       },
     }),
   });
-  if (!res.ok) {
-    const msg = await parseGhError(res);
-    throw new Error(hintForTokenError(msg, owner, repo));
-  }
+  if (!res.ok) await throwGhError(res, token, owner, repo);
+}
+
+/** Прямая запись JSON в репозиторий (Classic repo или Fine-grained Contents) */
+export async function publishViaGithubApi(cfg, { siteJson, productsJson, uploads = [] }) {
+  await verifyGithubConnection(cfg);
+  if (uploads.length) await uploadBinaryFiles(uploads);
+  await publishToGithub({ ...cfg, siteJson, productsJson, skipVerify: true });
+  return {
+    mode: 'github',
+    message: 'Файлы обновлены в GitHub. Сайт обновится за 1–2 минуты.',
+  };
 }
 
 /** Публикует контент сайта */
@@ -289,19 +306,26 @@ export async function publishSiteContent({ siteJson, productsJson, uploads = [] 
   const cfg = getGithubConfig();
   const cmsKey = getCmsPublishKey();
   if (!cfg.token || !cfg.owner || !cfg.repo) {
-    throw new Error(
-      'Запустите на компьютере: node scripts/cms-publish-server.mjs — затем снова «Сохранить» в админке.',
-    );
+    throw new Error(LOCAL_PUBLISH_HINT);
   }
+
   if (cmsKey) {
-    await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
-    return {
-      mode: 'actions',
-      message: 'Изменения отправлены в GitHub. Сайт обновится за 1–2 минуты.',
-    };
+    try {
+      await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
+      return {
+        mode: 'actions',
+        message: 'Изменения отправлены в GitHub Actions. Сайт обновится за 1–2 минуты.',
+      };
+    } catch (actionsErr) {
+      try {
+        return await publishViaGithubApi(cfg, { siteJson, productsJson, uploads });
+      } catch (apiErr) {
+        throw new Error(`${actionsErr.message}\n\nЗапасной способ тоже не сработал: ${apiErr.message}`);
+      }
+    }
   }
-  if (uploads.length) await uploadBinaryFiles(uploads);
-  return publishToGithub({ ...cfg, siteJson, productsJson });
+
+  return publishViaGithubApi(cfg, { siteJson, productsJson, uploads });
 }
 
 export function downloadPublishPayload(payload) {

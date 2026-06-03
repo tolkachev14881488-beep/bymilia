@@ -234,7 +234,7 @@ async function publishToSite({ successMessage = 'Опубликовано.', upl
     setPublishUi('err');
     downloadPublishPayload(payload);
     showAlert(
-      `${esc(e.message)}<br><br>Скачан файл <code>cms-publish-payload.json</code>. В папке проекта:<br><code>node scripts/cms-publish-server.mjs</code> (оставьте окно открытым) и сохраните снова.`,
+      `${esc(e.message)}<br><br>Скачан <code>cms-publish-payload.json</code>. Запустите на ПК: <code>node scripts/cms-publish-server.mjs</code> или <code>start-cms-publish.bat</code>, затем снова «Сохранить». Либо: <code>node scripts/cms-publish-from-payload.mjs</code> в папке загрузок.`,
       'err',
     );
     return false;
