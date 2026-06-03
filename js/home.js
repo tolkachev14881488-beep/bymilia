@@ -133,12 +133,20 @@ export function renderHomepage() {
     setText('[data-home="benefits-eyebrow"]', ben.eyebrow);
     setText('[data-home="benefits-title"]', ben.title);
     setText('[data-home="benefits-lead"]', ben.lead);
+    const section = document.querySelector('.section-benefits');
+    if (section && ben.bgImage) {
+      section.style.setProperty('--benefits-bg', `url("${asset(ben.bgImage)}")`);
+      section.style.setProperty(
+        '--benefits-bg-opacity',
+        String(ben.bgOpacity != null ? ben.bgOpacity : 0.14),
+      );
+    }
     const cardsEl = document.querySelector('[data-home="benefits-cards"]');
     if (cardsEl && ben.cards?.length) {
       cardsEl.innerHTML = ben.cards
         .map(
           (c, i) => `
-        <article class="info-card reveal reveal-delay-${Math.min(i + 1, 3)}">
+        <article class="info-card reveal reveal-delay-${Math.min(i + 1, 4)}">
           <span class="info-icon" aria-hidden="true">${escapeHtml(c.icon || '✦')}</span>
           <h3>${escapeHtml(c.title)}</h3>
           <p>${escapeHtml(c.text)}</p>

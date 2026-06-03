@@ -1015,8 +1015,24 @@ body.nav-open {
 }
 
 .section-benefits {
+  position: relative;
+  overflow: hidden;
   background: #fff;
   border-block: 1px solid var(--line);
+}
+
+.section-benefits::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--benefits-bg, transparent) center/cover no-repeat;
+  opacity: var(--benefits-bg-opacity, 0.14);
+  pointer-events: none;
+}
+
+.section-benefits > .container {
+  position: relative;
+  z-index: 1;
 }
 
 .benefits-layout {
@@ -1028,6 +1044,10 @@ body.nav-open {
   .benefits-layout {
     grid-template-columns: 0.9fr 1.1fr;
     align-items: start;
+  }
+
+  .section-benefits .info-cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -1308,9 +1328,10 @@ body.nav-open {
 
 .info-card {
   padding: 1.5rem;
-  background: var(--paper-2);
+  background: rgba(255, 255, 255, 0.92);
   border: 1px solid var(--line);
   border-radius: var(--radius);
+  backdrop-filter: blur(6px);
   transition: transform 0.35s var(--ease), box-shadow 0.35s, background 0.35s;
 }
 
@@ -2172,10 +2193,6 @@ body.nav-open {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   background: linear-gradient(180deg, rgba(255, 85, 0, 0.85), rgba(255, 69, 0, 0.95));
-}
-
-.section-benefits {
-  background: linear-gradient(180deg, #fff 0%, var(--paper-2) 100%);
 }
 
 /* ——— Responsive: phones & tablets ——— */
