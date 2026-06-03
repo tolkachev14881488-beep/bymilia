@@ -1,35 +1,19 @@
 {
   "products": [
     {
-      "colorHex": "#1c1c1c",
+      "id": "black",
       "colorName": "Классический чёрный",
+      "colorHex": "#1c1c1c",
+      "price": 42,
+      "skuPrefix": "BM-BLK",
+      "image": "",
+      "published": false,
       "description": "Сапожки для разогрева стоп перед занятиями и между номерами.",
       "features": [
         "6 размеров",
         "Для зала и репетиций",
         "Легко надевать самостоятельно"
-      ],
-      "id": "black",
-      "image": "",
-      "price": 42,
-      "published": true,
-      "skuPrefix": "BM-BLK"
-    },
-    {
-      "colorHex": "#ff5500",
-      "colorName": "Сапожки для разогрева стоп",
-      "description": "",
-      "features": [
-        "6 размеров"
-      ],
-      "id": "color-1780510585354",
-      "image": "",
-      "imageVersion": "2",
-      "images": [],
-      "price": 42,
-      "published": true,
-      "skuPrefix": "BM-NEW",
-      "wbUrl": ""
+      ]
     }
   ]
 }

@@ -2,82 +2,27 @@
   "admin": {
     "passwordHash": "e07b35caec1e81cb5664f634ed87290da414cb7d4ad803eeb0395acda8834efd"
   },
+  "site": {
+    "brand": "By Milia",
+    "tagline": "Сапожки для разогрева стоп для танцев",
+    "currency": "BYN",
+    "currencyLabel": "руб."
+  },
   "contacts": {
-    "address": "г. Минск, ул. Панченко, 8",
-    "email": "orders@bymilia.by",
-    "instagram": "https://instagram.com/",
     "phone": "+375 29 000-00-00",
     "phoneRaw": "375290000000",
-    "pickupHours": "9:00–18:00, по предварительной договорённости",
+    "email": "orders@bymilia.by",
     "whatsapp": "375290000000",
+    "instagram": "https://instagram.com/",
+    "address": "г. Минск, ул. Панченко, 8",
+    "pickupHours": "9:00–18:00, по предварительной договорённости",
     "wildberries": "https://www.wildberries.ru/"
   },
   "delivery": {
-    "freeCourierMinskFrom": 150,
     "freePostFrom": 50,
+    "freeCourierMinskFrom": 150,
     "sameDayBeforeHour": 13,
     "wholesaleLeadDays": 14
-  },
-  "deliveryOptions": [
-    {
-      "hint": "Бесплатно",
-      "id": "pickup",
-      "label": "Самовывоз (Минск, ул. Панченко, 8)"
-    },
-    {
-      "hint": "Бесплатно от 150 руб.",
-      "id": "courier_minsk",
-      "label": "Курьер по Минску"
-    },
-    {
-      "hint": "Бесплатно от 50 руб.",
-      "id": "europost",
-      "label": "Почта / Европочта (Беларусь)"
-    },
-    {
-      "hint": "Стоимость по региону, уточнит менеджер",
-      "id": "cdek_rf",
-      "label": "СДЭК (Россия)"
-    }
-  ],
-  "homepage": {
-    "benefits": {
-      "cards": [],
-      "eyebrow": "",
-      "lead": "",
-      "title": ""
-    },
-    "catalogSection": {
-      "eyebrow": "",
-      "lead": "",
-      "title": ""
-    },
-    "cta": {
-      "text": "",
-      "title": ""
-    },
-    "hero": {
-      "cardLabel": "",
-      "cardSub": "",
-      "eyebrow": "",
-      "lead": "",
-      "tags": [],
-      "titleHtml": ""
-    },
-    "marquee": [],
-    "steps": {
-      "eyebrow": "",
-      "items": [],
-      "lead": "",
-      "title": ""
-    }
-  },
-  "pages": {},
-  "site": {
-    "brand": "By Milia",
-    "currency": "BYN",
-    "currencyLabel": "руб.",
-    "tagline": "Сапожки для разогрева стоп для танцев"
   },
   "sizes": [
     {
@@ -104,5 +49,60 @@
       "id": "40-42",
       "label": "40–42"
     }
-  ]
+  ],
+  "deliveryOptions": [
+    {
+      "id": "pickup",
+      "label": "Самовывоз (Минск, ул. Панченко, 8)",
+      "hint": "Бесплатно"
+    },
+    {
+      "id": "courier_minsk",
+      "label": "Курьер по Минску",
+      "hint": "Бесплатно от 150 руб."
+    },
+    {
+      "id": "europost",
+      "label": "Почта / Европочта (Беларусь)",
+      "hint": "Бесплатно от 50 руб."
+    },
+    {
+      "id": "cdek_rf",
+      "label": "СДЭК (Россия)",
+      "hint": "Стоимость по региону, уточнит менеджер"
+    }
+  ],
+  "homepage": {
+    "hero": {
+      "eyebrow": "",
+      "titleHtml": "",
+      "lead": "",
+      "tags": [],
+      "cardLabel": "",
+      "cardSub": ""
+    },
+    "marquee": [],
+    "steps": {
+      "eyebrow": "",
+      "title": "",
+      "lead": "",
+      "items": []
+    },
+    "catalogSection": {
+      "eyebrow": "",
+      "title": "",
+      "lead": ""
+    },
+    "benefits": {
+      "eyebrow": "",
+      "title": "",
+      "lead": "",
+      "cards": []
+    },
+    "cta": {
+      "title": "",
+      "text": ""
+    }
+  },
+  "pages": {}
 }
