@@ -28,7 +28,6 @@ export function pageHref(href) {
 function renderHeader() {
   const count = cartCount();
   const home = pageHref('/index.html');
-  const catalog = pageHref('/catalog.html');
   const cart = pageHref('/cart.html');
   const logo = asset('assets/logo.png');
 
@@ -52,7 +51,6 @@ function renderHeader() {
             <a class="header-phone" href="${telUrl()}">${CONTACTS.phone}</a>
             <span class="header-phone-note">Приём заказов до 13:00 — отправка в тот же день</span>
           </div>
-          <a class="btn btn-primary btn-sm" href="${catalog}">Каталог</a>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/>
