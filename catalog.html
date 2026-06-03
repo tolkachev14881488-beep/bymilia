@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=14">
+  <link rel="stylesheet" href="css/styles.css?v=16">
   <meta name="theme-color" content="#ff5500">
 </head>
 <body class="page-catalog" data-site-root=".">
@@ -19,9 +19,11 @@
     <div class="page-hero">
       <div class="container reveal">
         <span class="eyebrow">Коллекция By Milia</span>
-        <h1>Каталог сапожек для разогрева</h1>
-        <p class="lead">Четыре расцветки By Milia · шесть размеров (25–42 см) · заказ на сайте и на Wildberries</p>
-        <a class="btn btn-primary btn-lg btn-glow" href="cart.html" style="margin-top:1rem">Корзина</a>
+        <h1>Каталог сапожек By Milia</h1>
+        <p class="lead">Четыре расцветки · размеры 25–42 · заявка до 13:00 — отправка в тот же день</p>
+        <a class="btn btn-primary btn-lg btn-glow" href="cart.html" id="catalog-cart-btn" style="margin-top:1rem" hidden>
+          Корзина <span class="cart-badge" data-catalog-cart-badge hidden></span>
+        </a>
       </div>
     </div>
     <section class="section section-catalog">

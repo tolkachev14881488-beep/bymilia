@@ -1,12 +1,24 @@
 import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
 import { PRODUCTS, getProduct, sku } from './products.js';
-import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart } from './cart.js';
+import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart, cartCount } from './cart.js';
 import { renderManagerCard } from './manager.js';
 import { submitOrder } from './checkout.js';
 import { asset, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
 const SIZE_BADGE = 'Размер 25–42';
+
+export function updateCatalogCartBtn() {
+  const btn = document.getElementById('catalog-cart-btn');
+  if (!btn) return;
+  const n = cartCount();
+  btn.hidden = !n;
+  const badge = btn.querySelector('[data-catalog-cart-badge]');
+  if (badge) {
+    badge.textContent = n;
+    badge.hidden = !n;
+  }
+}
 
 export function initCatalogSeo() {
   applySeo({
@@ -21,11 +33,14 @@ export function initCatalogSeo() {
   ]);
   const slot = document.getElementById('catalog-manager');
   if (slot) {
+    slot.className = 'container catalog-manager-block';
     slot.innerHTML = renderManagerCard({
       compact: true,
       title: 'Помочь с выбором расцветки и размера?',
     });
   }
+  updateCatalogCartBtn();
+  window.addEventListener('cart-updated', updateCatalogCartBtn);
 }
 
 export function initCartSeo() {

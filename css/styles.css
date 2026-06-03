@@ -1842,8 +1842,23 @@ body.nav-open {
   text-align: center;
 }
 
+.page-catalog .page-hero .eyebrow {
+  display: block;
+}
+
 .page-catalog .page-hero .lead {
   margin-inline: auto;
+  max-width: 36rem;
+}
+
+.catalog-manager-block {
+  text-align: center;
+}
+
+.catalog-manager-block .manager-card {
+  margin-inline: auto;
+  max-width: 36rem;
+  text-align: left;
 }
 
 /* ——— Modern blocks ——— */
