@@ -1,6 +1,7 @@
-import { CONTACTS, DELIVERY_OPTIONS, SITE } from './config.js';
+import { DELIVERY_OPTIONS, SITE } from './config.js';
 import { getProduct, sku, SIZES } from './products.js';
 import { getCart, cartTotal, clearCart } from './cart.js';
+import { sendToManager } from './contact-send.js';
 
 function formatLine(line) {
   const product = getProduct(line.productId);
@@ -35,10 +36,7 @@ export function buildOrderMessage(formData) {
 
 export function submitOrder(formData) {
   const message = buildOrderMessage(formData);
-  const waUrl = `https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(message)}`;
-
-  window.open(waUrl, '_blank', 'noopener,noreferrer');
-
+  sendToManager({ message });
   clearCart();
   return message;
 }

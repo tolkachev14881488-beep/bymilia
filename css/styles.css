@@ -2504,6 +2504,31 @@ body:has(.contact-bar) .site-header {
   top: 0;
 }
 
+.site-load-error {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: #fef3f2;
+  color: #b42318;
+  border-bottom: 1px solid #fecdca;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.cart-success {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.cart-success .btn {
+  margin-top: 0.25rem;
+}
+
 .wholesale-pricelist {
   margin: 0 0 2rem;
 }

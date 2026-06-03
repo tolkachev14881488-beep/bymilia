@@ -1,4 +1,5 @@
-import { CONTACTS, SITE } from './config.js';
+import { SITE } from './config.js';
+import { sendToManager } from './contact-send.js';
 
 function buildMessage({ name, phone }) {
   return [
@@ -11,11 +12,7 @@ function buildMessage({ name, phone }) {
 
 function submitLead({ name, phone }) {
   const message = buildMessage({ name, phone });
-  const waUrl = `https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(message)}`;
-  const mailUrl = `mailto:${CONTACTS.email}?subject=${encodeURIComponent(`Опт ${SITE.brand}`)}&body=${encodeURIComponent(message)}`;
-
-  window.open(waUrl, '_blank');
-  window.location.href = mailUrl;
+  sendToManager({ message });
 }
 
 function showToast(text) {

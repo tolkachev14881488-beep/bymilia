@@ -1,5 +1,7 @@
 /** Загрузка контента сайта из data/*.json (редактируется в /admin/) */
 
+import { dataFileUrl } from './site-path.js';
+
 const DEFAULT_SITE = {
   admin: { passwordHash: '689a18148c5a0cec342ba5ce0dfa5be545b00d0c0c66f0f85d9edddb20a522fc' },
   site: {
@@ -59,10 +61,7 @@ const DEFAULT_PRODUCTS = [
 let siteData = structuredClone(DEFAULT_SITE);
 let productsList = structuredClone(DEFAULT_PRODUCTS);
 let loadPromise = null;
-
-function dataUrl(file) {
-  return new URL(`../data/${file}`, import.meta.url).href;
-}
+let loadError = null;
 
 function deepMerge(target, source) {
   if (!source || typeof source !== 'object') return target;
@@ -87,17 +86,27 @@ async function fetchJson(url) {
 export async function loadSiteData() {
   if (loadPromise) return loadPromise;
   loadPromise = (async () => {
+    loadError = null;
+    const siteUrl = dataFileUrl('site.json');
+    const productsUrl = dataFileUrl('products.json');
     const [siteJson, productsJson] = await Promise.all([
-      fetchJson(dataUrl('site.json')),
-      fetchJson(dataUrl('products.json')),
+      fetchJson(siteUrl),
+      fetchJson(productsUrl),
     ]);
+    if (!siteJson || !productsJson) {
+      loadError = 'Не удалось загрузить данные сайта. Обновите страницу (Ctrl+F5).';
+    }
     siteData = deepMerge(DEFAULT_SITE, siteJson || {});
     const list = productsJson?.products;
     productsList = Array.isArray(list) && list.length ? list : DEFAULT_PRODUCTS;
     applyExports();
-    return { siteData, products: productsList };
+    return { siteData, products: productsList, error: loadError };
   })();
   return loadPromise;
+}
+
+export function getLoadError() {
+  return loadError;
 }
 
 export function getSiteData() {
@@ -137,8 +146,21 @@ function applyExports() {
   PRODUCTS = getPublishedProducts();
 }
 
+const PRODUCT_ID_ALIASES = {
+  black: 'wb-black',
+  tropical: 'wb-tropical',
+  bright: 'wb-bright',
+  classic: 'wb-classic',
+};
+
+export function normalizeProductId(id) {
+  if (!id) return id;
+  return PRODUCT_ID_ALIASES[id] || id;
+}
+
 export function getProduct(id) {
-  return productsList.find((p) => p.id === id && p.published !== false);
+  const norm = normalizeProductId(id);
+  return productsList.find((p) => p.id === norm && p.published !== false);
 }
 
 export function sku(product, sizeId) {

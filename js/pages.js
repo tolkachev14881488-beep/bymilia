@@ -133,8 +133,7 @@ export function initProductPage() {
   const root = document.getElementById('product-root');
   if (!product || !root) {
     if (root) {
-      root.innerHTML =
-        '<p class="empty-state">Товар не найден. <a href="catalog.html">В каталог</a></p>';
+      root.innerHTML = `<p class="empty-state">Товар не найден. <a href="${pageHref('/catalog.html')}">В каталог</a></p>`;
     }
     return;
   }
@@ -278,6 +277,17 @@ export function initCartPage() {
     return valid;
   }
 
+  function showOrderSuccess() {
+    if (asideEl) asideEl.hidden = true;
+    linesEl.innerHTML = `
+      <div class="empty-state cart-success">
+        <p><strong>Заявка отправлена</strong></p>
+        <p>Откройте WhatsApp — там уже готов текст заказа. Менеджер подтвердит детали.</p>
+        <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">В каталог</a>
+        <a class="btn btn-ghost" href="${pageHref('/index.html')}">На главную</a>
+      </div>`;
+  }
+
   function render() {
     const cart = pruneInvalidLines();
     if (!cart.length) {
@@ -342,12 +352,20 @@ export function initCartPage() {
 
   if (form) {
     const deliverySelect = form.querySelector('[name="delivery"]');
-    deliverySelect.innerHTML = DELIVERY_OPTIONS.map(
-      (o) => `<option value="${o.id}">${o.label} — ${o.hint}</option>`,
-    ).join('');
+    if (deliverySelect) {
+      deliverySelect.innerHTML = DELIVERY_OPTIONS.map(
+        (o) => `<option value="${o.id}">${o.label} — ${o.hint}</option>`,
+      ).join('');
+    }
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
+      const cart = pruneInvalidLines();
+      if (!cart.length) {
+        showToast('Корзина пуста');
+        render();
+        return;
+      }
       const fd = new FormData(form);
       const data = Object.fromEntries(fd.entries());
       if (!data.name?.trim() || !data.phone?.trim()) {
@@ -356,10 +374,7 @@ export function initCartPage() {
       }
       submitOrder(data);
       showToast('Заявка отправлена — откройте WhatsApp');
-      render();
-      setTimeout(() => {
-        window.location.href = pageHref('/index.html');
-      }, 1200);
+      showOrderSuccess();
     });
   }
 
