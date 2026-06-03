@@ -60,12 +60,18 @@ export function renderHomepage() {
   if (bentoEl && hp.bento?.length) {
     bentoEl.innerHTML = hp.bento
       .map(
-        (card) => `
+        (card) => {
+          const stars = card.stars
+            ? `<div class="bento-stars" aria-label="5 из 5">★★★★★</div>`
+            : '';
+          return `
       <article class="bento-card bento-${card.variant || 'small'}">
+        ${stars}
         <span class="bento-num">${escapeHtml(card.num || '')}</span>
         <h3>${escapeHtml(card.title || '')}</h3>
         <p>${escapeHtml(card.text || '')}</p>
-      </article>`,
+      </article>`;
+        },
       )
       .join('');
   }
