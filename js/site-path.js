@@ -1,6 +1,11 @@
 /** Базовый URL сайта (корректно на GitHub Pages /bymilia/ и локально) */
 
 export function getSiteRoot() {
+  const rootAttr = document.body?.dataset?.siteRoot;
+  if (rootAttr) {
+    return new URL(rootAttr, window.location.href).href;
+  }
+
   const scripts = document.querySelectorAll('script[type="module"][src]');
   for (const el of scripts) {
     const src = el.getAttribute('src');
@@ -14,9 +19,14 @@ export function getSiteRoot() {
   }
 
   const path = window.location.pathname.replace(/\\/g, '/');
-  const pagesIdx = path.indexOf('/pages/');
-  const rootPath = pagesIdx >= 0 ? path.slice(0, pagesIdx + 1) : path.replace(/[^/]*$/, '');
-  return new URL(rootPath || '/', window.location.origin).href;
+  const inPages = path.match(/^(.*)\/pages\/[^/]*$/);
+  if (inPages) {
+    const base = inPages[1] ? `${inPages[1]}/` : '/';
+    return new URL(base, window.location.origin).href;
+  }
+  const dir = path.replace(/\/[^/]*$/, '') || '/';
+  const withSlash = dir.endsWith('/') ? dir : `${dir}/`;
+  return new URL(withSlash, window.location.origin).href;
 }
 
 export function dataFileUrl(filename) {

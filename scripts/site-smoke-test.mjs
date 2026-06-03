@@ -64,6 +64,25 @@ const msgLines = migrated
 if (!msgLines.length) fail('order message', 'empty');
 else ok('order message build');
 
+function resolveSiteRootPathname(pathname) {
+  const p = pathname.replace(/\\/g, '/');
+  const inPages = p.match(/^(.*)\/pages\/[^/]*$/);
+  if (inPages) return inPages[1] ? `${inPages[1]}/` : '/';
+  const dir = p.replace(/\/[^/]*$/, '') || '/';
+  return dir.endsWith('/') ? dir : `${dir}/`;
+}
+
+const pathCases = [
+  ['/bymilia/pages/wholesale.html', '/bymilia/'],
+  ['/bymilia/cart.html', '/bymilia/'],
+  ['/pages/about.html', '/'],
+];
+for (const [input, expected] of pathCases) {
+  const got = resolveSiteRootPathname(input);
+  if (got !== expected) fail('site root path', `${input} → ${got}, want ${expected}`);
+  else ok(`site root ${input}`);
+}
+
 const htmlPages = [
   'index.html',
   'catalog.html',
@@ -71,14 +90,21 @@ const htmlPages = [
   'product.html',
   'pages/wholesale.html',
   'pages/about.html',
+  'pages/delivery.html',
+  'pages/contacts.html',
+  'pages/faq.html',
 ];
 for (const p of htmlPages) {
   const fp = path.join(root, p);
   if (!fs.existsSync(fp)) fail('html', `missing ${p}`);
   else {
     const html = fs.readFileSync(fp, 'utf8');
-    if (!html.includes('site-header') && !html.includes('init.js'))
-      fail('html', `${p} no boot`);
+    if (!html.includes('site-header')) fail('html', `${p} no header slot`);
+    else if (!html.includes('init.js')) fail('html', `${p} no boot`);
+    else if (p.startsWith('pages/') && !html.includes('data-site-root=".."'))
+      fail('html', `${p} missing data-site-root`);
+    else if (!p.startsWith('pages/') && !html.includes('data-site-root="."'))
+      fail('html', `${p} missing data-site-root`);
     else ok(`html ${p}`);
   }
 }
