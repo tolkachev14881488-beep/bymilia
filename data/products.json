@@ -4,7 +4,8 @@
       "id": "wb-black",
       "colorName": "Сапожки By Milia",
       "colorHex": "#1c1c1c",
-      "price": 72.04,
+      "price": 72,
+      "oldPrice": 175,
       "skuPrefix": "BM-230183062",
       "image": "assets/products/black-front.png",
       "images": [
