@@ -54,12 +54,7 @@ export function renderManagerCard(opts = {}) {
 }
 
 export function mountGlobalContacts() {
-  if (!document.getElementById('fab-wa-slot')) {
-    const fab = document.createElement('div');
-    fab.id = 'fab-wa-slot';
-    document.body.appendChild(fab);
-  }
-  document.getElementById('fab-wa-slot').innerHTML = renderFab();
+  /* FAB: contact menu + floating cart in contact-fab.js */
 }
 
 export function initHeaderScroll() {

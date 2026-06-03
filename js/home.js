@@ -60,12 +60,18 @@ export function renderHomepage() {
   if (bentoEl && hp.bento?.length) {
     bentoEl.innerHTML = hp.bento
       .map(
-        (card) => `
+        (card) => {
+          const stars = card.stars
+            ? `<div class="bento-stars" aria-label="5 из 5">★★★★★</div>`
+            : '';
+          return `
       <article class="bento-card bento-${card.variant || 'small'}">
+        ${stars}
         <span class="bento-num">${escapeHtml(card.num || '')}</span>
         <h3>${escapeHtml(card.title || '')}</h3>
         <p>${escapeHtml(card.text || '')}</p>
-      </article>`,
+      </article>`;
+        },
       )
       .join('');
   }
@@ -74,7 +80,16 @@ export function renderHomepage() {
   if (steps) {
     setText('[data-home="steps-eyebrow"]', steps.eyebrow);
     setText('[data-home="steps-title"]', steps.title);
-    setText('[data-home="steps-lead"]', steps.lead);
+    const stepsLead = document.querySelector('[data-home="steps-lead"]');
+    if (stepsLead) {
+      if (steps.lead?.trim()) {
+        stepsLead.textContent = steps.lead;
+        stepsLead.hidden = false;
+      } else {
+        stepsLead.hidden = true;
+        stepsLead.textContent = '';
+      }
+    }
     const stepsGrid = document.querySelector('[data-home="steps-grid"]');
     if (stepsGrid && steps.items?.length) {
       stepsGrid.innerHTML = steps.items
@@ -101,6 +116,10 @@ export function renderHomepage() {
     setText('[data-home="benefits-eyebrow"]', ben.eyebrow);
     setText('[data-home="benefits-title"]', ben.title);
     setText('[data-home="benefits-lead"]', ben.lead);
+    const section = document.querySelector('.section-benefits');
+    if (section && ben.bgImage) {
+      section.style.setProperty('--benefits-bg', `url("${asset(ben.bgImage)}")`);
+    }
     const cardsEl = document.querySelector('[data-home="benefits-cards"]');
     if (cardsEl && ben.cards?.length) {
       cardsEl.innerHTML = ben.cards

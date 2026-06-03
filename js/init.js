@@ -1,6 +1,7 @@
 import { getLoadError, loadSiteData } from './data-store.js';
 import { initLayout } from './layout.js';
-import { initHeaderScroll, mountGlobalContacts } from './manager.js';
+import { mountGlobalContacts, initHeaderScroll } from './manager.js';
+import { mountFloatingUi } from './contact-fab.js';
 
 function showLoadError(msg) {
   const el = document.createElement('div');
@@ -23,6 +24,7 @@ export async function boot(pageFn) {
   if (err) showLoadError(err);
 
   mountGlobalContacts();
+  mountFloatingUi();
   initLayout();
   initHeaderScroll();
   if (pageFn) await pageFn();

@@ -4,7 +4,10 @@ import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart } from '
 import { renderManagerCard } from './manager.js';
 import { submitOrder } from './checkout.js';
 import { asset, pageHref } from './layout.js';
+import { updateCatalogCartBtn } from './contact-fab.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
+
+const SIZE_BADGE = 'Размер 25–42';
 
 export function initCatalogSeo() {
   applySeo({
@@ -19,11 +22,14 @@ export function initCatalogSeo() {
   ]);
   const slot = document.getElementById('catalog-manager');
   if (slot) {
+    slot.className = 'container catalog-manager-block';
     slot.innerHTML = renderManagerCard({
       compact: true,
       title: 'Помочь с выбором расцветки и размера?',
     });
   }
+  updateCatalogCartBtn();
+  window.addEventListener('cart-updated', updateCatalogCartBtn);
 }
 
 export function initCartSeo() {
@@ -94,6 +100,23 @@ function productGallery(p, activeIndex = 0) {
   `;
 }
 
+function renderProductSpecs(features) {
+  if (!features?.length) return '';
+  const rows = features.map((f) => {
+    const sep = f.includes('·') ? '·' : f.includes('—') ? '—' : null;
+    if (sep) {
+      const [label, ...rest] = f.split(sep);
+      return `<tr><th scope="row">${label.trim()}</th><td>${rest.join(sep).trim()}</td></tr>`;
+    }
+    return `<tr><th scope="row">Особенность</th><td>${f}</td></tr>`;
+  });
+  return `
+    <table class="product-specs">
+      <caption class="visually-hidden">Характеристики</caption>
+      <tbody>${rows.join('')}</tbody>
+    </table>`;
+}
+
 function formatPrice(p, large = false) {
   const cls = large ? 'product-price product-price--lg' : 'product-price';
   if (p.oldPrice && p.oldPrice > p.price) {
@@ -113,7 +136,7 @@ export function renderProductGrid(container) {
     (p) => `
     <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
       <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33">
-        <span class="product-card-badge">6 размеров</span>
+        <span class="product-card-badge">${SIZE_BADGE}</span>
         ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
       </div>
@@ -204,9 +227,8 @@ export function initProductPage() {
           </div>
           <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
           ${product.wbUrl ? `<a class="btn btn-outline-orange btn-lg btn-block" href="${product.wbUrl}" target="_blank" rel="noopener noreferrer">Купить на Wildberries</a>` : ''}
-          <ul class="feature-list">
-            ${product.features.map((f) => `<li>${f}</li>`).join('')}
-          </ul>
+          <h2 class="product-specs-heading">Характеристики</h2>
+          ${renderProductSpecs(product.features)}
           ${renderManagerCard({
             compact: true,
             title: 'Вопросы по размеру?',
@@ -291,25 +313,37 @@ export function initCartPage() {
   function render() {
     const cart = pruneInvalidLines();
     if (!cart.length) {
-      linesEl.innerHTML = `<div class="empty-state"><p>Корзина пуста</p><a class="btn btn-primary" href="${pageHref('/catalog.html')}">Перейти в каталог</a></div>`;
+      linesEl.innerHTML = `
+        <div class="empty-state cart-empty">
+          <p><strong>Корзина пуста</strong></p>
+          <p class="cart-nudge-text">Выберите расцветку в каталоге — размеры 25–42, заявка до 13:00 уходит в тот же день.</p>
+          <div class="cart-nudge-actions">
+            <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">Перейти в каталог</a>
+          </div>
+        </div>`;
       if (asideEl) asideEl.hidden = true;
       return;
     }
 
     if (asideEl) asideEl.hidden = false;
 
-    linesEl.innerHTML = cart
+    linesEl.innerHTML = `
+      <div class="cart-nudge cart-nudge--top">
+        <p><strong>Хотите добавить ещё?</strong> <a href="${pageHref('/catalog.html')}">Продолжить покупки</a></p>
+        <p class="cart-nudge-order">Готовы оформить — заполните форму справа и отправьте заявку.</p>
+      </div>
+    ` + cart
       .map((line) => {
         const p = getProduct(line.productId);
         const size = SIZES.find((s) => s.id === line.sizeId);
         if (!p) return '';
         const img = productImageList(p)[0];
-        const swatchStyle = img
-          ? `background-image:url("${img.replace(/"/g, '%22')}");background-size:cover;background-position:center`
-          : `background:${p.colorHex}`;
+        const imgHtml = img
+          ? `<img class="cart-line-img" src="${img}" alt="${p.colorName}" loading="lazy" width="72" height="72">`
+          : `<div class="cart-line-swatch" style="background:${p.colorHex}"></div>`;
         return `
         <div class="cart-line" data-key="${line.key}">
-          <div class="cart-line-swatch" style="${swatchStyle}"></div>
+          ${imgHtml}
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
@@ -368,8 +402,8 @@ export function initCartPage() {
       }
       const fd = new FormData(form);
       const data = Object.fromEntries(fd.entries());
-      if (!data.name?.trim() || !data.phone?.trim()) {
-        showToast('Укажите имя и телефон');
+      if (!data.name?.trim() || !data.phone?.trim() || !data.email?.trim()) {
+        showToast('Укажите имя, телефон и email');
         return;
       }
       submitOrder(data);
