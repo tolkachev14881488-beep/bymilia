@@ -79,7 +79,7 @@
     },
     {
       "id": "wb-classic",
-      "colorName": "Сапожки для разогрева By Milia",
+      "colorName": "Классика · 5 цветов",
       "colorHex": "#ff5500",
       "price": 77,
       "oldPrice": 175,
@@ -89,7 +89,7 @@
         "assets/products/classic-1.png",
         "assets/products/classic-2.png"
       ],
-      "imageVersion": "2",
+      "imageVersion": "1",
       "wbNm": 216496169,
       "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
       "wbPhoto": 1,
