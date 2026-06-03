@@ -731,9 +731,18 @@ body.nav-open {
 
 .hero-tags {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 1.5rem;
+  max-width: 100%;
+}
+
+.hero-tags .tag {
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 0.72rem;
+  padding: 0.42rem 0.8rem;
 }
 
 .hero-visual {
@@ -2273,6 +2282,16 @@ body.nav-open {
 
   .hero-tags {
     margin-top: 1.25rem;
+    flex-wrap: nowrap;
+    justify-content: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+  }
+
+  .hero-tags::-webkit-scrollbar {
+    display: none;
   }
 
   .tag {
