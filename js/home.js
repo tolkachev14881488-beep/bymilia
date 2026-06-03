@@ -45,7 +45,7 @@ export function renderHomepage() {
     paletteEl.innerHTML = products
       .map(
         (p) =>
-          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(p.colorName)}</span>`,
+          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(p.paletteLabel || p.colorName)}</span>`,
       )
       .join('');
   }

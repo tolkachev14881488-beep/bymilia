@@ -3,6 +3,7 @@
     {
       "id": "wb-black",
       "colorName": "Сапожки для разогрева By Milia",
+      "paletteLabel": "Черный",
       "colorHex": "#1c1c1c",
       "price": 72,
       "oldPrice": 175,
@@ -29,6 +30,7 @@
     {
       "id": "wb-tropical",
       "colorName": "Тропический принт",
+      "paletteLabel": "Единорог",
       "colorHex": "#4fc3f7",
       "price": 77,
       "oldPrice": 175,
@@ -54,6 +56,7 @@
     {
       "id": "wb-bright",
       "colorName": "Яркий принт",
+      "paletteLabel": "Упс",
       "colorHex": "#ffca28",
       "price": 77,
       "oldPrice": 175,
