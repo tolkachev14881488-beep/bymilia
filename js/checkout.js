@@ -36,10 +36,8 @@ export function buildOrderMessage(formData) {
 export function submitOrder(formData) {
   const message = buildOrderMessage(formData);
   const waUrl = `https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(message)}`;
-  const mailUrl = `mailto:${CONTACTS.email}?subject=${encodeURIComponent(`Заказ ${SITE.brand}`)}&body=${encodeURIComponent(message)}`;
 
-  window.open(waUrl, '_blank');
-  window.location.href = mailUrl;
+  window.open(waUrl, '_blank', 'noopener,noreferrer');
 
   clearCart();
   return message;

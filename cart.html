@@ -20,10 +20,9 @@
       <h1>Корзина</h1>
       <div class="cart-lines" id="cart-lines"></div>
     </div>
-    <aside>
-      <div class="cart-summary" id="cart-summary" hidden></div>
-      <div id="cart-manager" class="cart-manager-slot"></div>
-      <form class="checkout-form cart-summary" id="checkout-form" style="margin-top:1rem" hidden>
+    <aside class="cart-aside" id="cart-aside" hidden>
+      <div class="cart-summary" id="cart-summary"></div>
+      <form class="checkout-form" id="checkout-form">
         <h2 style="font-size:1.1rem;font-family:var(--font)">Оформление заявки</h2>
         <p style="font-size:0.88rem;color:var(--ink-muted);margin:0 0 0.5rem">Менеджер свяжется для подтверждения и оплаты</p>
         <label>ФИО <input name="name" required autocomplete="name"></label>

@@ -1,10 +1,10 @@
 import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
 import { PRODUCTS, getProduct, sku } from './products.js';
-import { addToCart, getCart, cartTotal, updateQty, removeLine } from './cart.js';
+import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart } from './cart.js';
+import { renderManagerCard } from './manager.js';
 import { submitOrder } from './checkout.js';
 import { asset, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
-import { renderManagerCard } from './manager.js';
 
 export function initCatalogSeo() {
   applySeo({
@@ -268,36 +268,38 @@ export function initCartPage() {
   const linesEl = document.getElementById('cart-lines');
   const summaryEl = document.getElementById('cart-summary');
   const form = document.getElementById('checkout-form');
-  const managerSlot = document.getElementById('cart-manager');
-  if (managerSlot) {
-    managerSlot.innerHTML = renderManagerCard({
-      compact: true,
-      title: 'Вопросы по заказу?',
-      waText: 'Здравствуйте! Оформляю заказ сапожек By Milia на сайте.',
-    });
-  }
+  const asideEl = document.getElementById('cart-aside');
   if (!linesEl) return;
 
+  function pruneInvalidLines() {
+    const all = getCart();
+    const valid = all.filter((line) => getProduct(line.productId));
+    if (valid.length !== all.length) saveCart(valid);
+    return valid;
+  }
+
   function render() {
-    const cart = getCart();
+    const cart = pruneInvalidLines();
     if (!cart.length) {
       linesEl.innerHTML = `<div class="empty-state"><p>Корзина пуста</p><a class="btn btn-primary" href="${pageHref('/catalog.html')}">Перейти в каталог</a></div>`;
-      if (summaryEl) summaryEl.hidden = true;
-      if (form) form.hidden = true;
+      if (asideEl) asideEl.hidden = true;
       return;
     }
 
-    if (summaryEl) summaryEl.hidden = false;
-    if (form) form.hidden = false;
+    if (asideEl) asideEl.hidden = false;
 
     linesEl.innerHTML = cart
       .map((line) => {
         const p = getProduct(line.productId);
         const size = SIZES.find((s) => s.id === line.sizeId);
         if (!p) return '';
+        const img = productImageList(p)[0];
+        const swatchStyle = img
+          ? `background-image:url("${img.replace(/"/g, '%22')}");background-size:cover;background-position:center`
+          : `background:${p.colorHex}`;
         return `
         <div class="cart-line" data-key="${line.key}">
-          <div class="cart-line-swatch" style="${productImageList(p)[0] ? `background:url('${productImageList(p)[0]}') center/cover` : `background:${p.colorHex}`}"></div>
+          <div class="cart-line-swatch" style="${swatchStyle}"></div>
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
@@ -326,9 +328,14 @@ export function initCartPage() {
 
     linesEl.querySelectorAll('.cart-line').forEach((row) => {
       const key = row.dataset.key;
-      const line = cart.find((l) => l.key === key);
-      row.querySelector('[data-dec]')?.addEventListener('click', () => updateQty(key, line.qty - 1));
-      row.querySelector('[data-inc]')?.addEventListener('click', () => updateQty(key, line.qty + 1));
+      row.querySelector('[data-dec]')?.addEventListener('click', () => {
+        const line = getCart().find((l) => l.key === key);
+        if (line) updateQty(key, line.qty - 1);
+      });
+      row.querySelector('[data-inc]')?.addEventListener('click', () => {
+        const line = getCart().find((l) => l.key === key);
+        if (line) updateQty(key, line.qty + 1);
+      });
       row.querySelector('[data-remove]')?.addEventListener('click', () => removeLine(key));
     });
   }
@@ -348,10 +355,11 @@ export function initCartPage() {
         return;
       }
       submitOrder(data);
-      showToast('Заявка отправлена');
+      showToast('Заявка отправлена — откройте WhatsApp');
+      render();
       setTimeout(() => {
         window.location.href = pageHref('/index.html');
-      }, 800);
+      }, 1200);
     });
   }
 
