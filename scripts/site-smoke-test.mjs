@@ -93,6 +93,7 @@ for (const [input, expected] of pathCases) {
 
 const adminHtml = fs.readFileSync(path.join(root, 'admin/index.html'), 'utf8');
 if (!adminHtml.includes('data-site-root=".."')) fail('admin', 'missing data-site-root');
+else if (!adminHtml.includes('data-panel="dashboard"')) fail('admin', 'missing dashboard');
 else ok('admin/index.html');
 
 const htmlPages = [

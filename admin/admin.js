@@ -17,12 +17,15 @@ import {
   verifyGithubConnection,
   ensureDefaultPublishSettings,
 } from './github-publish.js';
+import { initProductModeration } from './product-moderation.js';
+import { pageLabel } from './page-labels.js';
+import { renderDashboard, markPublishedNow } from './dashboard.js';
 
 ensureDefaultPublishSettings();
-import { initProductModeration } from './product-moderation.js';
 
 const AUTH_KEY = 'bymilia-admin-auth';
 const DRAFT_KEY = 'bymilia-cms-draft';
+const UNSAVED_KEY = 'bymilia-cms-unsaved';
 
 let draft = null;
 let publishChain = Promise.resolve();
@@ -42,6 +45,18 @@ function showAlert(message, type = 'info') {
   setTimeout(() => {
     box.innerHTML = '';
   }, ms);
+}
+
+function showToast(text) {
+  let el = document.querySelector('.admin-toast');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'admin-toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = text;
+  el.classList.add('is-visible');
+  setTimeout(() => el.classList.remove('is-visible'), 3200);
 }
 
 function slugId(name) {
@@ -132,7 +147,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     showApp();
   } else {
     sessionStorage.removeItem(DRAFT_KEY);
-    showAlert('Неверный пароль. Сейчас: bymilia2026', 'err');
+    showAlert('Неверный пароль. Уточните пароль у администратора сайта.', 'err');
   }
 });
 
@@ -147,9 +162,37 @@ async function showApp() {
   initProductModerationPanel();
   renderAll();
   loadPublishForm();
+  await refreshPublishState();
+}
+
+function markDraftUnsaved() {
+  sessionStorage.setItem(UNSAVED_KEY, '1');
+  const badge = document.getElementById('unsaved-badge');
+  if (badge) badge.hidden = false;
+}
+
+function clearDraftUnsaved() {
+  sessionStorage.removeItem(UNSAVED_KEY);
+  const badge = document.getElementById('unsaved-badge');
+  if (badge) badge.hidden = true;
+}
+
+async function refreshPublishState() {
   await updateGithubBanner();
   const localOk = await isLocalPublishAvailable();
-  setPublishUi(isGithubConfigured() || localOk ? 'idle' : 'err', localOk ? 'Локальная публикация' : '');
+  const canPublish = isGithubConfigured() || localOk;
+  setPublishUi(canPublish ? 'idle' : 'err', canPublish ? 'Готово к публикации' : 'Нужна настройка');
+  renderDashboard({
+    draft,
+    canPublish,
+    localMode: localOk,
+    publishDetail: canPublish
+      ? localOk
+        ? 'Локальный сервер на этом ПК'
+        : 'GitHub-токен сохранён в браузере'
+      : 'Вкладка «Публикация» — один раз вставьте токен',
+  });
+  if (sessionStorage.getItem(UNSAVED_KEY) === '1') markDraftUnsaved();
 }
 
 function initProductModerationPanel() {
@@ -166,7 +209,11 @@ function initProductModerationPanel() {
       saveDraftToStorage();
     },
     onSaveProduct: saveProductFromModeration,
-    onQuickPublish: (msg) => queuePublish({ successMessage: msg }),
+    onDraftChange: () => {
+      saveDraftToStorage();
+      markDraftUnsaved();
+      showToast('Черновик обновлён. Нажмите «Опубликовать всё на сайт», когда будете готовы.');
+    },
     onDelete: deleteProduct,
   });
 }
@@ -198,11 +245,12 @@ async function saveProductFromModeration(oldId, data) {
 // ——— Tabs ———
 
 const titles = {
-  products: 'Каталог',
+  dashboard: 'Обзор',
+  products: 'Товары',
   homepage: 'Главная',
   pages: 'Страницы',
-  settings: 'Настройки',
-  publish: 'Подключение',
+  settings: 'Контакты и настройки',
+  publish: 'Публикация',
 };
 
 function setPublishUi(state, detail = '') {
@@ -271,6 +319,9 @@ async function publishToSite({
       .catch(() => {});
     setPublishUi('ok');
     const tail = result.mode === 'local' ? ' Сайт обновится за 1–2 минуты.' : ' Сайт обновится за 2–3 минуты.';
+    markPublishedNow();
+    clearDraftUnsaved();
+    await refreshPublishState();
     showAlert(`${result.message || successMessage}${tail}`, 'ok');
     return true;
   } catch (e) {
@@ -327,10 +378,22 @@ document.querySelectorAll('.admin-nav-btn[data-tab]').forEach((btn) => {
     document.querySelectorAll('.admin-nav-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
     document.querySelectorAll('.admin-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === tab));
     document.getElementById('panel-title').textContent = titles[tab] || tab;
+    document.getElementById('admin-sidebar')?.classList.remove('is-open');
   });
 });
 
+document.getElementById('admin-menu-toggle')?.addEventListener('click', () => {
+  document.getElementById('admin-sidebar')?.classList.toggle('is-open');
+});
+
 document.getElementById('publish-now-btn')?.addEventListener('click', () => {
+  if (
+    !confirm(
+      'Опубликовать все изменения на сайте? Проверьте, что вы нажали «С сайта», если давно не заходили.',
+    )
+  ) {
+    return;
+  }
   queuePublish({ successMessage: 'Весь контент опубликован на сайте.' });
 });
 
@@ -406,9 +469,9 @@ function renderHomepageForm() {
   const hero = hp.hero || {};
   const el = document.getElementById('homepage-form');
   el.innerHTML = `
-    <h3>Hero</h3>
-    <div class="field"><label>Плашка</label><input id="hp-hero-eyebrow" value="${esc(hero.eyebrow || '')}"></div>
-    <div class="field"><label>Заголовок (HTML)</label><input id="hp-hero-title" value="${esc(hero.titleHtml || '')}"></div>
+    <h3>Блок «Шапка»</h3>
+    <div class="field"><label>Короткая плашка над заголовком</label><input id="hp-hero-eyebrow" value="${esc(hero.eyebrow || '')}"></div>
+    <div class="field"><label>Главный заголовок (можно &lt;em&gt;курсив&lt;/em&gt;)</label><input id="hp-hero-title" value="${esc(hero.titleHtml || '')}"></div>
     <div class="field"><label>Текст</label><textarea id="hp-hero-lead">${esc(hero.lead || '')}</textarea></div>
     <div class="field"><label>Теги (по строке)</label><textarea id="hp-hero-tags">${esc((hero.tags || []).join('\n'))}</textarea></div>
     <div class="field-grid">
@@ -444,7 +507,7 @@ function renderHomepageForm() {
     <h3>CTA</h3>
     <div class="field"><label>Заголовок</label><input id="hp-cta-title" value="${esc(hp.cta?.title || '')}"></div>
     <div class="field"><label>Текст</label><textarea id="hp-cta-text">${esc(hp.cta?.text || '')}</textarea></div>
-    <button type="button" class="btn btn-primary btn-sm" id="hp-save">Сохранить главную</button>
+    <button type="button" class="btn btn-primary" id="hp-save">Сохранить и опубликовать главную</button>
   `;
 
   renderBentoEditor();
@@ -628,7 +691,9 @@ function val(id) {
 function renderPagesPanel() {
   const select = document.getElementById('page-select');
   const ids = Object.keys(draft.pages || {});
-  select.innerHTML = ids.map((id) => `<option value="${id}">${id}</option>`).join('');
+  select.innerHTML = ids
+    .map((id) => `<option value="${id}">${esc(pageLabel(id))}</option>`)
+    .join('');
   select.onchange = () => renderPageForm(select.value);
   renderPageForm(select.value || ids[0]);
 }
@@ -640,10 +705,14 @@ function renderPageForm(pageId) {
     el.innerHTML = '<p>Страница не найдена</p>';
     return;
   }
+  const preview = `../pages/${pageId}.html`;
   el.innerHTML = `
-    <div class="field"><label>Заголовок</label><input id="pg-title" value="${esc(page.title)}"></div>
-    <div class="field"><label>HTML-контент</label><textarea id="pg-html" style="min-height:280px">${esc(page.html)}</textarea></div>
-    <button type="button" class="btn btn-primary btn-sm" id="pg-save">Сохранить страницу</button>
+    <p class="hint">Страница: <strong>${esc(pageLabel(pageId))}</strong>
+      <a href="${preview}" target="_blank" rel="noopener">Посмотреть на сайте</a></p>
+    <div class="field"><label>Заголовок на странице</label><input id="pg-title" value="${esc(page.title)}"></div>
+    <div class="field"><label>Текст страницы (можно HTML: &lt;p&gt;, &lt;ul&gt;, &lt;strong&gt;)</label>
+      <textarea id="pg-html" class="page-html-editor">${esc(page.html)}</textarea></div>
+    <button type="button" class="btn btn-primary" id="pg-save">Сохранить и опубликовать</button>
   `;
   document.getElementById('pg-save').addEventListener('click', async () => {
     collectPage();
@@ -691,7 +760,7 @@ function renderSettingsForm() {
     </div>
     <h3>Пароль админки</h3>
     <div class="field"><label>Новый пароль</label><input id="st-new-pass" type="password" placeholder="Оставьте пустым, если не менять"></div>
-    <button type="button" class="btn btn-primary btn-sm" id="st-save">Сохранить настройки</button>
+    <button type="button" class="btn btn-primary" id="st-save">Сохранить и опубликовать</button>
   `;
   document.getElementById('st-save').addEventListener('click', async () => {
     await collectSettings();
@@ -805,11 +874,27 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
+async function updateDashboardOnly() {
+  const localOk = await isLocalPublishAvailable();
+  const canPublish = isGithubConfigured() || localOk;
+  renderDashboard({
+    draft,
+    canPublish,
+    localMode: localOk,
+    publishDetail: canPublish
+      ? localOk
+        ? 'Локальный сервер на этом ПК'
+        : 'GitHub-токен в браузере'
+      : 'Вкладка «Публикация»',
+  });
+}
+
 function renderAll() {
   productModeration?.refresh();
   renderHomepageForm();
   renderPagesPanel();
   renderSettingsForm();
+  void updateDashboardOnly();
 }
 
 function applySetupFromHash() {

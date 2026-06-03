@@ -44,7 +44,7 @@ export function initProductModeration({
   getProducts,
   setProducts,
   onSaveProduct,
-  onQuickPublish,
+  onDraftChange,
   onDelete,
 }) {
   let selectedId = null;
@@ -135,7 +135,7 @@ export function initProductModeration({
         if (!p) return;
         p.published = p.published === false;
         setProducts([...products()]);
-        await onQuickPublish(p.published === false ? 'Товар скрыт с сайта' : 'Товар снова в каталоге');
+        onDraftChange?.();
         renderGrid();
         if (selectedId === p.id) renderEditor();
       });
@@ -144,7 +144,7 @@ export function initProductModeration({
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         moveProduct(btn.dataset.move, Number(btn.dataset.dir));
-        onQuickPublish('Порядок в каталоге обновлён');
+        onDraftChange?.();
       });
     });
   }
@@ -336,7 +336,8 @@ export function initProductModeration({
         <div class="field"><label>Особенности (строка = пункт)</label><textarea name="features" rows="4">${esc((p.features || []).join('\n'))}</textarea></div>
 
         <div class="mod-editor-footer">
-          <button type="button" class="btn btn-primary" id="mod-save">Сохранить и на сайт</button>
+          <button type="button" class="btn btn-primary" id="mod-save">Сохранить и опубликовать</button>
+          <p class="hint mod-save-hint">Сначала сохраняет товар, затем отправляет на сайт (1–2 мин).</p>
           <button type="button" class="btn btn-danger btn-sm" id="mod-delete">Удалить</button>
         </div>
       </div>
