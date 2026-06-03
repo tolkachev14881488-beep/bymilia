@@ -231,9 +231,11 @@ body.nav-open {
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  gap: 0;
+  gap: 0.05rem;
   line-height: 1.15;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: min(22rem, 38vw);
 }
 
 .header-phone {
@@ -253,9 +255,9 @@ body.nav-open {
   font-weight: 500;
   color: var(--ink-muted);
   text-align: right;
-  line-height: 1.2;
-  max-width: 13.5rem;
-  white-space: nowrap;
+  line-height: 1.25;
+  max-width: 100%;
+  white-space: normal;
 }
 
 @media (min-width: 901px) {
