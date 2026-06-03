@@ -58,8 +58,22 @@ const DEFAULT_PRODUCTS = [
   },
 ];
 
+const DEFAULT_PRODUCT_SPECS = {
+  title: 'Основная информация',
+  items: [
+    { label: 'Состав', value: 'экокожа; флис; синтепон; Оксфорд' },
+    { label: 'Материал подкладки обуви', value: 'флис' },
+    { label: 'Материал стельки', value: 'ЭВА' },
+    { label: 'Материал подошвы обуви', value: 'искусственная кожа' },
+    { label: 'Вид застежки', value: 'резинка' },
+    { label: 'Страна производства', value: 'Беларусь' },
+    { label: 'Вес товара без упаковки (г)', value: '285 г' },
+  ],
+};
+
 let siteData = structuredClone(DEFAULT_SITE);
 let productsList = structuredClone(DEFAULT_PRODUCTS);
+let productSpecs = structuredClone(DEFAULT_PRODUCT_SPECS);
 let loadPromise = null;
 let loadError = null;
 
@@ -98,6 +112,9 @@ export function applyCmsPayload(siteJson, productsJson) {
   if (productsJson?.products) {
     productsList = productsJson.products;
   }
+  if (productsJson?.productSpecs) {
+    productSpecs = productsJson.productSpecs;
+  }
   applyExports();
   return { siteData, products: productsList };
 }
@@ -120,6 +137,11 @@ export async function loadSiteData({ reload = false } = {}) {
     siteData = deepMerge(DEFAULT_SITE, siteJson || {});
     const list = productsJson?.products;
     productsList = Array.isArray(list) && list.length ? list : DEFAULT_PRODUCTS;
+    if (productsJson?.productSpecs) {
+      productSpecs = productsJson.productSpecs;
+    } else {
+      productSpecs = structuredClone(DEFAULT_PRODUCT_SPECS);
+    }
     applyExports();
     return { siteData, products: productsList, error: loadError };
   })();
@@ -195,6 +217,11 @@ export function sku(product, sizeId) {
 /** Для админки: полный каталог, включая скрытые */
 export function getProductAny(id) {
   return productsList.find((p) => p.id === id);
+}
+
+export function getProductSpecs(product) {
+  if (product?.specs?.items?.length) return product.specs;
+  return productSpecs;
 }
 
 applyExports();

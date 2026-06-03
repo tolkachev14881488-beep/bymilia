@@ -1,6 +1,7 @@
 export {
   PRODUCTS,
   getProduct,
+  getProductSpecs,
   sku,
   SIZES,
   loadSiteData,

@@ -1,5 +1,5 @@
 import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
-import { PRODUCTS, getProduct, sku } from './products.js';
+import { PRODUCTS, getProduct, getProductSpecs, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart, cartCount } from './cart.js';
 import { renderManagerCard } from './manager.js';
 import { submitOrder } from './checkout.js';
@@ -7,6 +7,35 @@ import { asset, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
 const SIZE_BADGE = 'Размер 25–42';
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function renderProductSpecs(product) {
+  const specs = getProductSpecs(product);
+  if (!specs?.items?.length) return '';
+  const title = specs.title || 'Основная информация';
+  return `
+    <section class="product-specs" aria-labelledby="product-specs-title">
+      <h2 class="product-specs-title" id="product-specs-title">${escapeHtml(title)}</h2>
+      <dl class="product-specs-list">
+        ${specs.items
+          .map(
+            ({ label, value }) => `
+          <div class="product-specs-row">
+            <dt>${escapeHtml(label)}</dt>
+            <dd>${escapeHtml(value)}</dd>
+          </div>`,
+          )
+          .join('')}
+      </dl>
+    </section>`;
+}
 
 export function updateCatalogCartBtn() {
   const n = cartCount();
@@ -220,9 +249,7 @@ export function initProductPage() {
           </div>
           <button class="btn btn-primary btn-lg btn-glow btn-block" type="button" data-add-cart>Добавить в корзину</button>
           ${product.wbUrl ? `<a class="btn btn-outline-orange btn-lg btn-block" href="${product.wbUrl}" target="_blank" rel="noopener noreferrer">Купить на Wildberries</a>` : ''}
-          <ul class="feature-list">
-            ${product.features.map((f) => `<li>${f}</li>`).join('')}
-          </ul>
+          ${renderProductSpecs(product)}
           ${renderManagerCard({
             compact: true,
             title: 'Вопросы по размеру?',
