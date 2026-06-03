@@ -6,7 +6,7 @@
       "colorHex": "#1c1c1c",
       "price": 42,
       "skuPrefix": "BM-BLK",
-      "image": "Сапожки для разогрева стоп",
+      "image": "assets/products/black-1780511114143-0.jpg",
       "published": true,
       "description": "Сапожки для разогрева стоп перед занятиями и между номерами.",
       "features": [
@@ -15,7 +15,9 @@
         "Легко надевать самостоятельно"
       ],
       "wbUrl": "",
-      "images": [],
+      "images": [
+        "assets/products/black-1780511114143-0.jpg"
+      ],
       "imageVersion": "2"
     }
   ]
