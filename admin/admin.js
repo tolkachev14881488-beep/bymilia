@@ -731,8 +731,12 @@ document.getElementById('check-token-btn')?.addEventListener('click', async () =
     setPublishUi('publishing');
     const info = await verifyGithubConnection(cfg);
     showGithubConnected(info);
+    const modeLabel = info.mode === 'actions' ? 'Actions + API' : 'напрямую в GitHub';
     setPublishUi('ok', `OK: ${info.login}`);
-    showAlert(`Токен подходит. Аккаунт: ${info.login}, репозиторий: ${info.repoFullName}`, 'ok');
+    showAlert(
+      `Токен подходит (${modeLabel}). Можно редактировать с любого компьютера: ${info.repoFullName}`,
+      'ok',
+    );
   } catch (e) {
     setPublishUi('err');
     showAlert(e.message, 'err');

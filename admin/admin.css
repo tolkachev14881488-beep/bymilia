@@ -383,10 +383,18 @@ body {
 
 .mod-search {
   flex: 1;
+  min-width: 0;
   font: inherit;
   padding: 0.55rem 0.75rem;
   border: 1px solid var(--admin-border);
   border-radius: 10px;
+}
+
+.mod-search-clear {
+  flex-shrink: 0;
+  min-width: 2.25rem;
+  padding: 0.35rem 0.5rem;
+  line-height: 1;
 }
 
 .mod-count {

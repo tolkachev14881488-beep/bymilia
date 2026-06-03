@@ -296,7 +296,7 @@ export async function publishViaGithubApi(cfg, { siteJson, productsJson, uploads
   };
 }
 
-/** Публикует контент сайта */
+/** Публикует контент сайта (из любой точки мира — через GitHub API или Actions) */
 export async function publishSiteContent({ siteJson, productsJson, uploads = [] }) {
   if (await isLocalPublishAvailable()) {
     const message = await publishViaLocalServer({ siteJson, productsJson, uploads });
@@ -306,26 +306,25 @@ export async function publishSiteContent({ siteJson, productsJson, uploads = [] 
   const cfg = getGithubConfig();
   const cmsKey = getCmsPublishKey();
   if (!cfg.token || !cfg.owner || !cfg.repo) {
-    throw new Error(LOCAL_PUBLISH_HINT);
+    throw new Error(
+      `${LOCAL_PUBLISH_HINT}\n\nИли один раз: вкладка «Подключение» → Classic-токен (scope repo) от tolkachev14881488-beep.`,
+    );
   }
 
-  if (cmsKey) {
+  try {
+    return await publishViaGithubApi(cfg, { siteJson, productsJson, uploads });
+  } catch (apiErr) {
+    if (!cmsKey) throw apiErr;
     try {
       await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
       return {
         mode: 'actions',
-        message: 'Изменения отправлены в GitHub Actions. Сайт обновится за 1–2 минуты.',
+        message: 'Изменения отправлены через GitHub Actions. Сайт обновится за 1–2 минуты.',
       };
     } catch (actionsErr) {
-      try {
-        return await publishViaGithubApi(cfg, { siteJson, productsJson, uploads });
-      } catch (apiErr) {
-        throw new Error(`${actionsErr.message}\n\nЗапасной способ тоже не сработал: ${apiErr.message}`);
-      }
+      throw new Error(`${apiErr.message}\n\nЗапасной способ (Actions): ${actionsErr.message}`);
     }
   }
-
-  return publishViaGithubApi(cfg, { siteJson, productsJson, uploads });
 }
 
 export function downloadPublishPayload(payload) {

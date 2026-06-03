@@ -14,16 +14,43 @@ export function previewImageSrc(path) {
   return `../${path.replace(/^\//, '')}`;
 }
 
+function productMatches(p, q) {
+  if (!q) return true;
+  const needle = q.toLocaleLowerCase('ru');
+  const hay = [
+    p.colorName,
+    p.id,
+    p.skuPrefix,
+    String(p.wbNm ?? ''),
+    p.description,
+    ...(Array.isArray(p.features) ? p.features : []),
+  ]
+    .join(' ')
+    .toLocaleLowerCase('ru');
+  return hay.includes(needle);
+}
+
 function productThumb(p) {
   const src = p.image || (Array.isArray(p.images) && p.images[0]) || '';
-  if (!src) return `<div class="mod-card-thumb mod-card-thumb--empty" style="background:${esc(p.colorHex || '#eee')}"></div>`;
+  if (!src) {
+    return `<div class="mod-card-thumb mod-card-thumb--empty" style="background:${esc(p.colorHex || '#eee')}"></div>`;
+  }
   return `<img class="mod-card-thumb" src="${esc(previewImageSrc(src))}" alt="" loading="lazy" onerror="this.hidden=true;this.nextElementSibling?.classList.remove('hidden')"><div class="mod-card-thumb mod-card-thumb--empty hidden" style="background:${esc(p.colorHex || '#eee')}"></div>`;
 }
 
-export function initProductModeration({ root, editorRoot, getProducts, setProducts, onSaveProduct, onQuickPublish, onDelete }) {
+export function initProductModeration({
+  root,
+  editorRoot,
+  getProducts,
+  setProducts,
+  onSaveProduct,
+  onQuickPublish,
+  onDelete,
+}) {
   let selectedId = null;
   let filter = '';
   let pendingFiles = [];
+  let listMounted = false;
 
   function products() {
     return getProducts();
@@ -31,7 +58,7 @@ export function initProductModeration({ root, editorRoot, getProducts, setProduc
 
   function setSelected(id) {
     selectedId = id;
-    renderList();
+    renderGrid();
     renderEditor();
   }
 
@@ -43,34 +70,65 @@ export function initProductModeration({ root, editorRoot, getProducts, setProduc
     const [item] = list.splice(idx, 1);
     list.splice(next, 0, item);
     setProducts(list);
-    renderList();
+    renderGrid();
   }
 
-  function renderList() {
-    const q = filter.trim().toLowerCase();
-    const list = products().filter(
-      (p) => !q || p.colorName?.toLowerCase().includes(q) || p.id?.toLowerCase().includes(q),
-    );
-
+  function mountList() {
+    if (listMounted) return;
+    listMounted = true;
     root.innerHTML = `
       <div class="mod-toolbar">
-        <input type="search" class="mod-search" id="mod-search" placeholder="Поиск по названию или ID…" value="${esc(filter)}">
-        <span class="mod-count">${list.length} / ${products().length}</span>
+        <input type="search" class="mod-search" id="mod-search" placeholder="Поиск: название, ID, артикул…" autocomplete="off" enterkeyhint="search">
+        <button type="button" class="btn btn-secondary btn-sm mod-search-clear" id="mod-search-clear" title="Очистить" hidden>×</button>
+        <span class="mod-count" id="mod-count"></span>
       </div>
-      <div class="mod-grid">
-        ${list.length ? list.map((p) => cardHtml(p)).join('') : '<p class="hint">Ничего не найдено</p>'}
-      </div>
+      <div class="mod-grid" id="mod-grid"></div>
     `;
 
-    root.querySelector('#mod-search')?.addEventListener('input', (e) => {
+    const search = root.querySelector('#mod-search');
+    search?.addEventListener('input', (e) => {
       filter = e.target.value;
-      renderList();
+      const clearBtn = root.querySelector('#mod-search-clear');
+      if (clearBtn) clearBtn.hidden = !filter.length;
+      renderGrid();
+      updateCount();
+    });
+    search?.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        filter = '';
+        e.target.value = '';
+        root.querySelector('#mod-search-clear')?.click();
+      }
     });
 
-    root.querySelectorAll('[data-select]').forEach((btn) => {
+    root.querySelector('#mod-search-clear')?.addEventListener('click', () => {
+      filter = '';
+      const input = root.querySelector('#mod-search');
+      if (input) {
+        input.value = '';
+        input.focus();
+      }
+      root.querySelector('#mod-search-clear').hidden = true;
+      renderGrid();
+      updateCount();
+    });
+  }
+
+  function updateCount() {
+    const q = filter.trim();
+    const list = products().filter((p) => productMatches(p, q));
+    const el = root.querySelector('#mod-count');
+    if (el) el.textContent = `${list.length} / ${products().length}`;
+  }
+
+  function bindGridEvents() {
+    const grid = root.querySelector('#mod-grid');
+    if (!grid) return;
+
+    grid.querySelectorAll('[data-select]').forEach((btn) => {
       btn.addEventListener('click', () => setSelected(btn.dataset.select));
     });
-    root.querySelectorAll('[data-toggle]').forEach((btn) => {
+    grid.querySelectorAll('[data-toggle]').forEach((btn) => {
       btn.addEventListener('click', async (e) => {
         e.stopPropagation();
         const p = products().find((x) => x.id === btn.dataset.toggle);
@@ -78,17 +136,36 @@ export function initProductModeration({ root, editorRoot, getProducts, setProduc
         p.published = p.published === false;
         setProducts([...products()]);
         await onQuickPublish(p.published === false ? 'Товар скрыт с сайта' : 'Товар снова в каталоге');
-        renderList();
+        renderGrid();
         if (selectedId === p.id) renderEditor();
       });
     });
-    root.querySelectorAll('[data-move]').forEach((btn) => {
+    grid.querySelectorAll('[data-move]').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         moveProduct(btn.dataset.move, Number(btn.dataset.dir));
         onQuickPublish('Порядок в каталоге обновлён');
       });
     });
+  }
+
+  function renderGrid() {
+    mountList();
+    const q = filter.trim();
+    const list = products().filter((p) => productMatches(p, q));
+    const grid = root.querySelector('#mod-grid');
+    if (!grid) return;
+
+    grid.innerHTML = list.length
+      ? list.map((p) => cardHtml(p)).join('')
+      : `<p class="hint mod-empty">${q ? 'Ничего не найдено — измените запрос' : 'Нет товаров'}</p>`;
+
+    bindGridEvents();
+    updateCount();
+  }
+
+  function renderList() {
+    renderGrid();
   }
 
   function cardHtml(p) {
@@ -338,7 +415,7 @@ export function initProductModeration({ root, editorRoot, getProducts, setProduc
 
   return {
     refresh: () => {
-      renderList();
+      renderGrid();
       renderEditor();
     },
     select: setSelected,
