@@ -3001,37 +3001,6 @@ body.nav-open {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
-.fab-wa {
-  pointer-events: auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.1rem 0.85rem 0.95rem;
-  background: #25d366;
-  color: #fff;
-  border-radius: 999px;
-  box-shadow: 0 8px 28px rgba(37, 211, 102, 0.45);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.88rem;
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
-}
-
-.fab-wa:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 36px rgba(37, 211, 102, 0.55);
-}
-
-.fab-wa-text {
-  display: none;
-}
-
-@media (min-width: 480px) {
-  .fab-wa-text {
-    display: inline;
-  }
-}
-
 .manager-card {
   margin-top: 2rem;
   padding: clamp(1.25rem, 4vw, 1.75rem);
