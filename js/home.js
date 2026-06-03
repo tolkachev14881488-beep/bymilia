@@ -1,5 +1,5 @@
 import { getHomepage, getPublishedProducts } from './data-store.js';
-import { pageHref } from './layout.js';
+import { asset, pageHref } from './layout.js';
 
 export function renderHomepage() {
   const hp = getHomepage();
@@ -11,6 +11,25 @@ export function renderHomepage() {
   setHtml('[data-home="hero-lead"]', hero.lead);
   setText('[data-home="hero-card-label"]', hero.cardLabel);
   setText('[data-home="hero-card-sub"]', hero.cardSub);
+
+  const heroImg = document.querySelector('[data-home="hero-image"]');
+  if (heroImg) {
+    const src = hero.heroImage || getPublishedProducts().find((p) => p.image)?.image;
+    if (src) {
+      heroImg.src = src.startsWith('http') ? src : asset(src);
+      if (hero.imageAlt) heroImg.alt = hero.imageAlt;
+    }
+  }
+
+  const statsEl = document.querySelector('[data-home="hero-stats"]');
+  if (statsEl && hero.stats?.length) {
+    statsEl.innerHTML = hero.stats
+      .map(
+        (s) =>
+          `<li><strong>${escapeHtml(s.value)}</strong><span>${escapeHtml(s.label)}</span></li>`,
+      )
+      .join('');
+  }
 
   const tagsEl = document.querySelector('[data-home="hero-tags"]');
   if (tagsEl && hero.tags?.length) {
@@ -100,6 +119,12 @@ export function renderHomepage() {
   if (cta) {
     setText('[data-home="cta-title"]', cta.title);
     setText('[data-home="cta-text"]', cta.text);
+  }
+
+  const seo = hp.seo;
+  if (seo) {
+    setText('[data-home="seo-title"]', seo.title);
+    setHtml('[data-home="seo-html"]', seo.html);
   }
 
   import('./motion.js').then(({ observeReveals }) => {
