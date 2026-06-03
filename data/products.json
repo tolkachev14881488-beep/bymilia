@@ -1,105 +1,35 @@
 {
   "products": [
     {
-      "id": "wb-black",
-      "colorName": "Чёрный",
       "colorHex": "#1c1c1c",
-      "price": 72,
-      "oldPrice": 175,
-      "skuPrefix": "BM-230183062",
-      "image": "assets/products/black-front.png",
-      "images": [
-        "assets/products/black-front.png",
-        "assets/products/black-side.png",
-        "assets/products/black-sole.png"
-      ],
-      "wbNm": 230183062,
-      "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
-      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "colorName": "Классический чёрный",
+      "description": "Сапожки для разогрева стоп перед занятиями и между номерами.",
       "features": [
-        "6 размеров · 25–42 см",
-        "На WB: черный",
-        "670 отзывов · рейтинг 5",
-        "Заказ на сайте или на Wildberries"
-      ]
+        "6 размеров",
+        "Для зала и репетиций",
+        "Легко надевать самостоятельно"
+      ],
+      "id": "black",
+      "image": "",
+      "price": 42,
+      "published": true,
+      "skuPrefix": "BM-BLK"
     },
     {
-      "id": "wb-tropical",
-      "colorName": "Тропический принт",
-      "colorHex": "#4fc3f7",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-216515622",
-      "image": "assets/products/tropical-side.png",
-      "images": [
-        "assets/products/tropical-side.png",
-        "assets/products/tropical-back.png",
-        "assets/products/tropical-front.png"
-      ],
-      "wbNm": 216515622,
-      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
-      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
-      "features": [
-        "6 размеров · 25–42 см",
-        "На WB: голубой, розовый, оранжевый, синий, черный",
-        "200 отзывов · рейтинг 5",
-        "Заказ на сайте или на Wildberries"
-      ]
-    },
-    {
-      "id": "wb-bright",
-      "colorName": "Яркий принт",
-      "colorHex": "#ffca28",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-471902869",
-      "image": "assets/products/bright-comic-1.png",
-      "images": [
-        "assets/products/bright-comic-1.png",
-        "assets/products/bright-comic-2.png",
-        "assets/products/bright-comic-3.png"
-      ],
-      "imageVersion": "2",
-      "wbNm": 471902869,
-      "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
-      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
-      "features": [
-        "6 размеров · 25–42 см",
-        "На WB: желтый, фиолетовый, голубой, оранжевый",
-        "62 отзывов · рейтинг 5",
-        "Заказ на сайте или на Wildberries"
-      ]
-    },
-    {
-      "id": "wb-classic",
-      "colorName": "Классика · 5 цветов",
       "colorHex": "#ff5500",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-216496169",
-      "image": "assets/products/classic-1.png",
-      "images": [
-        "assets/products/classic-1.png",
-        "assets/products/classic-2.png"
-      ],
-      "imageVersion": "1",
-      "wbNm": 216496169,
-      "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
-      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "colorName": "Сапожки для разогрева стоп",
+      "description": "",
       "features": [
-        "6 размеров · 25–42 см",
-        "На WB: розовый, черный, красный, желтый, белый",
-        "753 отзывов · рейтинг 4.9",
-        "Заказ на сайте или на Wildberries"
-      ]
+        "6 размеров"
+      ],
+      "id": "color-1780510585354",
+      "image": "",
+      "imageVersion": "2",
+      "images": [],
+      "price": 42,
+      "published": true,
+      "skuPrefix": "BM-NEW",
+      "wbUrl": ""
     }
   ]
 }
