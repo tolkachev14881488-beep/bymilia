@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
@@ -11,27 +11,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=19">
+  <link rel="stylesheet" href="css/styles.css?v=20">
 </head>
 <body data-site-root=".">
   <div id="site-header"></div>
   <main class="container cart-layout">
-    <div>
-      <h1>Корзина</h1>
+    <div class="cart-main">
+      <div class="cart-head">
+        <h1>Корзина</h1>
+        <p class="cart-head-lead" id="cart-head-lead" hidden></p>
+      </div>
       <div class="cart-lines" id="cart-lines"></div>
     </div>
     <aside class="cart-aside" id="cart-aside" hidden>
       <div class="cart-summary" id="cart-summary"></div>
       <form class="checkout-form" id="checkout-form">
-        <h2 style="font-size:1.1rem;font-family:var(--font)">Оформление заявки</h2>
-        <p style="font-size:0.88rem;color:var(--ink-muted);margin:0 0 0.5rem">Менеджер свяжется для подтверждения и оплаты</p>
+        <h2 class="checkout-form-title">Оформление заказа</h2>
+        <p class="checkout-form-lead">Остался один шаг — отправьте заявку, менеджер ответит в WhatsApp</p>
         <label>ФИО <input name="name" required autocomplete="name"></label>
         <label>Телефон <input name="phone" type="tel" required autocomplete="tel" placeholder="+375 …"></label>
         <label>Email <input name="email" type="email" autocomplete="email"></label>
         <label>Способ доставки <select name="delivery" required></select></label>
         <label>Адрес / ПВЗ / комментарий к адресу <input name="address" placeholder="Город, улица, индекс…"></label>
         <label>Комментарий к заказу <textarea name="comment"></textarea></label>
-        <button class="btn btn-primary btn-lg btn-glow btn-block" type="submit">Отправить заявку в WhatsApp</button>
+        <button class="btn btn-primary btn-lg btn-glow btn-block" type="submit">Оформить заказ в WhatsApp</button>
+        <p class="checkout-form-note">Нажимая кнопку, вы соглашаетесь на обработку данных для связи по заказу</p>
       </form>
     </aside>
   </main>

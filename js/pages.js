@@ -1,4 +1,4 @@
-import { DELIVERY_OPTIONS, SIZES, SITE } from './config.js';
+import { DELIVERY_OPTIONS, SIZES, SITE, DELIVERY } from './config.js';
 import { PRODUCTS, getProduct, getProductSpecs, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart, cartCount } from './cart.js';
 import { renderManagerCard } from './manager.js';
@@ -6,7 +6,83 @@ import { submitOrder } from './checkout.js';
 import { asset, assetUrl, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
-const SIZE_BADGE = 'Размер 25–42';
+function renderCartUpsell(cart) {
+  const inCart = new Set(cart.map((line) => line.productId));
+  const others = PRODUCTS.filter((p) => !inCart.has(p.id)).slice(0, 3);
+  const catalog = pageHref('/catalog.html');
+  if (!others.length) {
+    return `
+      <div class="cart-continue">
+        <p class="cart-continue-text">Все расцветки уже в корзине — отличный выбор для коллектива или на смену в раздевалке.</p>
+        <a class="btn btn-ghost" href="${catalog}">Вернуться в каталог</a>
+      </div>`;
+  }
+  return `
+    <div class="cart-upsell">
+      <p class="cart-upsell-title">Добавить ещё расцветку?</p>
+      <p class="cart-upsell-lead">Удобно менять в раздевалке или собрать комплект для всей группы.</p>
+      <div class="cart-upsell-grid">
+        ${others
+          .map((p) => {
+            const img = productImageList(p)[0];
+            const label = p.paletteLabel || p.colorName;
+            const thumb = img
+              ? `<img src="${escapeHtml(img)}" alt="" width="52" height="52" loading="lazy">`
+              : `<span class="cart-upsell-swatch" style="background:${p.colorHex}"></span>`;
+            return `<a class="cart-upsell-card" href="${pageHref(`/product.html?id=${p.id}`)}">${thumb}<span>${escapeHtml(label)}</span></a>`;
+          })
+          .join('')}
+      </div>
+      <a class="btn btn-ghost btn-sm" href="${catalog}">Смотреть весь каталог →</a>
+    </div>`;
+}
+
+function renderCartFilled(cart) {
+  const linesHtml = cart
+    .map((line) => {
+      const p = getProduct(line.productId);
+      const size = SIZES.find((s) => s.id === line.sizeId);
+      if (!p) return '';
+      const img = productImageList(p)[0];
+      const thumbHtml = img
+        ? `<div class="cart-line-thumb"><img class="cart-line-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.colorName)}" width="72" height="72" loading="lazy"></div>`
+        : `<div class="cart-line-thumb cart-line-thumb--color" style="background:${p.colorHex}"></div>`;
+      return `
+        <div class="cart-line" data-key="${line.key}">
+          ${thumbHtml}
+          <div>
+            <strong>${p.colorName}</strong><br>
+            <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
+            <div class="qty-row" style="margin:0.5rem 0 0">
+              <div class="qty-control">
+                <button type="button" data-dec>−</button>
+                <span style="padding:0 0.75rem">${line.qty}</span>
+                <button type="button" data-inc>+</button>
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm" data-remove>Удалить</button>
+            </div>
+          </div>
+          <div><strong>${(p.price * line.qty).toFixed(2)} ${SITE.currencyLabel}</strong></div>
+        </div>`;
+    })
+    .join('');
+
+  const itemCount = cart.reduce((sum, line) => sum + line.qty, 0);
+  const sameDay = DELIVERY.sameDayBeforeHour || 13;
+
+  return `
+    <div class="cart-motivation">
+      <p class="cart-motivation-title">Отличный выбор — осталось оформить заявку</p>
+      <p class="cart-motivation-text">Менеджер подтвердит заказ в WhatsApp в рабочий день. Заявка до ${sameDay}:00 — отправка в тот же день.</p>
+    </div>
+    <div class="cart-lines-list">${linesHtml}</div>
+    ${renderCartUpsell(cart)}
+    <div class="cart-actions-row">
+      <a class="btn btn-ghost" href="${pageHref('/catalog.html')}">← Продолжить покупки</a>
+      <a class="btn btn-primary btn-glow cart-actions-order" href="#checkout-form">Оформить заказ →</a>
+    </div>
+    <p class="cart-items-note">${itemCount} ${itemCount === 1 ? 'пара' : itemCount < 5 ? 'пары' : 'пар'} в корзине — можно добавить другие размеры или расцветки</p>`;
+}
 
 function escapeHtml(text) {
   return String(text)
@@ -15,6 +91,8 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+const SIZE_BADGE = 'Размер 25–42';
 
 function renderProductSpecs(product) {
   const specs = getProductSpecs(product);
@@ -333,49 +411,47 @@ export function initCartPage() {
 
   function render() {
     const cart = pruneInvalidLines();
+    const headLead = document.getElementById('cart-head-lead');
+    const sameDay = DELIVERY.sameDayBeforeHour || 13;
+
     if (!cart.length) {
-      linesEl.innerHTML = `<div class="empty-state"><p>Корзина пуста</p><a class="btn btn-primary" href="${pageHref('/catalog.html')}">Перейти в каталог</a></div>`;
+      if (headLead) {
+        headLead.textContent = 'Выберите расцветку и размер — согреют ножки перед занятием';
+        headLead.hidden = false;
+      }
+      linesEl.innerHTML = `
+        <div class="empty-state cart-empty">
+          <p class="cart-empty-title">Пока пусто — самое время выбрать сапожки</p>
+          <p class="cart-empty-text">Четыре яркие расцветки, размеры 25–42. Заказ без регистрации — менеджер поможет с размером в WhatsApp.</p>
+          <div class="cart-empty-actions">
+            <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">Выбрать расцветку</a>
+            <a class="btn btn-ghost" href="${pageHref('/index.html')}">На главную</a>
+          </div>
+        </div>`;
       if (asideEl) asideEl.hidden = true;
       return;
     }
 
+    if (headLead) {
+      headLead.textContent = `Заявка до ${sameDay}:00 — отправка в тот же день`;
+      headLead.hidden = false;
+    }
+
     if (asideEl) asideEl.hidden = false;
 
-    linesEl.innerHTML = cart
-      .map((line) => {
-        const p = getProduct(line.productId);
-        const size = SIZES.find((s) => s.id === line.sizeId);
-        if (!p) return '';
-        const img = productImageList(p)[0];
-        const thumbHtml = img
-          ? `<div class="cart-line-thumb"><img class="cart-line-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.colorName)}" width="72" height="72" loading="lazy"></div>`
-          : `<div class="cart-line-thumb cart-line-thumb--color" style="background:${p.colorHex}"></div>`;
-        return `
-        <div class="cart-line" data-key="${line.key}">
-          ${thumbHtml}
-          <div>
-            <strong>${p.colorName}</strong><br>
-            <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
-            <div class="qty-row" style="margin:0.5rem 0 0">
-              <div class="qty-control">
-                <button type="button" data-dec>−</button>
-                <span style="padding:0 0.75rem">${line.qty}</span>
-                <button type="button" data-inc>+</button>
-              </div>
-              <button type="button" class="btn btn-ghost btn-sm" data-remove>Удалить</button>
-            </div>
-          </div>
-          <div><strong>${(p.price * line.qty).toFixed(2)} ${SITE.currencyLabel}</strong></div>
-        </div>`;
-      })
-      .join('');
+    linesEl.innerHTML = renderCartFilled(cart);
 
     const total = cartTotal();
+    const itemCount = cart.reduce((s, l) => s + l.qty, 0);
     if (summaryEl) {
       summaryEl.innerHTML = `
-        <div class="cart-summary-row"><span>Позиций</span><span>${cart.reduce((s, l) => s + l.qty, 0)}</span></div>
+        <div class="cart-order-nudge">
+          <p class="cart-order-nudge-title">Оформите заявку — мы на связи</p>
+          <p>Менеджер подтвердит заказ в WhatsApp. Оплата и доставка — после согласования, без лишних шагов на сайте.</p>
+        </div>
+        <div class="cart-summary-row"><span>Позиций</span><span>${itemCount}</span></div>
         <div class="cart-summary-row cart-total"><span>Итого</span><span>${total.toFixed(2)} ${SITE.currencyLabel}</span></div>
-        <p style="font-size:0.85rem;color:var(--ink-muted);margin:1rem 0 0">Оплата и точная стоимость доставки — по согласованию с менеджером после заявки.</p>
+        <p class="cart-summary-note">Европочта бесплатно от 50 руб. · курьер по Минску от 150 руб.</p>
       `;
     }
 
