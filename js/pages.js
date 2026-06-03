@@ -50,19 +50,23 @@ function renderCartFilled(cart) {
       return `
         <div class="cart-line" data-key="${line.key}">
           ${thumbHtml}
-          <div>
-            <strong>${p.colorName}</strong><br>
-            <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>
-            <div class="qty-row" style="margin:0.5rem 0 0">
-              <div class="qty-control">
-                <button type="button" data-dec>−</button>
-                <span style="padding:0 0.75rem">${line.qty}</span>
-                <button type="button" data-inc>+</button>
+          <div class="cart-line-main">
+            <div class="cart-line-header">
+              <div class="cart-line-info">
+                <strong class="cart-line-title">${escapeHtml(p.colorName)}</strong>
+                <span class="cart-line-meta">Размер ${escapeHtml(size?.label || '')} · ${escapeHtml(sku(p, line.sizeId))}</span>
               </div>
-              <button type="button" class="btn btn-ghost btn-sm" data-remove>Удалить</button>
+              <strong class="cart-line-price">${(p.price * line.qty).toFixed(2)} ${SITE.currencyLabel}</strong>
+            </div>
+            <div class="cart-line-footer qty-row">
+              <div class="qty-control">
+                <button type="button" data-dec aria-label="Уменьшить">−</button>
+                <span class="qty-value">${line.qty}</span>
+                <button type="button" data-inc aria-label="Увеличить">+</button>
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm cart-line-remove" data-remove>Удалить</button>
             </div>
           </div>
-          <div><strong>${(p.price * line.qty).toFixed(2)} ${SITE.currencyLabel}</strong></div>
         </div>`;
     })
     .join('');
@@ -396,8 +400,23 @@ export function initCartPage() {
     return valid;
   }
 
+  function setMobileBar(cart, total) {
+    const mobileBar = document.getElementById('cart-mobile-bar');
+    const mobileSum = document.getElementById('cart-mobile-sum');
+    if (!mobileBar) return;
+    if (!cart.length) {
+      mobileBar.hidden = true;
+      document.body.classList.remove('has-cart-bar');
+      return;
+    }
+    mobileBar.hidden = false;
+    document.body.classList.add('has-cart-bar');
+    if (mobileSum) mobileSum.textContent = `${total.toFixed(2)} ${SITE.currencyLabel}`;
+  }
+
   function showOrderSuccess() {
     if (asideEl) asideEl.hidden = true;
+    setMobileBar([], 0);
     linesEl.innerHTML = `
       <div class="empty-state cart-success">
         <p><strong>Заявка отправлена</strong></p>
@@ -427,6 +446,7 @@ export function initCartPage() {
           </div>
         </div>`;
       if (asideEl) asideEl.hidden = true;
+      setMobileBar([], 0);
       return;
     }
 
@@ -441,6 +461,7 @@ export function initCartPage() {
 
     const total = cartTotal();
     const itemCount = cart.reduce((s, l) => s + l.qty, 0);
+    setMobileBar(cart, total);
     if (summaryEl) {
       summaryEl.innerHTML = `
         <div class="cart-order-nudge">

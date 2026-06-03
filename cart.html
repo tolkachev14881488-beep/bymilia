@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=25">
+  <link rel="stylesheet" href="css/styles.css?v=27">
 </head>
-<body data-site-root=".">
+<body class="page-cart" data-site-root=".">
   <div id="site-header"></div>
   <main class="container cart-layout">
     <div class="cart-main">
@@ -39,6 +39,15 @@
       </form>
     </aside>
   </main>
+  <div class="cart-mobile-bar" id="cart-mobile-bar" hidden>
+    <div class="cart-mobile-bar-inner">
+      <div class="cart-mobile-bar-total">
+        <span class="cart-mobile-bar-label">Итого</span>
+        <strong class="cart-mobile-bar-sum" id="cart-mobile-sum"></strong>
+      </div>
+      <a class="btn btn-primary btn-glow cart-mobile-bar-btn" href="#checkout-form">Оформить</a>
+    </div>
+  </div>
   <div id="site-footer"></div>
   <script type="module">
     import { boot } from './js/init.js';
