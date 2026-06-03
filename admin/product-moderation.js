@@ -389,11 +389,12 @@ export function initProductModeration({
   }
 
   function readEditorForm(box, prev) {
-    const get = (n) => box.querySelector(`[name="${n}"]`)?.value?.trim() ?? '';
+    const editor = box.querySelector('.mod-editor') || box;
+    const get = (n) => editor.querySelector(`[name="${n}"]`)?.value?.trim() ?? '';
     return {
       ...prev,
       id: get('id') || prev.id,
-      colorName: get('colorName'),
+      colorName: get('colorName') || prev.colorName,
       colorHex: get('colorHex') || '#ff5500',
       price: parseFloat(get('price')) || 0,
       oldPrice: get('oldPrice') ? parseFloat(get('oldPrice')) : undefined,

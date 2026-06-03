@@ -1,4 +1,10 @@
-import { loadSiteData, getSiteData, getProductsRaw } from '../js/data-store.js';
+import {
+  loadSiteData,
+  reloadSiteData,
+  applyCmsPayload,
+  getSiteData,
+  getProductsRaw,
+} from '../js/data-store.js';
 import { fetchWbCatalog, DEFAULT_WB_URLS } from '../js/wb.js';
 import {
   getGithubConfig,
@@ -180,6 +186,7 @@ async function saveProductFromModeration(oldId, data) {
   saveDraftToStorage();
   const ok = await publishToSite({
     uploads,
+    skipCollectForms: true,
     successMessage: uploads.length
       ? `Товар и ${uploads.length} фото опубликованы на сайте.`
       : 'Товар опубликован на сайте.',
@@ -227,14 +234,23 @@ function persistGithubForm() {
   setPublishUi(isGithubConfigured() ? 'idle' : 'idle');
 }
 
-async function collectAllForms() {
-  if (document.getElementById('hp-hero-title')) collectHomepage();
-  if (document.getElementById('page-select')) collectPage();
-  if (document.getElementById('st-brand')) await collectSettings();
+function collectActivePanelForms() {
+  const panel = document.querySelector('.admin-panel.is-active')?.dataset.panel;
+  if (panel === 'homepage' && document.getElementById('hp-hero-title')) collectHomepage();
+  if (panel === 'pages' && document.getElementById('page-select')) collectPage();
+  if (panel === 'settings' && document.getElementById('st-brand')) collectSettings();
 }
 
-async function publishToSite({ successMessage = 'Опубликовано.', uploads = [] } = {}) {
-  await collectAllForms();
+async function collectAllForms() {
+  collectActivePanelForms();
+}
+
+async function publishToSite({
+  successMessage = 'Опубликовано.',
+  uploads = [],
+  skipCollectForms = false,
+} = {}) {
+  if (!skipCollectForms) await collectAllForms();
   validateDraftBeforePublish();
   persistGithubForm();
   const payload = { siteJson: sitePayload(), productsJson: productsPayload() };
@@ -246,9 +262,13 @@ async function publishToSite({ successMessage = 'Опубликовано.', upl
       uploads,
     });
     sessionStorage.removeItem(DRAFT_KEY);
-    await loadSiteData();
-    buildDraftFromServer();
+    applyCmsPayload(payload.siteJson, payload.productsJson);
+    saveDraftToStorage();
     renderAll();
+    reloadSiteData()
+      .then(() => buildDraftFromServer())
+      .then(() => renderAll())
+      .catch(() => {});
     setPublishUi('ok');
     const tail = result.mode === 'local' ? ' Сайт обновится за 1–2 минуты.' : ' Сайт обновится за 2–3 минуты.';
     showAlert(`${result.message || successMessage}${tail}`, 'ok');
@@ -320,7 +340,7 @@ document.querySelector('[data-goto-publish]')?.addEventListener('click', () => {
 
 document.getElementById('reload-btn').addEventListener('click', async () => {
   if (!confirm('Загрузить данные с сайта? Несохранённый черновик будет потерян.')) return;
-  await loadSiteData();
+  await reloadSiteData();
   sessionStorage.removeItem(DRAFT_KEY);
   buildDraftFromServer();
   renderAll();

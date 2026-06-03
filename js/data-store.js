@@ -77,21 +77,42 @@ function deepMerge(target, source) {
   return out;
 }
 
-async function fetchJson(url) {
-  const res = await fetch(url, { cache: 'no-store' });
+async function fetchJson(url, { bustCache = false } = {}) {
+  const fetchUrl = bustCache
+    ? `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`
+    : url;
+  const res = await fetch(fetchUrl, { cache: 'no-store' });
   if (!res.ok) return null;
   return res.json();
 }
 
-export async function loadSiteData() {
+export function invalidateSiteDataCache() {
+  loadPromise = null;
+}
+
+/** Применить данные после публикации из админки (без повторного fetch) */
+export function applyCmsPayload(siteJson, productsJson) {
+  if (siteJson) {
+    siteData = deepMerge(DEFAULT_SITE, siteJson);
+  }
+  if (productsJson?.products) {
+    productsList = productsJson.products;
+  }
+  applyExports();
+  return { siteData, products: productsList };
+}
+
+export async function loadSiteData({ reload = false } = {}) {
+  if (reload) invalidateSiteDataCache();
   if (loadPromise) return loadPromise;
   loadPromise = (async () => {
     loadError = null;
     const siteUrl = dataFileUrl('site.json');
     const productsUrl = dataFileUrl('products.json');
+    const bust = reload;
     const [siteJson, productsJson] = await Promise.all([
-      fetchJson(siteUrl),
-      fetchJson(productsUrl),
+      fetchJson(siteUrl, { bustCache: bust }),
+      fetchJson(productsUrl, { bustCache: bust }),
     ]);
     if (!siteJson || !productsJson) {
       loadError = 'Не удалось загрузить данные сайта. Обновите страницу (Ctrl+F5).';
@@ -103,6 +124,10 @@ export async function loadSiteData() {
     return { siteData, products: productsList, error: loadError };
   })();
   return loadPromise;
+}
+
+export async function reloadSiteData() {
+  return loadSiteData({ reload: true });
 }
 
 export function getLoadError() {
