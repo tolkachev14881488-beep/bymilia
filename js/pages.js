@@ -492,7 +492,7 @@ export function initCartPage() {
     const deliverySelect = form.querySelector('[name="delivery"]');
     if (deliverySelect) {
       deliverySelect.innerHTML = DELIVERY_OPTIONS.map(
-        (o) => `<option value="${o.id}">${o.label} — ${o.hint}</option>`,
+        (o) => `<option value="${o.id}">${escapeHtml(o.label)}</option>`,
       ).join('');
     }
 
