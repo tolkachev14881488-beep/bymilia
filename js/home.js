@@ -1,5 +1,6 @@
 import { getHomepage, getPublishedProducts } from './data-store.js';
 import { asset, pageHref } from './layout.js';
+import { applySeo } from './seo.js';
 
 export function renderHomepage() {
   const hp = getHomepage();
@@ -123,6 +124,16 @@ export function renderHomepage() {
 
   const seo = hp.seo;
   if (seo) {
+    applySeo({
+      title:
+        seo.metaTitle ||
+        'Сапожки для разогрева стоп By Milia — купить в Минске, доставка по Беларуси',
+      description:
+        seo.metaDescription ||
+        'Сапожки для разогрева стоп By Milia для балета и танцев: 4 расцветки, размеры 25–42 см, производство в Минске. Розница и опт.',
+      path: 'index.html',
+      image: seo.ogImage ? asset(seo.ogImage) : undefined,
+    });
     setText('[data-home="seo-title"]', seo.title);
     setHtml('[data-home="seo-html"]', seo.html);
   }

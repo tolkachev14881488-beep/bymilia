@@ -1,5 +1,6 @@
 import { SITE, CONTACTS } from './config.js';
 import { cartCount } from './cart.js';
+import { waUrl, telUrl, mailUrl } from './manager.js';
 
 const NAV = [
   { href: '/catalog.html', label: 'Каталог' },
@@ -46,6 +47,7 @@ function renderHeader() {
           </ul>
         </nav>
         <div class="header-actions">
+          <a class="btn btn-ghost btn-sm header-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <a class="btn btn-primary btn-sm" href="${catalog}">Каталог</a>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -87,11 +89,13 @@ function renderFooter() {
           </ul>
         </div>
         <div>
-          <p class="footer-heading">Контакты</p>
+          <p class="footer-heading">Менеджер</p>
           <ul class="footer-links">
-            <li><a href="tel:${CONTACTS.phoneRaw}">${CONTACTS.phone}</a></li>
-            <li><a href="mailto:${CONTACTS.email}">${CONTACTS.email}</a></li>
+            <li><a href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp — заказ и вопросы</a></li>
+            <li><a href="${telUrl()}">${CONTACTS.phone}</a></li>
+            <li><a href="${mailUrl()}">${CONTACTS.email}</a></li>
             <li>${CONTACTS.address}</li>
+            <li>${CONTACTS.pickupHours || ''}</li>
           </ul>
         </div>
       </div>

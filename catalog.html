@@ -26,13 +26,17 @@
     </div>
     <section class="section section-catalog">
       <div class="container product-grid" id="catalog-grid"></div>
+      <div class="container" id="catalog-manager" style="margin-top:2rem"></div>
     </section>
   </main>
   <div id="site-footer"></div>
   <script type="module">
     import { boot } from './js/init.js';
-    import { renderProductGrid } from './js/pages.js';
-    boot(() => renderProductGrid(document.getElementById('catalog-grid')));
+    import { initCatalogSeo, renderProductGrid } from './js/pages.js';
+    boot(() => {
+      initCatalogSeo();
+      renderProductGrid(document.getElementById('catalog-grid'));
+    });
   </script>
 </body>
 </html>

@@ -3,6 +3,38 @@ import { PRODUCTS, getProduct, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine } from './cart.js';
 import { submitOrder } from './checkout.js';
 import { asset, pageHref } from './layout.js';
+import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
+import { renderManagerCard } from './manager.js';
+
+export function initCatalogSeo() {
+  applySeo({
+    title: 'Каталог сапожек By Milia — 4 расцветки, размеры 25–42 см',
+    description:
+      'Купить сапожки для разогрева стоп By Milia: чёрный, тропический и яркий принт, классика. Цены, фото, доставка по Беларуси. Менеджер в WhatsApp.',
+    path: 'catalog.html',
+  });
+  breadcrumbJsonLd([
+    { name: 'Главная', path: 'index.html' },
+    { name: 'Каталог', path: 'catalog.html' },
+  ]);
+  const slot = document.getElementById('catalog-manager');
+  if (slot) {
+    slot.innerHTML = renderManagerCard({
+      compact: true,
+      title: 'Помочь с выбором расцветки и размера?',
+    });
+  }
+}
+
+export function initCartSeo() {
+  applySeo({
+    title: 'Корзина и оформление заказа — By Milia',
+    description:
+      'Оформите заказ сапожек By Milia: корзина, доставка по Беларуси, подтверждение менеджером в WhatsApp. Самовывоз в Минске, Европочта, курьер.',
+    path: 'cart.html',
+    noindex: true,
+  });
+}
 
 function showToast(text) {
   let el = document.querySelector('.toast');
@@ -107,7 +139,42 @@ export function initProductPage() {
     return;
   }
 
-  document.title = `${product.colorName} — ${SITE.brand}`;
+  const desc =
+    (product.description || '').slice(0, 155) +
+    ' Заказ на сайте By Milia, доставка по Беларуси.';
+  applySeo({
+    title: `${product.colorName} — сапожки By Milia | купить в Минске`,
+    description: desc,
+    path: `product.html?id=${product.id}`,
+    image: product.image ? asset(product.image) : undefined,
+    type: 'product',
+  });
+  breadcrumbJsonLd([
+    { name: 'Главная', path: 'index.html' },
+    { name: 'Каталог', path: 'catalog.html' },
+    { name: product.colorName, path: `product.html?id=${product.id}` },
+  ]);
+  const rawImg = productImageList(product)[0]?.split('?')[0];
+  const schemaImage = rawImg
+    ? rawImg.startsWith('http')
+      ? rawImg
+      : pageUrl(rawImg.replace(/^\.\.\//, ''))
+    : undefined;
+  injectJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: `${product.colorName} — ${SITE.brand}`,
+    description: product.description,
+    image: schemaImage,
+    brand: { '@type': 'Brand', name: SITE.brand },
+    offers: {
+      '@type': 'Offer',
+      price: product.price,
+      priceCurrency: 'BYN',
+      availability: 'https://schema.org/InStock',
+      url: pageUrl(`product.html?id=${product.id}`),
+    },
+  });
 
   let selectedSize = null;
   let qty = 1;
@@ -141,6 +208,11 @@ export function initProductPage() {
           <ul class="feature-list">
             ${product.features.map((f) => `<li>${f}</li>`).join('')}
           </ul>
+          ${renderManagerCard({
+            compact: true,
+            title: 'Вопросы по размеру?',
+            waText: `Здравствуйте! Интересует «${product.colorName}» By Milia.`,
+          })}
         </div>
       </div>
     `;
@@ -192,9 +264,18 @@ export function initProductPage() {
 }
 
 export function initCartPage() {
+  initCartSeo();
   const linesEl = document.getElementById('cart-lines');
   const summaryEl = document.getElementById('cart-summary');
   const form = document.getElementById('checkout-form');
+  const managerSlot = document.getElementById('cart-manager');
+  if (managerSlot) {
+    managerSlot.innerHTML = renderManagerCard({
+      compact: true,
+      title: 'Вопросы по заказу?',
+      waText: 'Здравствуйте! Оформляю заказ сапожек By Milia на сайте.',
+    });
+  }
   if (!linesEl) return;
 
   function render() {
