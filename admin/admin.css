@@ -175,6 +175,12 @@ body {
   font-size: 0.9rem;
 }
 
+.github-banner--ok {
+  background: rgba(34, 120, 70, 0.12);
+  border-color: rgba(34, 120, 70, 0.35);
+  color: var(--ink);
+}
+
 .github-banner.hidden {
   display: none;
 }

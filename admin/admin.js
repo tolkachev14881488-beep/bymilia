@@ -9,7 +9,10 @@ import {
   publishSiteContent,
   saveGithubSettings,
   verifyGithubConnection,
+  ensureDefaultPublishSettings,
 } from './github-publish.js';
+
+ensureDefaultPublishSettings();
 import { initProductModeration } from './product-moderation.js';
 
 const AUTH_KEY = 'bymilia-admin-auth';
@@ -250,12 +253,22 @@ async function updateGithubBanner() {
   if (!el) return;
   const local = await isLocalPublishAvailable();
   if (local) {
+    el.classList.remove('hidden');
+    el.className = 'github-banner github-banner--ok';
+    el.innerHTML =
+      'Локальная публикация активна (<code>cms-publish-server</code>). Сохранение в админке сразу пушит на GitHub.';
+    return;
+  }
+  if (isGithubConfigured()) {
     el.classList.add('hidden');
     return;
   }
   el.classList.remove('hidden');
+  el.className = 'github-banner';
   el.innerHTML =
-    'Для публикации запустите на компьютере: <code>node scripts/cms-publish-server.mjs</code> (окно не закрывайте).';
+    'Один раз: вкладка «Подключение» → вставьте GitHub-токен (scope <code>repo</code>) → «Проверить токен». ' +
+    'Дальше каждое «Сохранить» публикует сайт автоматически. ' +
+    'Или на ПК: <code>node scripts/cms-publish-server.mjs</code>.';
 }
 
 function showGithubConnected(info) {
@@ -672,6 +685,7 @@ async function collectSettings() {
 // ——— Publish ———
 
 function loadPublishForm() {
+  ensureDefaultPublishSettings();
   const s = loadGithubSettings();
   document.getElementById('gh-owner').value = s.owner || 'tolkachev14881488-beep';
   document.getElementById('gh-repo').value = s.repo || 'bymilia';

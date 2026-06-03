@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="admin.css">
 </head>
-<body>
+<body data-site-root="..">
   <div id="login-screen" class="admin-login">
     <form class="login-card" id="login-form">
       <h1>By Milia — админка</h1>
@@ -98,7 +98,7 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
       </section>
 
       <section class="admin-panel" data-panel="publish">
-        <p class="hint">Основной способ: локальный сервер <code>node scripts/cms-publish-server.mjs</code>. Токен GitHub — запасной вариант.</p>
+        <p class="hint">Один раз вставьте GitHub-токен — дальше «Сохранить» в любой вкладке публикует на сайт через GitHub Actions. На своём ПК можно вместо токена запустить <code>node scripts/cms-publish-server.mjs</code>.</p>
         <p id="gh-connected" class="gh-connected hidden"></p>
         <div class="field-grid">
           <div class="field">

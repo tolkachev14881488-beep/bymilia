@@ -29,6 +29,17 @@ export function getCmsPublishKey() {
   return (loadGithubSettings().cmsPublishKey || CMS_PUBLISH_KEY).trim();
 }
 
+/** Однократная настройка репозитория и ключа CMS (без токена) */
+export function ensureDefaultPublishSettings() {
+  const prev = loadGithubSettings();
+  saveGithubSettings({
+    owner: prev.owner || 'tolkachev14881488-beep',
+    repo: prev.repo || 'bymilia',
+    branch: prev.branch || 'main',
+    cmsPublishKey: prev.cmsPublishKey || CMS_PUBLISH_KEY,
+  });
+}
+
 export function isGithubConfigured() {
   const { token, owner, repo } = getGithubConfig();
   return Boolean(token && owner && repo && getCmsPublishKey());
@@ -284,7 +295,10 @@ export async function publishSiteContent({ siteJson, productsJson, uploads = [] 
   }
   if (cmsKey) {
     await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
-    return { mode: 'actions' };
+    return {
+      mode: 'actions',
+      message: 'Изменения отправлены в GitHub. Сайт обновится за 1–2 минуты.',
+    };
   }
   if (uploads.length) await uploadBinaryFiles(uploads);
   return publishToGithub({ ...cfg, siteJson, productsJson });

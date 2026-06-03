@@ -83,6 +83,10 @@ for (const [input, expected] of pathCases) {
   else ok(`site root ${input}`);
 }
 
+const adminHtml = fs.readFileSync(path.join(root, 'admin/index.html'), 'utf8');
+if (!adminHtml.includes('data-site-root=".."')) fail('admin', 'missing data-site-root');
+else ok('admin/index.html');
+
 const htmlPages = [
   'index.html',
   'catalog.html',
