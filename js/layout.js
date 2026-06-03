@@ -33,7 +33,7 @@ function renderHeader() {
   const logo = asset('assets/logo.png');
 
   return `
-    <header class="site-header site-header--lux">
+    <header class="site-header">
       <div class="container header-inner">
         <a class="logo-link" href="${home}" aria-label="${SITE.brand} — на главную">
           <img src="${logo}" alt="${SITE.brand}" class="logo-img" width="160" height="48">
@@ -41,14 +41,14 @@ function renderHeader() {
         <button class="nav-toggle" type="button" aria-label="Меню" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
-        <nav class="site-nav site-nav--lux" aria-label="Основное меню">
+        <nav class="site-nav" aria-label="Основное меню">
           <ul>
             ${NAV.map((n) => `<li><a href="${pageHref(n.href)}">${n.label}</a></li>`).join('')}
           </ul>
         </nav>
         <div class="header-actions">
           <a class="btn btn-ghost btn-sm header-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          <a class="btn btn-primary btn-sm btn-lux" href="${catalog}">Каталог</a>
+          <a class="btn btn-primary btn-sm" href="${catalog}">Каталог</a>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/>
