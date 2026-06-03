@@ -1,6 +1,23 @@
 import { getHomepage, getPublishedProducts } from './data-store.js';
 import { asset, pageHref } from './layout.js';
 import { applySeo } from './seo.js';
+import { normalizeProductId } from './products.js';
+
+const HERO_PALETTE_LABELS = {
+  'wb-black': 'Черный',
+  'wb-tropical': 'Единорог',
+  'wb-bright': 'Упс',
+  'wb-classic': 'Цветы',
+  black: 'Черный',
+  tropical: 'Единорог',
+  bright: 'Упс',
+  classic: 'Цветы',
+};
+
+function heroPaletteLabel(product) {
+  const id = normalizeProductId(product.id);
+  return HERO_PALETTE_LABELS[id] || product.paletteLabel || product.colorName;
+}
 
 export function renderHomepage() {
   const hp = getHomepage();
@@ -45,7 +62,7 @@ export function renderHomepage() {
     paletteEl.innerHTML = products
       .map(
         (p) =>
-          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(p.paletteLabel || p.colorName)}</span>`,
+          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(heroPaletteLabel(p))}</span>`,
       )
       .join('');
   }

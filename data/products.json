@@ -83,6 +83,7 @@
     {
       "id": "wb-classic",
       "colorName": "Классика · 5 цветов",
+      "paletteLabel": "Цветы",
       "colorHex": "#ff5500",
       "price": 77,
       "oldPrice": 175,
