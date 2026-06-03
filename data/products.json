@@ -28,7 +28,7 @@
     },
     {
       "id": "wb-tropical",
-      "colorName": "Сапожки By Milia",
+      "colorName": "Тропический принт",
       "colorHex": "#4fc3f7",
       "price": 77,
       "oldPrice": 175,
@@ -49,12 +49,11 @@
         "На WB: голубой, розовый, оранжевый, синий, черный",
         "200 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
-      ],
-      "imageVersion": "2"
+      ]
     },
     {
       "id": "wb-bright",
-      "colorName": "Яркий принт",
+      "colorName": "Сапожки By Milia",
       "colorHex": "#ffca28",
       "price": 77,
       "oldPrice": 175,
@@ -65,7 +64,7 @@
         "assets/products/bright-comic-2.png",
         "assets/products/bright-comic-3.png"
       ],
-      "imageVersion": "2",
+      "imageVersion": "3",
       "wbNm": 471902869,
       "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
       "wbPhoto": 1,
