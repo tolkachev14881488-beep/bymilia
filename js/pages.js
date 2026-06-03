@@ -3,7 +3,7 @@ import { PRODUCTS, getProduct, getProductSpecs, sku } from './products.js';
 import { addToCart, getCart, cartTotal, updateQty, removeLine, saveCart, cartCount } from './cart.js';
 import { renderManagerCard } from './manager.js';
 import { submitOrder } from './checkout.js';
-import { asset, pageHref } from './layout.js';
+import { asset, assetUrl, pageHref } from './layout.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
 const SIZE_BADGE = 'Размер 25–42';
@@ -98,7 +98,7 @@ const ASSET_CACHE_VERSION = '20260602';
 function productImageSrc(src, product) {
   if (src.startsWith('http')) return src;
   const v = product?.imageVersion || ASSET_CACHE_VERSION;
-  return `${asset(src)}?v=${encodeURIComponent(v)}`;
+  return `${assetUrl(src)}?v=${encodeURIComponent(v)}`;
 }
 
 function productImageList(p) {
@@ -347,12 +347,12 @@ export function initCartPage() {
         const size = SIZES.find((s) => s.id === line.sizeId);
         if (!p) return '';
         const img = productImageList(p)[0];
-        const swatchStyle = img
-          ? `background-image:url("${img.replace(/"/g, '%22')}");background-size:cover;background-position:center`
-          : `background:${p.colorHex}`;
+        const thumbHtml = img
+          ? `<div class="cart-line-thumb"><img class="cart-line-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.colorName)}" width="72" height="72" loading="lazy"></div>`
+          : `<div class="cart-line-thumb cart-line-thumb--color" style="background:${p.colorHex}"></div>`;
         return `
         <div class="cart-line" data-key="${line.key}">
-          <div class="cart-line-swatch" style="${swatchStyle}"></div>
+          ${thumbHtml}
           <div>
             <strong>${p.colorName}</strong><br>
             <span style="color:var(--ink-muted);font-size:0.88rem">Размер ${size?.label} · ${sku(p, line.sizeId)}</span>

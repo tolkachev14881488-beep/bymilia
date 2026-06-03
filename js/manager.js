@@ -1,4 +1,5 @@
 import { CONTACTS, SITE } from './config.js';
+import { cartCount } from './cart.js';
 import { pageHref } from './layout.js';
 
 const DEFAULT_WA_TEXT = 'Здравствуйте! Хочу заказать сапожки By Milia. Подскажите, пожалуйста.';
@@ -13,6 +14,33 @@ export function telUrl() {
 
 export function mailUrl(subject = `Вопрос ${SITE.brand}`) {
   return `mailto:${CONTACTS.email}?subject=${encodeURIComponent(subject)}`;
+}
+
+/** Плавающая кнопка корзины */
+export function renderFabCart() {
+  if (/\/cart\.html$/i.test(window.location.pathname.replace(/\\/g, '/'))) return '';
+  const count = cartCount();
+  const cart = pageHref('/cart.html');
+  return `
+    <a class="fab-cart" href="${cart}" aria-label="${count ? `Корзина, ${count} товаров` : 'Корзина'}">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+        <path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M6 6L5 3H2"/>
+      </svg>
+      <span class="fab-cart-badge" data-fab-cart-badge ${count ? '' : 'hidden'}>${count || ''}</span>
+    </a>
+  `;
+}
+
+export function updateFabCart() {
+  const fab = document.querySelector('.fab-cart');
+  const badge = document.querySelector('[data-fab-cart-badge]');
+  if (!fab) return;
+  const n = cartCount();
+  fab.setAttribute('aria-label', n ? `Корзина, ${n} товаров` : 'Корзина');
+  if (badge) {
+    badge.textContent = n;
+    badge.hidden = !n;
+  }
 }
 
 /** Плавающая кнопка WhatsApp */
@@ -54,12 +82,20 @@ export function renderManagerCard(opts = {}) {
 }
 
 export function mountGlobalContacts() {
-  if (!document.getElementById('fab-wa-slot')) {
-    const fab = document.createElement('div');
-    fab.id = 'fab-wa-slot';
-    document.body.appendChild(fab);
+  let stack = document.getElementById('fab-stack');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'fab-stack';
+    stack.className = 'fab-stack';
+    document.body.appendChild(stack);
   }
-  document.getElementById('fab-wa-slot').innerHTML = renderFab();
+  stack.innerHTML = `${renderFabCart()}${renderFab()}`;
+
+  if (!window.__fabCartListener) {
+    window.__fabCartListener = true;
+    window.addEventListener('cart-updated', updateFabCart);
+  }
+  updateFabCart();
 }
 
 export function initHeaderScroll() {

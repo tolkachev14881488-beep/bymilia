@@ -1,4 +1,5 @@
 import { SITE, CONTACTS } from './config.js';
+import { getSiteRoot } from './site-path.js';
 import { cartCount } from './cart.js';
 import { telUrl, mailUrl, waUrl } from './manager.js';
 
@@ -17,6 +18,18 @@ function inPagesDir() {
 
 export function asset(path) {
   return inPagesDir() ? `../${path}` : path;
+}
+
+/** Абсолютный URL ассета (корректно на GitHub Pages /bymilia/) */
+export function assetUrl(path) {
+  if (!path || path.startsWith('http')) return path;
+  const clean = path.replace(/^\.\//, '');
+  const rel = inPagesDir() ? `../${clean}` : clean;
+  try {
+    return new URL(rel, getSiteRoot()).href;
+  } catch {
+    return rel;
+  }
 }
 
 export function pageHref(href) {

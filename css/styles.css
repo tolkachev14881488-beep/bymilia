@@ -1620,11 +1620,22 @@ body.nav-open {
   box-shadow: var(--shadow);
 }
 
-.cart-line-swatch {
+.cart-line-swatch,
+.cart-line-thumb {
   width: 72px;
   height: 72px;
   border-radius: 16px;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--paper-2);
+}
+
+.cart-line-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .cart-aside {
@@ -2509,7 +2520,8 @@ body.nav-open {
     border-top: 1px dashed var(--line);
   }
 
-  .cart-line-swatch {
+  .cart-line-swatch,
+  .cart-line-thumb {
     width: 56px;
     height: 56px;
     grid-row: 1 / span 2;
@@ -2637,12 +2649,58 @@ body.nav-open {
   }
 }
 
-#fab-wa-slot {
+#fab-stack {
   position: fixed;
   z-index: 110;
   right: max(1rem, var(--safe-right));
   bottom: max(1.25rem, var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
   pointer-events: none;
+}
+
+#fab-stack > * {
+  pointer-events: auto;
+}
+
+.fab-cart {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 8px 28px var(--accent-glow);
+  text-decoration: none;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.fab-cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px var(--accent-glow);
+  color: #fff;
+}
+
+.fab-cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .fab-wa {
