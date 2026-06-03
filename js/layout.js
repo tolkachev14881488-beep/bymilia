@@ -1,6 +1,6 @@
 import { SITE, CONTACTS } from './config.js';
 import { cartCount } from './cart.js';
-import { waUrl, telUrl, mailUrl } from './manager.js';
+import { telUrl, mailUrl, waUrl } from './manager.js';
 
 const NAV = [
   { href: '/catalog.html', label: 'Каталог' },
@@ -38,6 +38,7 @@ function renderHeader() {
         <a class="logo-link" href="${home}" aria-label="${SITE.brand} — на главную">
           <img src="${logo}" alt="${SITE.brand}" class="logo-img" width="160" height="48">
         </a>
+        <p class="header-address">${CONTACTS.address}</p>
         <button class="nav-toggle" type="button" aria-label="Меню" aria-expanded="false">
           <span></span><span></span><span></span>
         </button>
@@ -47,7 +48,10 @@ function renderHeader() {
           </ul>
         </nav>
         <div class="header-actions">
-          <a class="btn btn-ghost btn-sm header-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <div class="header-phone-block">
+            <a class="header-phone" href="${telUrl()}">${CONTACTS.phone}</a>
+            <span class="header-phone-note">Приём заказов до 13:00 — отправка в тот же день</span>
+          </div>
           <a class="btn btn-primary btn-sm" href="${catalog}">Каталог</a>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
