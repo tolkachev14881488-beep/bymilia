@@ -74,6 +74,7 @@ function renderFooter() {
           <p class="footer-heading">Покупателям</p>
           <ul class="footer-links">
             <li><a href="${pageHref('/catalog.html')}">Каталог</a></li>
+            <li><a href="${pageHref('/cart.html')}">Корзина</a></li>
             <li><a href="${pageHref('/pages/delivery.html')}">Доставка и оплата</a></li>
             <li><a href="${pageHref('/pages/guarantee.html')}">Гарантия и возврат</a></li>
             <li><a href="${pageHref('/pages/where-to-buy.html')}">Где купить</a></li>
@@ -116,7 +117,10 @@ function renderFooter() {
 export function initLayout() {
   const headerSlot = document.getElementById('site-header');
   const footerSlot = document.getElementById('site-footer');
-  if (headerSlot) headerSlot.innerHTML = renderHeader();
+  if (headerSlot) {
+    headerSlot.innerHTML = '';
+    headerSlot.hidden = true;
+  }
   if (footerSlot) footerSlot.innerHTML = renderFooter();
 
   import('./motion.js')

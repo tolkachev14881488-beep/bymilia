@@ -15,21 +15,6 @@ export function mailUrl(subject = `Вопрос ${SITE.brand}`) {
   return `mailto:${CONTACTS.email}?subject=${encodeURIComponent(subject)}`;
 }
 
-/** Верхняя полоска с контактами менеджера */
-export function renderContactBar() {
-  return `
-    <div class="contact-bar" role="region" aria-label="Связь с менеджером">
-      <div class="container contact-bar-inner">
-        <span class="contact-bar-label">Менеджер By Milia</span>
-        <a class="contact-bar-link" href="${telUrl()}">${CONTACTS.phone}</a>
-        <a class="contact-bar-link contact-bar-link--wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-        <a class="contact-bar-link" href="${mailUrl()}">${CONTACTS.email}</a>
-        <span class="contact-bar-hours">${CONTACTS.pickupHours || 'Пн–Пт 9:00–18:00'}</span>
-      </div>
-    </div>
-  `;
-}
-
 /** Плавающая кнопка WhatsApp */
 export function renderFab() {
   return `
@@ -69,13 +54,6 @@ export function renderManagerCard(opts = {}) {
 }
 
 export function mountGlobalContacts() {
-  if (!document.getElementById('contact-bar-slot')) {
-    const bar = document.createElement('div');
-    bar.id = 'contact-bar-slot';
-    document.body.prepend(bar);
-  }
-  document.getElementById('contact-bar-slot').innerHTML = renderContactBar();
-
   if (!document.getElementById('fab-wa-slot')) {
     const fab = document.createElement('div');
     fab.id = 'fab-wa-slot';

@@ -5,29 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Опт — By Milia</title>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/styles.css">
+  <style>#site-header,#contact-bar-slot,.contact-bar,.site-header{display:none!important}</style>
+  <link rel="stylesheet" href="../css/styles.css?v=3">
 </head>
-<body data-page="wholesale">
-  <div id="site-header"></div>
-  <main>
+<body data-page="wholesale">  <main>
     <div class="page-hero"><div class="container"><h1>Оптовым клиентам</h1><p class="lead"></p></div></div>
-    <div class="container page-content prose">
-      <p>Работаем с тренерами и коллективами. <strong>Минимальная партия — 10 пар.</strong> Регистрация на сайте не требуется.</p>
-      <p>Цены зависят от объёма и условий — скачайте актуальный прайс-лист:</p>
-      <p><a class="btn btn-primary" href="../assets/pricelist.pdf" download id="pricelist-btn">Скачать прайс (PDF)</a></p>
-      <p style="font-size:0.9rem;color:var(--ink-muted)" id="pricelist-hint">Добавьте файл <code>assets/pricelist.pdf</code> — кнопка заработает автоматически.</p>
-      <h2>Оптовая заявка</h2>
-      <p>Напишите нам в WhatsApp или на почту: укажите коллектив, расцветки, размеры и количество пар. Срок производства — от 14 дней.</p>
-      <p><a class="btn btn-ghost" href="../pages/contacts.html">Контакты</a></p>
-      <h2>Скоро</h2>
-      <p>Индивидуальная печать на сапожках для коллективов — планируем к осеннему сезону.</p>
-    </div>
+    <div class="container page-content prose"></div>
   </main>
   <div id="site-footer"></div>
     <script type="module">
     import { boot } from '../js/init.js';
     import { injectPageContent } from '../js/content-page.js';
-    boot(() => injectPageContent());
+    import { initWholesaleInquiry } from '../js/wholesale-inquiry.js';
+    boot(() => {
+      injectPageContent();
+      initWholesaleInquiry();
+    });
   </script>
 </body>
 </html>

@@ -188,25 +188,22 @@ html.js .reveal.is-visible {
   }
 }
 
-/* Header */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  padding-top: var(--safe-top);
-  transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s;
-  border-bottom: 1px solid transparent;
+#site-header,
+#contact-bar-slot,
+.contact-bar {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
 }
 
+/* Шапка отключена — навигация в подвале */
 body.nav-open {
   overflow: hidden;
-}
-
-.site-header.is-scrolled {
-  background: var(--glass);
-  backdrop-filter: blur(16px) saturate(1.4);
-  border-bottom-color: var(--line);
-  box-shadow: 0 8px 32px rgba(18, 16, 22, 0.06);
 }
 
 .header-inner {
@@ -1549,6 +1546,104 @@ body.nav-open {
   padding-left: 1.25rem;
 }
 
+.wholesale-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin: 1.5rem 0 2rem;
+}
+
+/* Modal */
+body.modal-open {
+  overflow: hidden;
+}
+
+.modal[hidden] {
+  display: none !important;
+}
+
+.modal:not([hidden]) {
+  display: block;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(26, 18, 12, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.modal-panel {
+  position: fixed;
+  z-index: 201;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(520px, calc(100% - 2rem));
+  max-height: min(90vh, 720px);
+  overflow-y: auto;
+  padding: clamp(1.25rem, 4vw, 1.75rem);
+  background: var(--paper);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s var(--ease);
+}
+
+.modal-close:hover {
+  background: var(--paper-3);
+}
+
+.modal-eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.modal-title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 1.85rem);
+  font-weight: 600;
+  padding-right: 2rem;
+}
+
+.modal-lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+.wholesale-form select[multiple] {
+  min-height: 6.5rem;
+}
+
+.field-hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+}
+
 /* Footer */
 .site-footer {
   margin-top: auto;
@@ -2299,68 +2394,7 @@ body.nav-open {
   }
 }
 
-/* —— Менеджер: полоска, FAB, карточка —— */
-#contact-bar-slot {
-  position: relative;
-  z-index: 120;
-}
-
-.contact-bar {
-  background: linear-gradient(90deg, #1a120c 0%, #2d2218 100%);
-  color: #fff9f4;
-  font-size: 0.78rem;
-  border-bottom: 1px solid rgba(255, 138, 0, 0.35);
-}
-
-.contact-bar-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.25rem;
-  padding: 0.45rem 0;
-  min-height: 2.25rem;
-}
-
-.contact-bar-label {
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--accent-3);
-  font-size: 0.7rem;
-}
-
-.contact-bar-link {
-  color: inherit;
-  text-decoration: none;
-  opacity: 0.92;
-  transition: color 0.2s var(--ease);
-}
-
-.contact-bar-link:hover {
-  color: var(--accent-2);
-}
-
-.contact-bar-link--wa {
-  color: #7dffb0;
-  font-weight: 600;
-}
-
-.contact-bar-hours {
-  margin-left: auto;
-  opacity: 0.75;
-  font-size: 0.72rem;
-}
-
-@media (max-width: 640px) {
-  .contact-bar-hours {
-    display: none;
-  }
-
-  .contact-bar-inner {
-    justify-content: center;
-  }
-}
-
+/* —— Менеджер: FAB, карточка —— */
 #fab-wa-slot {
   position: fixed;
   z-index: 110;
@@ -2478,10 +2512,6 @@ body.nav-open {
   .header-wa {
     display: inline-flex;
   }
-}
-
-body:has(.contact-bar) .site-header {
-  top: 0;
 }
 
 .cart-manager-slot {
