@@ -1,6 +1,6 @@
 import { SITE, CONTACTS } from './config.js';
 import { cartCount } from './cart.js';
-import { telUrl, mailUrl } from './manager.js';
+import { waUrl, telUrl, mailUrl } from './manager.js';
 
 const NAV = [
   { href: '/catalog.html', label: 'Каталог' },
@@ -25,18 +25,6 @@ export function pageHref(href) {
   return inPagesDir() ? `../${clean}` : clean;
 }
 
-function mapEmbedUrl() {
-  return `https://yandex.ru/map-widget/v1/?text=${encodeURIComponent(CONTACTS.address)}&z=16`;
-}
-
-function googleRouteUrl() {
-  return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(CONTACTS.address)}`;
-}
-
-function yandexRouteUrl() {
-  return `https://yandex.ru/maps/?rtext=~${encodeURIComponent(CONTACTS.address)}`;
-}
-
 function renderHeader() {
   const count = cartCount();
   const home = pageHref('/index.html');
@@ -46,15 +34,6 @@ function renderHeader() {
 
   return `
     <header class="site-header">
-      <div class="header-top">
-        <div class="container header-top-inner">
-          <span class="header-address">${CONTACTS.address}</span>
-          <div class="header-phone-block">
-            <a class="header-phone" href="${telUrl()}">${CONTACTS.phone}</a>
-            <span class="header-phone-note">Приём заказов до 13:00 — отправка в тот же день</span>
-          </div>
-        </div>
-      </div>
       <div class="container header-inner">
         <a class="logo-link" href="${home}" aria-label="${SITE.brand} — на главную">
           <img src="${logo}" alt="${SITE.brand}" class="logo-img" width="160" height="48">
@@ -68,6 +47,7 @@ function renderHeader() {
           </ul>
         </nav>
         <div class="header-actions">
+          <a class="btn btn-ghost btn-sm header-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
           <a class="btn btn-primary btn-sm" href="${catalog}">Каталог</a>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
@@ -112,21 +92,12 @@ function renderFooter() {
         <div>
           <p class="footer-heading">Менеджер</p>
           <ul class="footer-links">
+            <li><a href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp — заказ и вопросы</a></li>
             <li><a href="${telUrl()}">${CONTACTS.phone}</a></li>
             <li><a href="${mailUrl()}">${CONTACTS.email}</a></li>
             <li>${CONTACTS.address}</li>
             <li>${CONTACTS.pickupHours || ''}</li>
           </ul>
-        </div>
-      </div>
-      <div class="footer-map-wrap">
-        <div class="container footer-map-block">
-          <p class="footer-map-title">${CONTACTS.address}</p>
-          <iframe class="footer-map" title="Карта — ${CONTACTS.address}" src="${mapEmbedUrl()}" loading="lazy" allowfullscreen></iframe>
-          <div class="footer-map-links">
-            <a class="btn btn-ghost btn-sm" href="${googleRouteUrl()}" target="_blank" rel="noopener noreferrer">Маршрут в Google</a>
-            <a class="btn btn-ghost btn-sm" href="${yandexRouteUrl()}" target="_blank" rel="noopener noreferrer">Маршрут в Яндекс</a>
-          </div>
         </div>
       </div>
       <div class="container footer-bottom">
