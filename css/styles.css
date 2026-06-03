@@ -2143,6 +2143,25 @@ body.nav-open {
   justify-content: center;
 }
 
+.page-wholesale .page-hero {
+  text-align: center;
+}
+
+.page-wholesale .page-hero h1 {
+  max-width: none;
+  margin-inline: auto;
+}
+
+.page-wholesale .page-hero .lead {
+  margin-inline: auto;
+  max-width: 36rem;
+}
+
+.page-wholesale .page-content {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
 /* ——— Modern blocks ——— */
 
 .section-bento {

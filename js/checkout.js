@@ -25,7 +25,7 @@ export function buildOrderMessage(formData) {
     '',
     `ФИО: ${formData.name}`,
     `Телефон: ${formData.phone}`,
-    `Email: ${formData.email || '—'}`,
+    `Email: ${formData.email}`,
     `Доставка: ${delivery}`,
     `Адрес: ${formData.address || '—'}`,
     formData.comment ? `Комментарий: ${formData.comment}` : '',

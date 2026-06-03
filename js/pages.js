@@ -487,8 +487,8 @@ export function initCartPage() {
       }
       const fd = new FormData(form);
       const data = Object.fromEntries(fd.entries());
-      if (!data.name?.trim() || !data.phone?.trim()) {
-        showToast('Укажите имя и телефон');
+      if (!data.name?.trim() || !data.phone?.trim() || !data.email?.trim()) {
+        showToast('Укажите имя, телефон и email');
         return;
       }
       submitOrder(data);
