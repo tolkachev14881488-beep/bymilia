@@ -9,15 +9,14 @@ import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 const SIZE_BADGE = 'Размер 25–42';
 
 export function updateCatalogCartBtn() {
-  const btn = document.getElementById('catalog-cart-btn');
-  if (!btn) return;
   const n = cartCount();
-  btn.hidden = !n;
-  const badge = btn.querySelector('[data-catalog-cart-badge]');
-  if (badge) {
-    badge.textContent = n;
-    badge.hidden = !n;
+  const btn = document.getElementById('catalog-cart-btn');
+  if (btn) {
+    btn.hidden = !n;
+    btn.textContent = n ? `Корзина (${n})` : 'Корзина';
   }
+  const headerCart = document.querySelector('.page-catalog .header-actions .cart-link');
+  if (headerCart) headerCart.hidden = !n;
 }
 
 export function initCatalogSeo() {
@@ -33,7 +32,7 @@ export function initCatalogSeo() {
   ]);
   const slot = document.getElementById('catalog-manager');
   if (slot) {
-    slot.className = 'container catalog-manager-block';
+    slot.classList.add('catalog-manager-block');
     slot.innerHTML = renderManagerCard({
       compact: true,
       title: 'Помочь с выбором расцветки и размера?',

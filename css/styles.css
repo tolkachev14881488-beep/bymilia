@@ -1838,8 +1838,17 @@ body.nav-open {
   color: var(--accent);
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .page-catalog .page-hero {
   text-align: center;
+}
+
+.page-catalog .page-hero h1 {
+  max-width: none;
+  margin-inline: auto;
 }
 
 .page-catalog .page-hero .eyebrow {
@@ -1851,7 +1860,12 @@ body.nav-open {
   max-width: 36rem;
 }
 
+.page-catalog .catalog-cart-btn {
+  margin-top: 1rem;
+}
+
 .catalog-manager-block {
+  margin-top: 2rem;
   text-align: center;
 }
 
@@ -1859,6 +1873,14 @@ body.nav-open {
   margin-inline: auto;
   max-width: 36rem;
   text-align: left;
+}
+
+.catalog-manager-block .manager-card-title {
+  text-align: center;
+}
+
+.catalog-manager-block .manager-card-actions {
+  justify-content: center;
 }
 
 /* ——— Modern blocks ——— */
