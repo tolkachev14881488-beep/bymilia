@@ -79,7 +79,9 @@ export function mountGlobalContacts() {
     stack.className = 'fab-stack';
     document.body.appendChild(stack);
   }
-  stack.innerHTML = renderFabCart();
+  const fabHtml = renderFabCart();
+  stack.innerHTML = fabHtml;
+  document.body.classList.toggle('has-fab', Boolean(fabHtml.trim()));
 
   if (!window.__fabCartListener) {
     window.__fabCartListener = true;

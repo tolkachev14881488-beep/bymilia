@@ -122,8 +122,6 @@ export function updateCatalogCartBtn() {
     btn.hidden = !n;
     btn.textContent = n ? `Корзина (${n})` : 'Корзина';
   }
-  const headerCart = document.querySelector('.page-catalog .header-actions .cart-link');
-  if (headerCart) headerCart.hidden = !n;
 }
 
 export function initCatalogSeo() {

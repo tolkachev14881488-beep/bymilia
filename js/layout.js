@@ -72,8 +72,8 @@ function renderFooterMap() {
           <p class="footer-map-address">${CONTACTS.address}</p>
           <p class="footer-map-hours">${CONTACTS.pickupHours || ''}</p>
           <div class="footer-map-links">
-            <a class="footer-map-link" href="${googleRoute}" target="_blank" rel="noopener noreferrer">Маршрут в Google Картах</a>
-            <a class="footer-map-link" href="${yandexRoute}" target="_blank" rel="noopener noreferrer">Маршрут в Яндекс Картах</a>
+            <a class="footer-map-link" href="${googleRoute}" target="_blank" rel="noopener noreferrer" aria-label="Построить маршрут в Google Картах">Google Карты</a>
+            <a class="footer-map-link" href="${yandexRoute}" target="_blank" rel="noopener noreferrer" aria-label="Построить маршрут в Яндекс Картах">Яндекс Карты</a>
           </div>
         </div>
         <div class="footer-map-wrap">
@@ -112,6 +112,11 @@ function renderHeader() {
           <ul>
             ${NAV.map((n) => `<li><a href="${pageHref(n.href)}">${n.label}</a></li>`).join('')}
           </ul>
+          <div class="nav-mobile-contacts">
+            <a class="nav-mobile-phone" href="${telUrl()}">${CONTACTS.phone}</a>
+            <a class="nav-mobile-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <p class="nav-mobile-note">Приём заказов до 13:00 — отправка в тот же день</p>
+          </div>
         </nav>
         <div class="header-actions">
           <div class="header-phone-block">

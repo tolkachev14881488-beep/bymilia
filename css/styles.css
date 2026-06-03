@@ -390,6 +390,10 @@ body.nav-open {
   transition: transform 0.25s;
 }
 
+.nav-mobile-contacts {
+  display: none;
+}
+
 @media (max-width: 900px) {
   :root {
     --header-h: 64px;
@@ -481,6 +485,46 @@ body.nav-open {
     display: block;
     padding: 0.75rem 1rem;
     font-size: 1rem;
+  }
+
+  .nav-mobile-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-mobile-phone {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-mobile-wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.65rem 1rem;
+    border-radius: 999px;
+    background: #25d366;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-decoration: none;
+  }
+
+  .nav-mobile-note {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    line-height: 1.4;
+  }
+
+  .nav-mobile-contacts {
+    display: flex;
   }
 
   .header-actions .btn-sm {
@@ -857,6 +901,32 @@ body.nav-open {
   .hero-tags,
   .palette-strip {
     justify-content: center;
+  }
+
+  .hero-tags {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+    padding-bottom: 0.15rem;
+  }
+
+  .hero-tags::-webkit-scrollbar {
+    display: none;
+  }
+
+  .palette-strip {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+    padding-bottom: 0.15rem;
+  }
+
+  .palette-strip::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -1884,6 +1954,7 @@ body.nav-open {
 .checkout-form select,
 .checkout-form textarea {
   font: inherit;
+  font-size: 16px;
   padding: 0.75rem 1rem;
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -1911,6 +1982,35 @@ body.nav-open {
   background: var(--paper-2);
   border-radius: var(--radius-lg);
   border: 1px dashed var(--line);
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .footer-map-block {
+    grid-template-columns: 1fr;
+  }
+
+  .product-card-cta {
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(255, 85, 0, 0.55), rgba(255, 69, 0, 0.75));
+    font-size: 0.85rem;
+  }
+
+  body.has-fab main {
+    padding-bottom: calc(5rem + var(--safe-bottom));
+  }
+
+  body.has-fab .toast {
+    bottom: calc(5rem + var(--safe-bottom));
+  }
+
+  .site-footer {
+    padding-bottom: calc(2rem + var(--safe-bottom));
+  }
 }
 
 @media (max-width: 900px) {
@@ -2130,15 +2230,25 @@ body.nav-open {
 
 @media (max-width: 768px) {
   .footer-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .footer-map-block {
     grid-template-columns: 1fr;
+    padding: 1.15rem;
   }
 
   .footer-map-frame {
-    height: 200px;
+    height: min(45vw, 200px);
+  }
+
+  .footer-map-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footer-map-link {
+    justify-content: center;
   }
 }
 
@@ -2826,6 +2936,45 @@ body.nav-open {
     margin-left: 0;
   }
 
+  .cart-line .qty-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .cart-line [data-remove] {
+    width: 100%;
+  }
+
+  .cart-upsell-grid {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cart-upsell-card {
+    border-radius: var(--radius);
+    justify-content: flex-start;
+  }
+
+  .product-panel {
+    padding: 1.15rem 1rem;
+  }
+
+  .breadcrumb {
+    font-size: 0.8rem;
+    overflow-wrap: anywhere;
+  }
+
+  .product-photo {
+    min-height: min(65vw, 280px);
+  }
+
+  .hero-photo-badge {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
   .checkout-form .btn-block {
     font-size: 0.92rem;
     padding: 1rem 1.25rem;
@@ -2852,8 +3001,17 @@ body.nav-open {
   .site-nav a,
   .nav-toggle,
   .cart-link,
+  .fab-cart,
   .qty-control button {
     min-height: 44px;
+  }
+
+  .fab-cart {
+    min-width: 48px;
+  }
+
+  .product-card-cta {
+    opacity: 1;
   }
 
   .product-card:hover {
