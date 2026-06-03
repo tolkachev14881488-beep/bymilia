@@ -80,7 +80,16 @@ export function renderHomepage() {
   if (steps) {
     setText('[data-home="steps-eyebrow"]', steps.eyebrow);
     setText('[data-home="steps-title"]', steps.title);
-    setText('[data-home="steps-lead"]', steps.lead);
+    const stepsLead = document.querySelector('[data-home="steps-lead"]');
+    if (stepsLead) {
+      if (steps.lead?.trim()) {
+        stepsLead.textContent = steps.lead;
+        stepsLead.hidden = false;
+      } else {
+        stepsLead.hidden = true;
+        stepsLead.textContent = '';
+      }
+    }
     const stepsGrid = document.querySelector('[data-home="steps-grid"]');
     if (stepsGrid && steps.items?.length) {
       stepsGrid.innerHTML = steps.items
