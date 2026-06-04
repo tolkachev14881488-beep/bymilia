@@ -736,6 +736,17 @@ body.nav-open {
   grid-area: intro;
 }
 
+.page-home .hero-intro h1 {
+  max-width: none;
+  text-wrap: unset;
+  white-space: nowrap;
+  font-size: clamp(1.05rem, 2.6vw + 0.75rem, 3.65rem);
+}
+
+.page-home .hero-intro h1 em {
+  white-space: nowrap;
+}
+
 .hero-body {
   grid-area: body;
 }
@@ -913,11 +924,9 @@ body.nav-open {
   }
 
   .page-home .hero-intro h1 {
-    font-size: clamp(1.7rem, 7.8vw, 2.4rem);
     line-height: 1.06;
-    max-width: 16ch;
     margin: 0;
-    text-wrap: balance;
+    font-size: clamp(1rem, 4.2vw + 0.35rem, 2.4rem);
   }
 
   .page-home .hero-lead {
@@ -3363,8 +3372,7 @@ body.page-cart .checkout-form textarea {
   }
 
   .page-home .hero-intro h1 {
-    font-size: clamp(1.55rem, 8.2vw, 2rem);
-    max-width: 14ch;
+    font-size: clamp(0.95rem, 3.9vw + 0.3rem, 2rem);
   }
 
   .page-home .hero-lead {
