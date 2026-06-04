@@ -10,6 +10,7 @@ for (const script of [
   'admin-product-save-test.mjs',
   'admin-cms-test.mjs',
   'admin-publish-integration-test.mjs',
+  'admin-panel-test.mjs',
   'design-responsive-test.mjs',
 ]) {
   console.log(`\n=== ${script} ===`);
