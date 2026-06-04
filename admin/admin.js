@@ -132,6 +132,30 @@ function validateDraftBeforePublish() {
       'Главная страница пустая. Нажмите «С сайта» перед публикацией.',
     );
   }
+  if (!String(hero.heroImage || '').trim()) {
+    throw new Error(
+      'На главной не задано фото (поле «Фото на главной»). Нажмите «С сайта» — иначе слетит дизайн шапки.',
+    );
+  }
+  if (!hero.stats?.length) {
+    throw new Error(
+      'На главной пропала статистика (4 расцветки / размеры). Нажмите «С сайта».',
+    );
+  }
+  if (!String(draft.homepage?.seo?.metaTitle || '').trim()) {
+    throw new Error(
+      'SEO главной пропало. Нажмите «С сайта» перед публикацией.',
+    );
+  }
+  const thinPages = Object.entries(draft.pages || {}).filter(
+    ([, page]) => String(page?.html || '').replace(/<[^>]+>/g, '').trim().length < 60,
+  );
+  if (thinPages.length) {
+    const names = thinPages.map(([id]) => id).join(', ');
+    throw new Error(
+      `Слишком короткие тексты страниц: ${names}. Нажмите «С сайта» — старый черновик затирает сайт.`,
+    );
+  }
 }
 
 // ——— Auth ———

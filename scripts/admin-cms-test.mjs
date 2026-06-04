@@ -38,6 +38,8 @@ if (!adminJs.includes('skipCollectForms')) fail('admin.js', 'skipCollectForms');
 if (!adminJs.includes('applyCmsPayload')) fail('admin.js', 'applyCmsPayload');
 if (!adminJs.includes('function collectAllForms()')) fail('admin.js', 'collectAllForms');
 if (!adminJs.includes('stats: prevHero.stats')) fail('admin.js', 'collectHomepage must preserve hero.stats');
+if (!adminJs.includes('hero.stats?.length')) fail('admin.js', 'validate hero.stats');
+if (!adminJs.includes('hero.heroImage')) fail('admin.js', 'validate heroImage');
 if (!adminJs.includes('hp-hero-image')) fail('admin.js', 'hero image admin field');
 if (adminJs.match(/if \(!skipCollectForms\) collectActivePanelForms/)) {
   fail('admin.js', 'publish must use collectAllForms not active panel only');
