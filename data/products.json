@@ -1,22 +1,8 @@
 {
   "products": [
     {
-      "id": "wb-black",
-      "colorName": "Сапожки для разогрева \"Чёрные\"",
       "colorHex": "#1c1c1c",
-      "price": 72,
-      "oldPrice": 175,
-      "skuPrefix": "BM-230183062",
-      "image": "assets/products/black-front.png",
-      "images": [
-        "assets/products/black-front.png",
-        "assets/products/black-side.png",
-        "assets/products/black-sole.png"
-      ],
-      "wbNm": 230183062,
-      "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
+      "colorName": "Сапожки для разогрева \"Чёрные\"",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
@@ -24,25 +10,25 @@
         "670 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
       ],
-      "imageVersion": "2"
+      "id": "wb-black",
+      "image": "assets/products/black-front.png",
+      "imageVersion": "2",
+      "images": [
+        "assets/products/black-front.png",
+        "assets/products/black-side.png",
+        "assets/products/black-sole.png"
+      ],
+      "oldPrice": 175,
+      "price": 72,
+      "published": true,
+      "skuPrefix": "BM-230183062",
+      "wbNm": 230183062,
+      "wbPhoto": 1,
+      "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx"
     },
     {
-      "id": "wb-tropical",
-      "colorName": "Сапожки для разогрева Единорог",
       "colorHex": "#4fc3f7",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-216515622",
-      "image": "assets/products/tropical-side.png",
-      "images": [
-        "assets/products/tropical-side.png",
-        "assets/products/tropical-back.png",
-        "assets/products/tropical-front.png"
-      ],
-      "wbNm": 216515622,
-      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
+      "colorName": "Сапожки для разогрева Единорог",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
@@ -50,58 +36,72 @@
         "200 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
       ],
-      "imageVersion": "2"
+      "id": "wb-tropical",
+      "image": "assets/products/tropical-side.png",
+      "imageVersion": "2",
+      "images": [
+        "assets/products/tropical-side.png",
+        "assets/products/tropical-back.png",
+        "assets/products/tropical-front.png"
+      ],
+      "oldPrice": 175,
+      "price": 77,
+      "published": true,
+      "skuPrefix": "BM-216515622",
+      "wbNm": 216515622,
+      "wbPhoto": 1,
+      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx"
     },
     {
-      "id": "wb-bright",
-      "colorName": "Сапожки для разогрева \"Упс\"",
       "colorHex": "#ffca28",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-471902869",
-      "image": "assets/products/bright-comic-1.png",
-      "images": [
-        "assets/products/bright-comic-1.png",
-        "assets/products/bright-comic-2.png",
-        "assets/products/bright-comic-3.png"
-      ],
-      "imageVersion": "3",
-      "wbNm": 471902869,
-      "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
+      "colorName": "Яркий принт",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
         "На WB: желтый, фиолетовый, голубой, оранжевый",
         "62 отзывов · рейтинг 5",
         "Заказ на сайте или на Wildberries"
-      ]
+      ],
+      "id": "wb-bright",
+      "image": "assets/products/bright-comic-1.png",
+      "imageVersion": "2",
+      "images": [
+        "assets/products/bright-comic-1.png",
+        "assets/products/bright-comic-2.png",
+        "assets/products/bright-comic-3.png"
+      ],
+      "oldPrice": 175,
+      "price": 77,
+      "published": true,
+      "skuPrefix": "BM-471902869",
+      "wbNm": 471902869,
+      "wbPhoto": 1,
+      "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx"
     },
     {
-      "id": "wb-classic",
-      "colorName": "Классика · 5 цветов",
       "colorHex": "#ff5500",
-      "price": 77,
-      "oldPrice": 175,
-      "skuPrefix": "BM-216496169",
-      "image": "assets/products/classic-1.png",
-      "images": [
-        "assets/products/classic-1.png",
-        "assets/products/classic-2.png"
-      ],
-      "imageVersion": "1",
-      "wbNm": 216496169,
-      "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx",
-      "wbPhoto": 1,
-      "published": true,
+      "colorName": "Сапожки для разогрева \"цветы\"",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
         "На WB: розовый, черный, красный, желтый, белый",
         "753 отзывов · рейтинг 4.9",
         "Заказ на сайте или на Wildberries"
-      ]
+      ],
+      "id": "wb-classic",
+      "image": "assets/products/classic-1.png",
+      "imageVersion": "2",
+      "images": [
+        "assets/products/classic-1.png",
+        "assets/products/classic-2.png"
+      ],
+      "oldPrice": 175,
+      "price": 77,
+      "published": true,
+      "skuPrefix": "BM-216496169",
+      "wbNm": 216496169,
+      "wbPhoto": 1,
+      "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx"
     }
   ]
 }
