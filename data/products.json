@@ -102,24 +102,6 @@
       "wbNm": 216496169,
       "wbPhoto": 1,
       "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx"
-    },
-    {
-      "id": "color-1780557302851",
-      "colorName": "Новая расцветка тест",
-      "colorHex": "#ff5500",
-      "price": 42,
-      "skuPrefix": "BM-NEW",
-      "image": "assets/products/color-1780557302851-1780557312056-0.jpg",
-      "published": true,
-      "description": "бла бла бла",
-      "features": [
-        "привет мир"
-      ],
-      "wbUrl": "",
-      "images": [
-        "assets/products/color-1780557302851-1780557312056-0.jpg"
-      ],
-      "imageVersion": "2"
     }
   ]
 }
