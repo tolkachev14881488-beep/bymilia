@@ -36,6 +36,12 @@ else ok('draft-only product toggles');
 if (!adminJs.includes('validateDraftBeforePublish')) fail('admin.js', 'validateDraftBeforePublish');
 if (!adminJs.includes('skipCollectForms')) fail('admin.js', 'skipCollectForms');
 if (!adminJs.includes('applyCmsPayload')) fail('admin.js', 'applyCmsPayload');
+if (!adminJs.includes('function collectAllForms()')) fail('admin.js', 'collectAllForms');
+if (!adminJs.includes('stats: prevHero.stats')) fail('admin.js', 'collectHomepage must preserve hero.stats');
+if (!adminJs.includes('hp-hero-image')) fail('admin.js', 'hero image admin field');
+if (adminJs.match(/if \(!skipCollectForms\) collectActivePanelForms/)) {
+  fail('admin.js', 'publish must use collectAllForms not active panel only');
+}
 else ok('admin publish guards');
 
 const labels = fs.readFileSync(path.join(root, 'admin/page-labels.js'), 'utf8');

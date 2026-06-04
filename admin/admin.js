@@ -283,14 +283,13 @@ function persistGithubForm() {
 }
 
 function collectActivePanelForms() {
-  const panel = document.querySelector('.admin-panel.is-active')?.dataset.panel;
-  if (panel === 'homepage' && document.getElementById('hp-hero-title')) collectHomepage();
-  if (panel === 'pages' && document.getElementById('page-select')) collectPage();
-  if (panel === 'settings' && document.getElementById('st-brand')) collectSettings();
+  collectAllForms();
 }
 
-async function collectAllForms() {
-  collectActivePanelForms();
+function collectAllForms() {
+  if (document.getElementById('hp-hero-title')) collectHomepage();
+  if (document.getElementById('page-select')) collectPage();
+  if (document.getElementById('st-brand')) collectSettings();
 }
 
 async function publishToSite({
@@ -298,7 +297,7 @@ async function publishToSite({
   uploads = [],
   skipCollectForms = false,
 } = {}) {
-  if (!skipCollectForms) await collectAllForms();
+  if (!skipCollectForms) collectAllForms();
   validateDraftBeforePublish();
   persistGithubForm();
   const payload = { siteJson: sitePayload(), productsJson: productsPayload() };
@@ -374,6 +373,7 @@ function showGithubConnected(info) {
 
 document.querySelectorAll('.admin-nav-btn[data-tab]').forEach((btn) => {
   btn.addEventListener('click', () => {
+    collectActiveForms();
     const tab = btn.dataset.tab;
     document.querySelectorAll('.admin-nav-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
     document.querySelectorAll('.admin-panel').forEach((p) => p.classList.toggle('is-active', p.dataset.panel === tab));
@@ -411,10 +411,7 @@ document.getElementById('reload-btn').addEventListener('click', async () => {
 });
 
 function collectActiveForms() {
-  const panel = document.querySelector('.admin-panel.is-active')?.dataset.panel;
-  if (panel === 'homepage') collectHomepage();
-  if (panel === 'pages') collectPage();
-  if (panel === 'settings') collectSettings();
+  collectAllForms();
 }
 
 // ——— Products ———
@@ -473,6 +470,11 @@ function renderHomepageForm() {
     <div class="field"><label>Короткая плашка над заголовком</label><input id="hp-hero-eyebrow" value="${esc(hero.eyebrow || '')}"></div>
     <div class="field"><label>Главный заголовок (можно &lt;em&gt;курсив&lt;/em&gt;)</label><input id="hp-hero-title" value="${esc(hero.titleHtml || '')}"></div>
     <div class="field"><label>Текст</label><textarea id="hp-hero-lead">${esc(hero.lead || '')}</textarea></div>
+    <div class="field"><label>Фото на главной (путь к файлу, не из каталога)</label>
+      <input id="hp-hero-image" value="${esc(hero.heroImage || 'assets/products/hero-bright.png')}" placeholder="assets/products/hero-bright.png"></div>
+    <div class="field"><label>Описание фото (alt)</label>
+      <input id="hp-hero-alt" value="${esc(hero.imageAlt || '')}"></div>
+    <p class="hint">Картинка главной задаётся здесь отдельно — не подставляется из карточек товаров.</p>
     <div class="field"><label>Теги (по строке)</label><textarea id="hp-hero-tags">${esc((hero.tags || []).join('\n'))}</textarea></div>
     <div class="field-grid">
       <div class="field"><label>Подпись карточки</label><input id="hp-card-label" value="${esc(hero.cardLabel || '')}"></div>
@@ -641,16 +643,21 @@ function renderBenefitCards() {
 
 function collectHomepage() {
   const hp = draft.homepage;
+  const prevHero = hp.hero || {};
   hp.hero = {
+    ...prevHero,
     eyebrow: val('hp-hero-eyebrow'),
     titleHtml: val('hp-hero-title'),
     lead: val('hp-hero-lead'),
+    heroImage: val('hp-hero-image') || prevHero.heroImage || '',
+    imageAlt: val('hp-hero-alt') || prevHero.imageAlt || '',
     tags: val('hp-hero-tags')
       .split('\n')
       .map((s) => s.trim())
       .filter(Boolean),
     cardLabel: val('hp-card-label'),
     cardSub: val('hp-card-sub'),
+    stats: prevHero.stats,
   };
   hp.marquee = val('hp-marquee')
     .split(',')
@@ -851,7 +858,7 @@ document.getElementById('test-github-btn')?.addEventListener('click', async () =
 });
 
 document.getElementById('download-json-btn').addEventListener('click', () => {
-  collectActiveForms();
+  collectAllForms();
   downloadJson('site.json', sitePayload());
   downloadJson('products.json', productsPayload());
   showAlert('Файлы скачаны — положите в папку data/ и запушьте в GitHub', 'ok');

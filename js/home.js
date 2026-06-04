@@ -32,10 +32,10 @@ export function renderHomepage() {
 
   const heroImg = document.querySelector('[data-home="hero-image"]');
   if (heroImg) {
-    const src = hero.heroImage || getPublishedProducts().find((p) => p.image)?.image;
+    if (hero.imageAlt) heroImg.alt = hero.imageAlt;
+    const src = (hero.heroImage || '').trim();
     if (src) {
       heroImg.src = src.startsWith('http') ? src : asset(src);
-      if (hero.imageAlt) heroImg.alt = hero.imageAlt;
     }
   }
 

@@ -278,7 +278,7 @@ export async function publishViaActions({ token, owner, repo, cmsKey, siteJson, 
         key: cmsKey,
         siteJson,
         productsJson,
-        binaryFiles: binaryFiles.slice(0, 8),
+        binaryFiles: binaryFiles.slice(0, 20),
       },
     }),
   });

@@ -9,6 +9,7 @@ for (const script of [
   'site-smoke-test.mjs',
   'admin-product-save-test.mjs',
   'admin-cms-test.mjs',
+  'admin-publish-integration-test.mjs',
 ]) {
   console.log(`\n=== ${script} ===`);
   execSync(`node scripts/${script}`, { cwd: root, stdio: 'inherit' });
