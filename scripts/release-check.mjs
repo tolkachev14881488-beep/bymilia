@@ -103,5 +103,13 @@ for (const rule of ['body.has-fab main', '.product-card-cta', '.nav-mobile-conta
   else fail('css', `missing ${rule}`);
 }
 
+console.log('\n=== Design responsive (devices) ===');
+try {
+  execSync('node scripts/design-responsive-test.mjs', { cwd: root, stdio: 'inherit' });
+} catch {
+  failed += 1;
+  console.error('  FAIL design-responsive-test.mjs');
+}
+
 console.log(failed ? `\n${failed} release check(s) failed` : '\nAll release checks passed');
 process.exit(failed ? 1 : 0);
