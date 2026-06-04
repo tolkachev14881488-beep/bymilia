@@ -54,7 +54,7 @@
     },
     {
       "id": "wb-bright",
-      "colorName": "Яркий принт",
+      "colorName": "Сапожки для разогрева \"Упс\"",
       "colorHex": "#ffca28",
       "price": 77,
       "oldPrice": 175,
@@ -65,7 +65,7 @@
         "assets/products/bright-comic-2.png",
         "assets/products/bright-comic-3.png"
       ],
-      "imageVersion": "2",
+      "imageVersion": "3",
       "wbNm": 471902869,
       "wbUrl": "https://www.wildberries.by/catalog/471902869/detail.aspx",
       "wbPhoto": 1,
