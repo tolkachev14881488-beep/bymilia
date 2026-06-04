@@ -77,13 +77,13 @@ function renderCartFilled(cart) {
   return `
     <div class="cart-motivation">
       <p class="cart-motivation-title">Отличный выбор — осталось оформить заявку</p>
-      <p class="cart-motivation-text">Отправьте заявку в WhatsApp. Заявка до ${sameDay}:00 — отправка в тот же день.</p>
+      <p class="cart-motivation-text">Отправьте заявку — заявки до ${sameDay}:00 уходят в отправку в тот же день.</p>
     </div>
     <div class="cart-lines-list">${linesHtml}</div>
     ${renderCartUpsell(cart)}
     <div class="cart-actions-row">
       <a class="btn btn-ghost" href="${pageHref('/catalog.html')}">← Продолжить покупки</a>
-      <a class="btn btn-primary btn-glow cart-actions-order" href="#checkout-form">Оформить заказ →</a>
+      <a class="btn btn-primary btn-glow cart-actions-order" href="#checkout-form">Отправить заявку →</a>
     </div>
     <p class="cart-items-note">${itemCount} ${itemCount === 1 ? 'пара' : itemCount < 5 ? 'пары' : 'пар'} в корзине — можно добавить другие размеры или расцветки</p>`;
 }
@@ -420,7 +420,7 @@ export function initCartPage() {
     linesEl.innerHTML = `
       <div class="empty-state cart-success">
         <p><strong>Заявка отправлена</strong></p>
-        <p>Откройте WhatsApp — там уже готов текст заказа.</p>
+        <p>Спасибо! Мы свяжемся с вами для уточнения деталей.</p>
         <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">В каталог</a>
         <a class="btn btn-ghost" href="${pageHref('/index.html')}">На главную</a>
       </div>`;
@@ -511,7 +511,7 @@ export function initCartPage() {
         return;
       }
       submitOrder(data);
-      showToast('Заявка отправлена — откройте WhatsApp');
+      showToast('Заявка отправлена');
       showOrderSuccess();
     });
   }
