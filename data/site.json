@@ -15,8 +15,6 @@
     "whatsapp": "375290000000",
     "instagram": "https://instagram.com/",
     "address": "г. Минск, ул. Панченко, 8",
-    "mapLat": 53.882715,
-    "mapLon": 27.424353,
     "pickupHours": "9:00–18:00, по предварительной договорённости",
     "wildberries": "https://www.wildberries.by/catalog/216496169/detail.aspx"
   },
@@ -84,7 +82,9 @@
         "6 размеров · 25–42 см"
       ],
       "cardLabel": "By Milia",
-      "cardSub": "Согревают · удобны · яркие в раздевалке"
+      "cardSub": "Согревают · удобны · яркие в раздевалке",
+      "heroImage": "assets/products/hero-bright.png",
+      "imageAlt": ""
     },
     "marquee": [
       "тепло",
