@@ -66,7 +66,7 @@ export function renderManagerCard(opts = {}) {
         <li>${CONTACTS.address}</li>
         <li>${CONTACTS.pickupHours || 'По предварительной договорённости'}</li>
       </ul>
-      <p class="manager-card-note">Заказ на сайте → подтверждение в WhatsApp в рабочий день. Также <a href="${CONTACTS.wildberries}" target="_blank" rel="noopener">Wildberries</a>.</p>
+      <p class="manager-card-note">Заказ на сайте → заявка в WhatsApp. Также <a href="${CONTACTS.wildberries}" target="_blank" rel="noopener">Wildberries</a>.</p>
     </aside>
   `;
 }

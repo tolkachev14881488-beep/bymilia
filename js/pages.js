@@ -77,7 +77,7 @@ function renderCartFilled(cart) {
   return `
     <div class="cart-motivation">
       <p class="cart-motivation-title">Отличный выбор — осталось оформить заявку</p>
-      <p class="cart-motivation-text">Менеджер подтвердит заказ в WhatsApp в рабочий день. Заявка до ${sameDay}:00 — отправка в тот же день.</p>
+      <p class="cart-motivation-text">Отправьте заявку в WhatsApp. Заявка до ${sameDay}:00 — отправка в тот же день.</p>
     </div>
     <div class="cart-lines-list">${linesHtml}</div>
     ${renderCartUpsell(cart)}
@@ -155,7 +155,7 @@ export function initCartSeo() {
   applySeo({
     title: 'Корзина и оформление заказа — By Milia',
     description:
-      'Оформите заказ сапожек By Milia: корзина, доставка по Беларуси, подтверждение менеджером в WhatsApp. Самовывоз в Минске, Европочта, курьер.',
+      'Оформите заказ сапожек By Milia: корзина, доставка по Беларуси, заявка в WhatsApp. Самовывоз в Минске, Европочта, курьер.',
     path: 'cart.html',
     noindex: true,
   });
@@ -420,7 +420,7 @@ export function initCartPage() {
     linesEl.innerHTML = `
       <div class="empty-state cart-success">
         <p><strong>Заявка отправлена</strong></p>
-        <p>Откройте WhatsApp — там уже готов текст заказа. Менеджер подтвердит детали.</p>
+        <p>Откройте WhatsApp — там уже готов текст заказа.</p>
         <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">В каталог</a>
         <a class="btn btn-ghost" href="${pageHref('/index.html')}">На главную</a>
       </div>`;
@@ -466,7 +466,7 @@ export function initCartPage() {
       summaryEl.innerHTML = `
         <div class="cart-order-nudge">
           <p class="cart-order-nudge-title">Оформите заявку — мы на связи</p>
-          <p>Менеджер подтвердит заказ в WhatsApp. Оплата и доставка — после согласования, без лишних шагов на сайте.</p>
+          <p>Оплата и доставка — после согласования в WhatsApp, без лишних шагов на сайте.</p>
         </div>
         <div class="cart-summary-row"><span>Позиций</span><span>${itemCount}</span></div>
         <div class="cart-summary-row cart-total"><span>Итого</span><span>${total.toFixed(2)} ${SITE.currencyLabel}</span></div>
