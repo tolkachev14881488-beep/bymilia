@@ -6,8 +6,6 @@
     "address": "г. Минск, ул. Панченко, 8",
     "email": "orders@bymilia.by",
     "instagram": "https://instagram.com/",
-    "mapLat": 53.882715,
-    "mapLon": 27.424353,
     "phone": "+375 29 000-00-00",
     "phoneRaw": "375290000000",
     "pickupHours": "9:00–18:00, по предварительной договорённости",
@@ -110,6 +108,8 @@
       "cardLabel": "By Milia",
       "cardSub": "Согревают · удобны · яркие в раздевалке",
       "eyebrow": "Производство в Минске · для танцев",
+      "heroImage": "assets/products/hero-bright.png",
+      "imageAlt": "",
       "lead": "By Milia — сапожки для разогрева, которые любят мамы юных танцовщиц и тренеры коллективов по всей Беларуси.",
       "tags": [
         "Отправка до 13:00 — в тот же день",

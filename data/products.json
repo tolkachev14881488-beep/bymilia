@@ -54,7 +54,7 @@
     },
     {
       "colorHex": "#ffca28",
-      "colorName": "Яркий принт",
+      "colorName": "Сапожки для разогрева \"Упс\"",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
@@ -64,7 +64,7 @@
       ],
       "id": "wb-bright",
       "image": "assets/products/bright-comic-1.png",
-      "imageVersion": "2",
+      "imageVersion": "3",
       "images": [
         "assets/products/bright-comic-1.png",
         "assets/products/bright-comic-2.png",
@@ -80,7 +80,7 @@
     },
     {
       "colorHex": "#ff5500",
-      "colorName": "Сапожки для разогрева \"цветы\"",
+      "colorName": "Классика · 5 цветов",
       "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
       "features": [
         "6 размеров · 25–42 см",
@@ -90,7 +90,7 @@
       ],
       "id": "wb-classic",
       "image": "assets/products/classic-1.png",
-      "imageVersion": "2",
+      "imageVersion": "1",
       "images": [
         "assets/products/classic-1.png",
         "assets/products/classic-2.png"
