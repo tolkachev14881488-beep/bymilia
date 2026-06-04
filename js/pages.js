@@ -25,7 +25,7 @@ function renderCartUpsell(cart) {
         ${others
           .map((p) => {
             const img = productImageList(p)[0];
-            const label = p.paletteLabel || p.colorName;
+            const label = p.colorName;
             const thumb = img
               ? `<img src="${escapeHtml(img)}" alt="" width="52" height="52" loading="lazy">`
               : `<span class="cart-upsell-swatch" style="background:${p.colorHex}"></span>`;

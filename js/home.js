@@ -1,22 +1,9 @@
 import { getHomepage, getPublishedProducts } from './data-store.js';
 import { asset, pageHref } from './layout.js';
 import { applySeo } from './seo.js';
-import { normalizeProductId } from './products.js';
-
-const HERO_PALETTE_LABELS = {
-  'wb-black': 'Черный',
-  'wb-tropical': 'Единорог',
-  'wb-bright': 'Упс',
-  'wb-classic': 'Цветы',
-  black: 'Черный',
-  tropical: 'Единорог',
-  bright: 'Упс',
-  classic: 'Цветы',
-};
-
 function heroPaletteLabel(product) {
-  const id = normalizeProductId(product.id);
-  return HERO_PALETTE_LABELS[id] || product.paletteLabel || product.colorName;
+  const label = String(product.paletteLabel || product.colorName || '').trim();
+  return label || product.id;
 }
 
 export function renderHomepage() {

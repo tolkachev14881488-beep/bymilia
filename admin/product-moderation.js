@@ -337,7 +337,7 @@ export function initProductModeration({
 
         <div class="mod-editor-footer">
           <button type="button" class="btn btn-primary" id="mod-save">Сохранить и опубликовать</button>
-          <p class="hint mod-save-hint">Сначала сохраняет товар, затем отправляет на сайт (1–2 мин).</p>
+          <p class="hint mod-save-hint">Публикует этот товар на сайт (1–2 мин). Кнопка «Опубликовать всё» тоже подхватит название из поля выше.</p>
           <button type="button" class="btn btn-danger btn-sm" id="mod-delete">Удалить</button>
         </div>
       </div>
@@ -412,6 +412,32 @@ export function initProductModeration({
     };
   }
 
+  /** Считать поля редактора в черновик (перед «Опубликовать всё») */
+  function flushEditorToDraft({ silent = false } = {}) {
+    if (!selectedId) return false;
+    const p = products().find((x) => x.id === selectedId);
+    if (!p || !editorRoot.querySelector('.mod-editor')) return false;
+    const data = readEditorForm(editorRoot, p);
+    const paths = galleryPathsFromEditor(editorRoot);
+    data.images = paths;
+    data.image = paths[0] || data.image;
+    const list = [...products()];
+    const idx = list.findIndex((x) => x.id === selectedId);
+    if (idx < 0) return false;
+    const newId = data.id || p.id;
+    if (newId !== selectedId && list.some((x) => x.id === newId)) {
+      if (!silent) return false;
+      return false;
+    }
+    list[idx] = { ...list[idx], ...data, id: newId };
+    if (newId !== selectedId) selectedId = newId;
+    setProducts(list);
+    if (!silent) onDraftChange?.();
+    renderGrid();
+    if (selectedId === newId) renderEditor();
+    return true;
+  }
+
   renderList();
   renderEditor();
 
@@ -421,5 +447,6 @@ export function initProductModeration({
       renderEditor();
     },
     select: setSelected,
+    flushEditorToDraft,
   };
 }

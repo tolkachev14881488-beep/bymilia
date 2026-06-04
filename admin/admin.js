@@ -311,6 +311,7 @@ function collectActivePanelForms() {
 }
 
 function collectAllForms() {
+  productModeration?.flushEditorToDraft?.({ silent: true });
   if (document.getElementById('hp-hero-title')) collectHomepage();
   if (document.getElementById('page-select')) collectPage();
   if (document.getElementById('st-brand')) collectSettings();
@@ -332,14 +333,10 @@ async function publishToSite({
       productsJson: payload.productsJson,
       uploads,
     });
-    sessionStorage.removeItem(DRAFT_KEY);
     applyCmsPayload(payload.siteJson, payload.productsJson);
+    buildDraftFromServer();
     saveDraftToStorage();
     renderAll();
-    reloadSiteData()
-      .then(() => buildDraftFromServer())
-      .then(() => renderAll())
-      .catch(() => {});
     setPublishUi('ok');
     const tail = result.mode === 'local' ? ' Сайт обновится за 1–2 минуты.' : ' Сайт обновится за 2–3 минуты.';
     markPublishedNow();

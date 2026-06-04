@@ -37,6 +37,8 @@ if (!adminJs.includes('validateDraftBeforePublish')) fail('admin.js', 'validateD
 if (!adminJs.includes('skipCollectForms')) fail('admin.js', 'skipCollectForms');
 if (!adminJs.includes('applyCmsPayload')) fail('admin.js', 'applyCmsPayload');
 if (!adminJs.includes('function collectAllForms()')) fail('admin.js', 'collectAllForms');
+if (!adminJs.includes('flushEditorToDraft')) fail('admin.js', 'collectAllForms must flush product editor');
+if (!modJs.includes('flushEditorToDraft')) fail('product-moderation', 'flushEditorToDraft');
 if (!adminJs.includes('stats: prevHero.stats')) fail('admin.js', 'collectHomepage must preserve hero.stats');
 if (!adminJs.includes('hero.stats?.length')) fail('admin.js', 'validate hero.stats');
 if (!adminJs.includes('hero.heroImage')) fail('admin.js', 'validate heroImage');

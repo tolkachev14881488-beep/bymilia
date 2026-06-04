@@ -43,6 +43,10 @@ if (homeJs.includes('getPublishedProducts().find((p) => p.image)')) {
   fail('home.js', 'hero still falls back to product image');
 } else ok('hero image independent from catalog');
 
+if (homeJs.includes('HERO_PALETTE_LABELS')) {
+  fail('home.js', 'hardcoded palette labels override colorName from admin');
+} else ok('hero palette uses colorName from products.json');
+
 const pageIds = Object.keys(siteJson.pages || {});
 if (pageIds.length < 8) fail('site.json pages', `only ${pageIds.length} pages`);
 else ok(`site.json has ${pageIds.length} pages`);
