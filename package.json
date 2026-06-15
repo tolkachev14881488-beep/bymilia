@@ -1,0 +1,12 @@
+{
+  "name": "bymilia-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy:pack": "node scripts/make-hosting-zip.mjs",
+    "deploy:ftp": "node scripts/deploy-to-hosting.mjs"
+  },
+  "dependencies": {
+    "basic-ftp": "^5.0.5"
+  }
+}

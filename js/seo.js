@@ -1,10 +1,28 @@
 import { SITE } from './config.js';
+import { getSiteRoot } from './site-path.js';
 
-export const SITE_ORIGIN = 'https://tolkachev14881488-beep.github.io/bymilia';
+const DEFAULT_ORIGIN = 'https://by-milia.by';
+
+/** Базовый URL для canonical, OG и JSON-LD */
+export function getSiteOrigin() {
+  if (typeof window !== 'undefined') {
+    try {
+      const root = getSiteRoot();
+      const u = new URL(root);
+      return (u.origin + u.pathname).replace(/\/$/, '');
+    } catch {
+      /* fallback */
+    }
+  }
+  return DEFAULT_ORIGIN;
+}
+
+export const SITE_ORIGIN = DEFAULT_ORIGIN;
 
 export function pageUrl(path = '') {
   const clean = path.replace(/^\//, '');
-  return `${SITE_ORIGIN}/${clean}`;
+  const origin = typeof window !== 'undefined' ? getSiteOrigin() : DEFAULT_ORIGIN;
+  return clean ? `${origin}/${clean}` : `${origin}/`;
 }
 
 /** Устанавливает title, description, canonical, Open Graph */

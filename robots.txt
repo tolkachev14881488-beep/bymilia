@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tolkachev14881488-beep.github.io/bymilia/sitemap.xml
+Sitemap: https://by-milia.by/sitemap.xml
 
 Disallow: /admin/
 Disallow: /cart.html

@@ -1,0 +1,19 @@
+# By Milia — hoster.by / Apache
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
+AddDefaultCharset UTF-8
+
+# Админка не в поиске (дублирует meta robots)
+<IfModule mod_rewrite.c>
+  RewriteRule ^admin/ - [E=noindex:1]
+</IfModule>
