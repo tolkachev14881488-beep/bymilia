@@ -3,7 +3,7 @@ import { asset, pageHref } from './layout.js';
 import { applySeo } from './seo.js';
 function heroPaletteLabel(product) {
   const label = String(product.paletteLabel || product.colorName || '').trim();
-  return label || product.id;
+  return label.replace(/^Сапожки для разогрева\s*/i, '').replace(/"/g, '');
 }
 
 export function renderHomepage() {
@@ -62,7 +62,10 @@ export function renderHomepage() {
 
   const bentoEl = document.querySelector('[data-home="bento"]');
   if (bentoEl && hp.bento?.length) {
-    bentoEl.innerHTML = hp.bento
+    const bentoCards = hp.bento.filter(
+      (card) => !/сертифиц/i.test(`${card.title || ''} ${card.text || ''}`),
+    );
+    bentoEl.innerHTML = bentoCards
       .map(
         (card) => {
           const stars = card.stars

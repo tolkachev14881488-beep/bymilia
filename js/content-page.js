@@ -27,7 +27,7 @@ export function injectPageContent() {
   const metaTitle = page.metaTitle || `${page.title} — ${SITE.brand}`;
   const metaDesc =
     page.metaDescription ||
-    `${page.title}. ${SITE.brand} — сапожки для разогрева стоп, производство в Минске. Заказ на сайте и WhatsApp.`;
+    `${page.title}. ${SITE.brand} — сапожки для разогрева стоп, производство в Минске. Заказ на сайте, связь с менеджером.`;
 
   applySeo({
     title: metaTitle,

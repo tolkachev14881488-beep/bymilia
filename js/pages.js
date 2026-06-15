@@ -43,17 +43,20 @@ function renderCartFilled(cart) {
       const p = getProduct(line.productId);
       const size = SIZES.find((s) => s.id === line.sizeId);
       if (!p) return '';
+      const productUrl = pageHref(`/product.html?id=${line.productId}`);
       const img = productImageList(p)[0];
       const thumbHtml = img
         ? `<div class="cart-line-thumb"><img class="cart-line-img" src="${escapeHtml(img)}" alt="${escapeHtml(p.colorName)}" width="72" height="72" loading="lazy"></div>`
         : `<div class="cart-line-thumb cart-line-thumb--color" style="background:${p.colorHex}"></div>`;
       return `
         <div class="cart-line" data-key="${line.key}">
-          ${thumbHtml}
+          <a class="cart-line-media" href="${productUrl}">
+            ${thumbHtml}
+          </a>
           <div class="cart-line-main">
             <div class="cart-line-header">
               <div class="cart-line-info">
-                <strong class="cart-line-title">${escapeHtml(p.colorName)}</strong>
+                <a class="cart-line-title" href="${productUrl}">${escapeHtml(p.colorName)}</a>
                 <span class="cart-line-meta">Размер ${escapeHtml(size?.label || '')} · ${escapeHtml(sku(p, line.sizeId))}</span>
               </div>
               <strong class="cart-line-price">${(p.price * line.qty).toFixed(2)} ${SITE.currencyLabel}</strong>
@@ -103,8 +106,8 @@ function renderProductSpecs(product) {
   if (!specs?.items?.length) return '';
   const title = specs.title || 'Основная информация';
   return `
-    <section class="product-specs" aria-labelledby="product-specs-title">
-      <h2 class="product-specs-title" id="product-specs-title">${escapeHtml(title)}</h2>
+    <details class="product-specs">
+      <summary class="product-specs-title">${escapeHtml(title)}</summary>
       <dl class="product-specs-list">
         ${specs.items
           .map(
@@ -116,7 +119,7 @@ function renderProductSpecs(product) {
           )
           .join('')}
       </dl>
-    </section>`;
+    </details>`;
 }
 
 export function updateCatalogCartBtn() {
@@ -237,7 +240,7 @@ export function renderProductGrid(container) {
   container.innerHTML = PRODUCTS.map(
     (p) => `
     <a class="product-card" href="${pageHref(`/product.html?id=${p.id}`)}">
-      <div class="product-card-thumb" style="--card-glow: ${p.colorHex}33">
+      <div class="product-card-thumb product-card-thumb--${p.id}" style="--card-glow: ${p.colorHex}33">
         <span class="product-card-badge">${SIZE_BADGE}</span>
         ${productThumb(p)}
         <span class="product-card-cta">Смотреть →</span>
@@ -245,6 +248,7 @@ export function renderProductGrid(container) {
       <div class="product-card-body">
         <h3 class="product-card-title">${p.colorName}</h3>
         <p class="product-price-wrap">${formatPrice(p)}</p>
+        <p class="product-card-delivery">Бесплатная доставка по Беларуси</p>
       </div>
     </a>
   `,
@@ -315,6 +319,7 @@ export function initProductPage() {
           <span class="eyebrow">${SITE.brand}</span>
           <h1>${product.colorName}</h1>
           <p class="product-price-wrap product-price-wrap--lg">${formatPrice(product, true)}</p>
+          <p class="product-delivery-note">Бесплатная доставка по Беларуси</p>
           ${product.wbNm ? `<p class="product-meta">Артикул WB: ${product.wbNm}</p>` : ''}
           <p>${product.description}</p>
           <p><strong>Размер (длина стопы, см)</strong></p>
@@ -332,7 +337,7 @@ export function initProductPage() {
           ${renderProductSpecs(product)}
           ${renderManagerCard({
             compact: true,
-            title: 'Вопросы по размеру?',
+            title: 'Как подобрать размер?',
             waText: `Здравствуйте! Интересует «${product.colorName}» By Milia.`,
           })}
         </div>
@@ -439,7 +444,7 @@ export function initCartPage() {
       linesEl.innerHTML = `
         <div class="empty-state cart-empty">
           <p class="cart-empty-title">Пока пусто — самое время выбрать сапожки</p>
-          <p class="cart-empty-text">Четыре яркие расцветки, размеры 25–42. Заказ без регистрации — менеджер поможет с размером в WhatsApp.</p>
+          <p class="cart-empty-text">Четыре яркие расцветки, размеры 25–42. Заказ без регистрации — менеджер поможет с размером.</p>
           <div class="cart-empty-actions">
             <a class="btn btn-primary btn-lg btn-glow" href="${pageHref('/catalog.html')}">Выбрать расцветку</a>
             <a class="btn btn-ghost" href="${pageHref('/index.html')}">На главную</a>
@@ -466,7 +471,7 @@ export function initCartPage() {
       summaryEl.innerHTML = `
         <div class="cart-order-nudge">
           <p class="cart-order-nudge-title">Оформите заявку — мы на связи</p>
-          <p>Оплата и доставка — после согласования в WhatsApp, без лишних шагов на сайте.</p>
+          <p>Оплата и доставка — после согласования с менеджером, без лишних шагов на сайте.</p>
         </div>
         <div class="cart-summary-row"><span>Позиций</span><span>${itemCount}</span></div>
         <div class="cart-summary-row cart-total"><span>Итого</span><span>${total.toFixed(2)} ${SITE.currencyLabel}</span></div>

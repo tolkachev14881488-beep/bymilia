@@ -8,12 +8,38 @@ export function waUrl(text = DEFAULT_WA_TEXT) {
   return `https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(text)}`;
 }
 
+export function viberUrl() {
+  return `viber://chat?number=%2B${CONTACTS.phoneRaw}`;
+}
+
+export function telegramUrl() {
+  return `https://t.me/+${CONTACTS.phoneRaw}`;
+}
+
 export function telUrl() {
   return `tel:${CONTACTS.phoneRaw}`;
 }
 
 export function mailUrl(subject = `Вопрос ${SITE.brand}`) {
   return `mailto:${CONTACTS.email}?subject=${encodeURIComponent(subject)}`;
+}
+
+export function renderMessengerLinks(waText = DEFAULT_WA_TEXT) {
+  return `
+    <div class="messenger-links" role="group" aria-label="Написать менеджеру">
+      <a class="messenger-btn messenger-btn--viber" href="${viberUrl()}" target="_blank" rel="noopener noreferrer">
+        <span class="messenger-btn-icon" aria-hidden="true">V</span>
+        <span class="messenger-btn-label">Viber</span>
+      </a>
+      <a class="messenger-btn messenger-btn--wa" href="${waUrl(waText)}" target="_blank" rel="noopener noreferrer">
+        <span class="messenger-btn-icon" aria-hidden="true">W</span>
+        <span class="messenger-btn-label">WhatsApp</span>
+      </a>
+      <a class="messenger-btn messenger-btn--tg" href="${telegramUrl()}" target="_blank" rel="noopener noreferrer">
+        <span class="messenger-btn-icon" aria-hidden="true">T</span>
+        <span class="messenger-btn-label">Telegram</span>
+      </a>
+    </div>`;
 }
 
 /** Плавающая кнопка корзины */
@@ -43,11 +69,11 @@ export function updateFabCart() {
   }
 }
 
-/** Карточка «Связаться с менеджером» для контентных страниц и товара */
+/** Карточка «Связаться с менеджером» — одинаковая на всех страницах */
 export function renderManagerCard(opts = {}) {
   const {
     title = 'Нужна помощь с заказом?',
-    text = 'Менеджер By Milia ответит в WhatsApp: подберёт размер, расскажет о доставке и оформит заказ.',
+    text = 'Менеджер By Milia ответит: подберёт размер, расскажет о доставке и оформит заказ.',
     waText = DEFAULT_WA_TEXT,
     compact = false,
   } = opts;
@@ -57,16 +83,14 @@ export function renderManagerCard(opts = {}) {
       <p class="manager-card-eyebrow">Менеджер By Milia</p>
       <h2 class="manager-card-title">${title}</h2>
       <p class="manager-card-text">${text}</p>
-      <div class="manager-card-actions">
-        <a class="btn btn-primary btn-glow" href="${waUrl(waText)}" target="_blank" rel="noopener noreferrer">Написать в WhatsApp</a>
-        <a class="btn btn-ghost" href="${telUrl()}">${CONTACTS.phone}</a>
-      </div>
+      ${renderMessengerLinks(waText)}
+      <p class="manager-card-phone"><a href="${telUrl()}">${CONTACTS.phone}</a></p>
       <ul class="manager-card-meta">
         <li><a href="${mailUrl()}">${CONTACTS.email}</a></li>
         <li>${CONTACTS.address}</li>
         <li>${CONTACTS.pickupHours || 'По предварительной договорённости'}</li>
       </ul>
-      <p class="manager-card-note">Заказ на сайте → заявка в WhatsApp. Также <a href="${CONTACTS.wildberries}" target="_blank" rel="noopener">Wildberries</a>.</p>
+      <p class="manager-card-note">Заказ на сайте → заявка менеджеру. Также <a href="${CONTACTS.wildberries}" target="_blank" rel="noopener">Wildberries</a>.</p>
     </aside>
   `;
 }
