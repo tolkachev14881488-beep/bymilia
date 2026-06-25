@@ -72,8 +72,8 @@ export function updateFabCart() {
 /** Карточка «Связаться с менеджером» — одинаковая на всех страницах */
 export function renderManagerCard(opts = {}) {
   const {
-    title = 'Нужна помощь с заказом?',
-    text = 'Менеджер By Milia ответит: подберёт размер, расскажет о доставке и оформит заказ.',
+    title = 'Помочь с выбором расцветки и размера, вопросы по доставке?',
+    text = 'свяжитесь удобным для вас способом',
     waText = DEFAULT_WA_TEXT,
     compact = false,
   } = opts;

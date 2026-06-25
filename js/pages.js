@@ -147,7 +147,7 @@ export function initCatalogSeo() {
     slot.classList.add('catalog-manager-block');
     slot.innerHTML = renderManagerCard({
       compact: true,
-      title: 'Помочь с выбором расцветки и размера?',
+      title: 'Помочь с выбором расцветки и размера, вопросы по доставке?',
     });
   }
   updateCatalogCartBtn();

@@ -16,7 +16,7 @@ const DEFAULT_SITE = {
     email: 'orders@bymilia.by',
     whatsapp: '375290000000',
     instagram: 'https://instagram.com/',
-    address: 'г. Минск, ул. Панченко, 8',
+    address: 'г. Минск, ул. Панченко,8 (самовывоз)',
     mapLat: 53.882715,
     mapLon: 27.424353,
     pickupHours: '9:00–18:00, по предварительной договорённости',
