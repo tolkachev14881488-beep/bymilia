@@ -170,13 +170,9 @@
       ],
       "palette": [
         { "label": "Чёрные", "color": "#1c1c1c" },
-        { "label": "Чёрные", "color": "#1c1c1c" },
-        { "label": "Единорог", "color": "#4fc3f7" },
-        { "label": "Розовый", "color": "#f48fb1" },
+        { "label": "Единорог", "color": "#f48fb1" },
         { "label": "Упс", "color": "#81d4fa" },
-        { "label": "Цветы", "color": "#e91e8c" },
-        { "label": "Синий", "color": "#2196f3" },
-        { "label": "Тёмно", "color": "#263238" }
+        { "label": "Цветы", "color": "#1565c0" }
       ],
       "titleHtml": "Сапожки для разогрева&nbsp;<em>By Milia</em>"
     },
