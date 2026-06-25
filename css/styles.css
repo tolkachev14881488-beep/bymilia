@@ -3049,6 +3049,12 @@ body[data-page="contacts"] .page-content.prose ul {
   border: 2px solid var(--line);
 }
 
+.bento-full {
+  grid-column: span 6;
+  background: linear-gradient(180deg, #fff 0%, var(--paper-2) 100%);
+  border: 2px solid var(--line);
+}
+
 .bento-tall {
   grid-column: span 2;
   grid-row: span 2;
@@ -3095,6 +3101,7 @@ body[data-page="contacts"] .page-content.prose ul {
 
   .bento-large,
   .bento-wide,
+  .bento-full,
   .bento-tall,
   .bento-small,
   .bento-accent {

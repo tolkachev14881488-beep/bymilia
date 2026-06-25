@@ -62,10 +62,7 @@ export function renderHomepage() {
 
   const bentoEl = document.querySelector('[data-home="bento"]');
   if (bentoEl && hp.bento?.length) {
-    const bentoCards = hp.bento.filter(
-      (card) => !/сертифиц/i.test(`${card.title || ''} ${card.text || ''}`),
-    );
-    bentoEl.innerHTML = bentoCards
+    bentoEl.innerHTML = hp.bento
       .map(
         (card) => {
           const stars = card.stars
