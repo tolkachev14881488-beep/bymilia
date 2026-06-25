@@ -112,7 +112,17 @@ export function renderHomepage() {
   if (cat) {
     setText('[data-home="catalog-eyebrow"]', cat.eyebrow);
     setText('[data-home="catalog-title"]', cat.title);
-    setText('[data-home="catalog-lead"]', cat.lead);
+    const leadEl = document.querySelector('[data-home="catalog-lead"]');
+    if (leadEl) {
+      const lead = (cat.lead || '').trim();
+      if (lead) {
+        leadEl.textContent = lead;
+        leadEl.hidden = false;
+      } else {
+        leadEl.textContent = '';
+        leadEl.hidden = true;
+      }
+    }
   }
 
   const ben = hp.benefits;
