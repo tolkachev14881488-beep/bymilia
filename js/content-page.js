@@ -39,7 +39,16 @@ export function injectPageContent() {
     const h1 = document.querySelector('.page-hero h1');
     if (h1) h1.textContent = page.title;
     const lead = document.querySelector('.page-hero .lead');
-    if (lead && page.lead) lead.textContent = page.lead;
+    if (lead) {
+      const leadText = (page.lead || '').trim();
+      if (leadText) {
+        lead.textContent = leadText;
+        lead.hidden = false;
+      } else {
+        lead.textContent = '';
+        lead.hidden = true;
+      }
+    }
   }
 
   const container = document.querySelector('.page-content');
