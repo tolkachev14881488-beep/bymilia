@@ -7,7 +7,7 @@ export const PAGE_LABELS = {
   contacts: 'Контакты',
   faq: 'Вопросы и ответы',
   guarantee: 'Гарантия и возврат',
-  'where-to-buy': 'Где купить',
+  'where-to-buy': 'Где приобрести',
   news: 'Новости',
   offer: 'Публичная оферта',
   privacy: 'Конфиденциальность',

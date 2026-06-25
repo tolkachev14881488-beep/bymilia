@@ -151,13 +151,12 @@ function renderFooter() {
             <li><a href="${pageHref('/cart.html')}">Корзина</a></li>
             <li><a href="${pageHref('/pages/delivery.html')}">Доставка и оплата</a></li>
             <li><a href="${pageHref('/pages/guarantee.html')}">Гарантия и возврат</a></li>
-            <li><a href="${pageHref('/pages/where-to-buy.html')}">Где купить</a></li>
+            <li><a href="${pageHref('/pages/where-to-buy.html')}">Где приобрести</a></li>
           </ul>
         </div>
         <div>
           <p class="footer-heading">Компания</p>
           <ul class="footer-links">
-            <li><a href="${pageHref('/pages/about.html')}">О нас</a></li>
             <li><a href="${pageHref('/pages/production.html')}">Производство</a></li>
             <li><a href="${pageHref('/pages/wholesale.html')}">Опт</a></li>
             <li><a href="${pageHref('/pages/news.html')}">Новости</a></li>
