@@ -2955,6 +2955,15 @@ body.page-cart .checkout-form textarea {
   margin-inline: auto;
 }
 
+body[data-page="delivery"] .page-hero {
+  text-align: center;
+}
+
+body[data-page="delivery"] .page-hero h1 {
+  max-width: none;
+  margin-inline: auto;
+}
+
 body[data-page="production"] .page-hero {
   text-align: center;
 }
