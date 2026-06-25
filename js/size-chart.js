@@ -33,7 +33,10 @@ export function renderSizeChart() {
               .map(
                 (row) =>
                   `<tr>${columns
-                    .map((col) => `<td>${escapeHtml(row[col.key] || '')}</td>`)
+                    .map(
+                      (col) =>
+                        `<td data-label="${escapeHtml(col.label)}">${escapeHtml(row[col.key] || '')}</td>`,
+                    )
                     .join('')}</tr>`,
               )
               .join('')}
