@@ -2986,6 +2986,11 @@ body[data-page="contacts"] .page-hero .container {
   text-align: center;
 }
 
+body[data-page="contacts"] .page-hero h1 {
+  max-width: none;
+  margin-inline: auto;
+}
+
 body[data-page="contacts"] .page-hero .lead {
   margin-inline: auto;
 }
