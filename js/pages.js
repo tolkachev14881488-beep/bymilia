@@ -75,12 +75,11 @@ function renderCartFilled(cart) {
     .join('');
 
   const itemCount = cart.reduce((sum, line) => sum + line.qty, 0);
-  const sameDay = DELIVERY.sameDayBeforeHour || 13;
 
   return `
     <div class="cart-motivation">
       <p class="cart-motivation-title">Отличный выбор — осталось оформить заявку</p>
-      <p class="cart-motivation-text">Отправьте заявку — заявки до ${sameDay}:00 уходят в отправку в тот же день.</p>
+      <p class="cart-motivation-text">отправка на следующий день при наличии товаров</p>
     </div>
     <div class="cart-lines-list">${linesHtml}</div>
     ${renderCartUpsell(cart)}
@@ -434,7 +433,6 @@ export function initCartPage() {
   function render() {
     const cart = pruneInvalidLines();
     const headLead = document.getElementById('cart-head-lead');
-    const sameDay = DELIVERY.sameDayBeforeHour || 13;
 
     if (!cart.length) {
       if (headLead) {
@@ -455,10 +453,7 @@ export function initCartPage() {
       return;
     }
 
-    if (headLead) {
-      headLead.textContent = `Заявка до ${sameDay}:00 — отправка в тот же день`;
-      headLead.hidden = false;
-    }
+    if (headLead) headLead.hidden = true;
 
     if (asideEl) asideEl.hidden = false;
 
