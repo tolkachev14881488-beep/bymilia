@@ -103,7 +103,6 @@ function renderHeader() {
           <a class="logo-link" href="${home}" aria-label="${SITE.brand} — на главную">
             <img src="${logo}" alt="${SITE.brand}" class="logo-img" width="160" height="48">
           </a>
-          <p class="header-address">${CONTACTS.address}</p>
         </div>
         <button class="nav-toggle" type="button" aria-label="Меню" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -115,13 +114,13 @@ function renderHeader() {
           <div class="nav-mobile-contacts">
             <a class="nav-mobile-phone" href="${telUrl()}">${CONTACTS.phone}</a>
             <a class="nav-mobile-wa" href="${waUrl()}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <p class="nav-mobile-note">Приём заказов до 13:00 — отправка в тот же день</p>
+            <p class="nav-mobile-note">${CONTACTS.address}</p>
           </div>
         </nav>
         <div class="header-actions">
           <div class="header-phone-block">
             <a class="header-phone" href="${telUrl()}">${CONTACTS.phone}</a>
-            <span class="header-phone-note"><span class="header-phone-line">Приём заказов до 13:00 —</span><span class="header-phone-line">отправка в тот же день</span></span>
+            <span class="header-phone-note">${CONTACTS.address}</span>
           </div>
           <a class="cart-link" href="${cart}" aria-label="Корзина">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">

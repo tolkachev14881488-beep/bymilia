@@ -224,15 +224,6 @@ body.nav-open {
   min-width: 0;
 }
 
-.header-address {
-  margin: 0;
-  font-size: 0.72rem;
-  line-height: 1.25;
-  font-weight: 500;
-  color: var(--ink-muted);
-  max-width: 9.5rem;
-}
-
 .site-nav {
   flex: 1 1 auto;
   min-width: 0;
@@ -246,7 +237,7 @@ body.nav-open {
   gap: 0.1rem;
   line-height: 1.2;
   flex-shrink: 0;
-  width: 11.75rem;
+  width: 13.5rem;
 }
 
 .header-phone {
@@ -263,37 +254,17 @@ body.nav-open {
 }
 
 .header-phone-note {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0;
-  width: 100%;
-}
-
-.header-phone-line {
+  display: block;
   font-size: 0.62rem;
   font-weight: 500;
   color: var(--ink-muted);
-  line-height: 1.2;
+  line-height: 1.25;
   text-align: right;
-  white-space: nowrap;
 }
 
 @media (min-width: 901px) {
   .header-phone-block {
     display: flex;
-  }
-}
-
-@media (min-width: 1000px) {
-  .header-address {
-    display: block;
-  }
-}
-
-@media (max-width: 999px) {
-  .header-address {
-    display: none;
   }
 }
 
@@ -420,10 +391,6 @@ body.nav-open {
     align-items: center;
     gap: 0.5rem;
     min-width: 0;
-  }
-
-  .header-brand .header-address {
-    display: none;
   }
 
   .logo-img {
@@ -777,10 +744,12 @@ body.nav-open {
 .hero-stats {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: clamp(1.25rem, 3vw, 2.5rem);
   margin: 2.5rem 0 0;
   padding: 0;
   list-style: none;
+  width: 100%;
 }
 
 .hero-stats li {
@@ -805,11 +774,13 @@ body.nav-open {
 
 .hero-tags {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 0.5rem;
   margin-top: 1.5rem;
   max-width: 100%;
+  width: 100%;
 }
 
 .hero-tags .tag {
@@ -1068,7 +1039,7 @@ body.nav-open {
 
   .page-home .hero-tags,
   .page-home .palette-strip {
-    justify-content: flex-start;
+    justify-content: center;
     align-self: stretch;
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -3243,8 +3214,10 @@ body[data-page="contacts"] .page-content.prose ul {
 .palette-strip {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.75rem;
   margin-top: 1.5rem;
+  width: 100%;
 }
 
 .palette-dot {

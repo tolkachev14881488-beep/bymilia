@@ -45,11 +45,16 @@ export function renderHomepage() {
 
   const paletteEl = document.querySelector('[data-home="palette"]');
   if (paletteEl) {
-    const products = getPublishedProducts();
-    paletteEl.innerHTML = products
+    const paletteItems = hero.palette?.length
+      ? hero.palette
+      : getPublishedProducts().map((p) => ({
+          label: heroPaletteLabel(p),
+          color: p.colorHex,
+        }));
+    paletteEl.innerHTML = paletteItems
       .map(
-        (p) =>
-          `<span class="palette-dot"><span style="background:${p.colorHex}"></span>${escapeHtml(heroPaletteLabel(p))}</span>`,
+        (item) =>
+          `<span class="palette-dot"><span style="background:${escapeHtml(item.color)}"></span>${escapeHtml(item.label)}</span>`,
       )
       .join('');
   }
