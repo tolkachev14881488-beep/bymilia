@@ -73,7 +73,7 @@ export function updateFabCart() {
 export function renderManagerCard(opts = {}) {
   const {
     title = 'Помочь с выбором расцветки и размера, вопросы по доставке?',
-    text = 'свяжитесь удобным для вас способом',
+    text = 'Свяжитесь удобным для вас способом',
     waText = DEFAULT_WA_TEXT,
     compact = false,
   } = opts;
