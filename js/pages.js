@@ -471,11 +471,11 @@ export function initCartPage() {
       summaryEl.innerHTML = `
         <div class="cart-order-nudge">
           <p class="cart-order-nudge-title">Оформите заявку — мы на связи</p>
-          <p>Оплата и доставка — после согласования с менеджером, без лишних шагов на сайте.</p>
+          <p>Оплата и доставка — после согласования с менеджером</p>
         </div>
         <div class="cart-summary-row"><span>Позиций</span><span>${itemCount}</span></div>
         <div class="cart-summary-row cart-total"><span>Итого</span><span>${total.toFixed(2)} ${SITE.currencyLabel}</span></div>
-        <p class="cart-summary-note">Европочта бесплатно от 50 руб. · курьер по Минску от 150 руб.</p>
+        <p class="cart-summary-note">Белпочта и европочта — бесплатно от 80р по всей Беларуси, курьер по Минску и Беларуси от 400р — бесплатно.</p>
       `;
     }
 
