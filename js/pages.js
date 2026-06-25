@@ -20,7 +20,7 @@ function renderCartUpsell(cart) {
   return `
     <div class="cart-upsell">
       <p class="cart-upsell-title">Добавить ещё расцветку?</p>
-      <p class="cart-upsell-lead">Удобно менять в раздевалке или собрать комплект для всей группы.</p>
+      <p class="cart-upsell-lead">Удобно подобрать под танцевальный костюм или настроение</p>
       <div class="cart-upsell-grid">
         ${others
           .map((p) => {
