@@ -755,7 +755,9 @@ body.nav-open {
 .hero-stats li {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 0.2rem;
+  text-align: center;
 }
 
 .hero-stats strong {
@@ -764,12 +766,15 @@ body.nav-open {
   font-weight: 600;
   color: var(--ink);
   line-height: 1;
+  width: 100%;
+  text-align: center;
 }
 
 .hero-stats span {
   font-size: 0.82rem;
   color: var(--ink-muted);
   max-width: 10rem;
+  text-align: center;
 }
 
 .hero-tags {
