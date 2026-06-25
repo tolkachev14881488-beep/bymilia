@@ -30,8 +30,7 @@ function showToast(text) {
 function renderLeadForm() {
   return `
     <section class="wholesale-lead-card" aria-labelledby="wholesale-lead-title">
-      <h2 id="wholesale-lead-title" class="wholesale-lead-title">Оставить заявку</h2>
-      <p class="wholesale-lead-text">Укажите имя и телефон — менеджер свяжется для расчёта опта.</p>
+      <h2 id="wholesale-lead-title" class="wholesale-lead-title">Свяжитесь с нами, чтобы обсудить детали оптового заказа и получить индивидуальное предложение!</h2>
       <form class="wholesale-inline-form" id="wholesale-form" novalidate>
         <label class="field">
           <span class="field-label">Ваше имя</span>
