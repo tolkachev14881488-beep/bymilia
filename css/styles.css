@@ -3904,6 +3904,86 @@ body[data-page="contacts"] .page-content.prose ul {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
+.size-chart {
+  margin: 0.85rem 0 1rem;
+  padding: 0.85rem 0.75rem;
+  border-radius: calc(var(--radius) - 2px);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(255, 85, 0, 0.12);
+  text-align: left;
+}
+
+.size-chart-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: center;
+}
+
+.size-chart-fit {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-align: center;
+}
+
+.size-chart-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.size-chart-table {
+  width: 100%;
+  min-width: 28rem;
+  border-collapse: collapse;
+  font-size: 0.76rem;
+}
+
+.size-chart-table th,
+.size-chart-table td {
+  padding: 0.45rem 0.5rem;
+  border: 1px solid rgba(255, 85, 0, 0.14);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.size-chart-table th {
+  background: rgba(255, 85, 0, 0.08);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.size-chart-table tbody tr:nth-child(even) td {
+  background: rgba(255, 248, 240, 0.55);
+}
+
+.size-chart-important {
+  margin: 0.65rem 0 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: var(--ink-muted);
+}
+
+.size-chart-important strong {
+  color: var(--accent);
+}
+
+.manager-card--with-chart .manager-card-text {
+  margin-top: 0.15rem;
+}
+
+.prose .size-chart {
+  margin: 1rem 0 1.25rem;
+  max-width: none;
+}
+
 .manager-card {
   margin-top: 2rem;
   padding: clamp(1.25rem, 4vw, 1.75rem);

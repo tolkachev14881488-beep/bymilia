@@ -42,6 +42,20 @@ const DEFAULT_SITE = {
     { id: 'europost', label: 'Почта / Европочта (Беларусь)', hint: 'Бесплатно от 50 руб.' },
     { id: 'cdek_rf', label: 'СДЭК (Россия)', hint: 'Стоимость по региону, уточнит менеджер' },
   ],
+  sizeChart: {
+    title: 'Размерная сетка',
+    fitNote: 'Сапожки идут с запасом на свободу',
+    importantNote:
+      'Ориентируйтесь на длину стопы. Если будете надевать поверх балеток или пуантов — возьмите на размер больше',
+    rows: [
+      { size: '25–27', footLength: '16–18 см', insoleLength: '20 см', height: '21 см' },
+      { size: '28–30', footLength: '18–20 см', insoleLength: '22 см', height: '21 см' },
+      { size: '31–33', footLength: '20–22 см', insoleLength: '24 см', height: '22 см' },
+      { size: '34–36', footLength: '22–24 см', insoleLength: '26 см', height: '23 см' },
+      { size: '37–39', footLength: '24–26 см', insoleLength: '28 см', height: '24 см' },
+      { size: '40–42', footLength: '26–28 см', insoleLength: '30 см', height: '25 см' },
+    ],
+  },
   homepage: {},
   pages: {},
 };
@@ -176,6 +190,10 @@ export function getPageContent(pageId) {
 
 export function getHomepage() {
   return siteData.homepage || {};
+}
+
+export function getSizeChart() {
+  return siteData.sizeChart || DEFAULT_SITE.sizeChart;
 }
 
 /* Экспортируемые поля (обновляются после loadSiteData) */

@@ -146,6 +146,7 @@ export function initCatalogSeo() {
     slot.classList.add('catalog-manager-block');
     slot.innerHTML = renderManagerCard({
       compact: true,
+      showSizeChart: true,
       title: 'Помочь с выбором расцветки и размера, вопросы по доставке?',
     });
   }
@@ -336,7 +337,9 @@ export function initProductPage() {
           ${renderProductSpecs(product)}
           ${renderManagerCard({
             compact: true,
+            showSizeChart: true,
             title: 'Как подобрать размер?',
+            text: 'Если остались вопросы — свяжитесь с менеджером',
             waText: `Здравствуйте! Интересует «${product.colorName}» By Milia.`,
           })}
         </div>

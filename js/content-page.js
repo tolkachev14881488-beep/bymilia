@@ -1,6 +1,7 @@
 import { CONTACTS, SITE } from './config.js';
 import { getPageContent } from './data-store.js';
 import { renderManagerCard } from './manager.js';
+import { mountSizeCharts } from './size-chart.js';
 import { applySeo, breadcrumbJsonLd, injectJsonLd, pageUrl } from './seo.js';
 
 const PAGE_PATHS = {
@@ -52,10 +53,18 @@ export function injectPageContent() {
   }
 
   const container = document.querySelector('.page-content');
+  const showSizeChart = pageId === 'contacts';
+  const managerOpts = {
+    ...(page.managerCard || {}),
+    showSizeChart,
+  };
+
   if (container && page.html) {
-    container.innerHTML = page.html + renderManagerCard(page.managerCard);
+    container.innerHTML = page.html + renderManagerCard(managerOpts);
+    mountSizeCharts(container);
   } else if (container) {
-    container.insertAdjacentHTML('beforeend', renderManagerCard(page.managerCard));
+    container.insertAdjacentHTML('beforeend', renderManagerCard(managerOpts));
+    mountSizeCharts(container);
   }
 
   breadcrumbJsonLd([

@@ -1,6 +1,7 @@
 import { CONTACTS, SITE } from './config.js';
 import { cartCount } from './cart.js';
 import { pageHref } from './layout.js';
+import { renderSizeChart } from './size-chart.js';
 
 const DEFAULT_WA_TEXT = 'Здравствуйте! Хочу заказать сапожки By Milia. Подскажите, пожалуйста.';
 
@@ -76,12 +77,14 @@ export function renderManagerCard(opts = {}) {
     text = 'Свяжитесь удобным для вас способом',
     waText = DEFAULT_WA_TEXT,
     compact = false,
+    showSizeChart = false,
   } = opts;
 
   return `
-    <aside class="manager-card${compact ? ' manager-card--compact' : ''}" aria-label="Связь с менеджером">
+    <aside class="manager-card${compact ? ' manager-card--compact' : ''}${showSizeChart ? ' manager-card--with-chart' : ''}" aria-label="Связь с менеджером">
       <p class="manager-card-eyebrow">Менеджер By Milia</p>
       <h2 class="manager-card-title">${title}</h2>
+      ${showSizeChart ? renderSizeChart() : ''}
       <p class="manager-card-text">${text}</p>
       ${renderMessengerLinks(waText)}
       <p class="manager-card-phone"><a href="${telUrl()}">${CONTACTS.phone}</a></p>
