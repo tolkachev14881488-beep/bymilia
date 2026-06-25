@@ -1620,6 +1620,7 @@ body.nav-open {
   border-radius: var(--radius);
   backdrop-filter: blur(6px);
   transition: transform 0.35s var(--ease), box-shadow 0.35s, background 0.35s;
+  text-align: center;
 }
 
 .info-card:hover {
@@ -1637,7 +1638,7 @@ body.nav-open {
   background: linear-gradient(135deg, var(--accent-soft), rgba(255, 185, 130, 0.35));
   color: var(--accent);
   font-size: 1.1rem;
-  margin-bottom: 0.85rem;
+  margin: 0 auto 0.85rem;
 }
 
 .info-card h3 {
@@ -3285,6 +3286,7 @@ body[data-page="contacts"] .page-content.prose ul {
   color: #fff;
   border-radius: 14px;
   box-shadow: 0 6px 16px var(--accent-glow);
+  margin-inline: auto;
 }
 
 .cta-inner {
