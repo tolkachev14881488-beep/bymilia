@@ -12,6 +12,7 @@ import {
   loadGithubSettings,
   downloadPublishPayload,
   isLocalPublishAvailable,
+  isRemotePublishAvailable,
   publishSiteContent,
   saveGithubSettings,
   verifyGithubConnection,
@@ -339,7 +340,7 @@ async function publishToSite({
     renderAll();
     setPublishUi('ok');
     const tail =
-      result.mode === 'local'
+      result.mode === 'local' || result.mode === 'remote'
         ? ' by-milia.by обновится сразу или за 1–2 минуты.'
         : ' by-milia.by обновится за 2–3 минуты.';
     markPublishedNow();
@@ -373,7 +374,15 @@ async function updateGithubBanner() {
     el.classList.remove('hidden');
     el.className = 'github-banner github-banner--ok';
     el.innerHTML =
-      'Локальная публикация активна (<code>cms-publish-server</code>). Сохранение в админке пушит на GitHub и обновляет by-milia.by.';
+      'Локальная публикация активна (<code>cms-publish-server</code>). Сохранение в админке сразу обновляет by-milia.by.';
+    return;
+  }
+  const remote = await isRemotePublishAvailable();
+  if (remote) {
+    el.classList.remove('hidden');
+    el.className = 'github-banner github-banner--ok';
+    el.innerHTML =
+      'Публикация с любого устройства активна. Сохранение в админке отправляет данные напрямую на by-milia.by.';
     return;
   }
   if (isGithubConfigured()) {
@@ -383,9 +392,8 @@ async function updateGithubBanner() {
   el.classList.remove('hidden');
   el.className = 'github-banner';
   el.innerHTML =
-    'Один раз: вкладка «Подключение» → вставьте GitHub-токен (scope <code>repo</code>) → «Проверить токен». ' +
-    'Дальше каждое «Сохранить» публикует сайт автоматически. ' +
-    'Или на ПК: <code>node scripts/cms-publish-server.mjs</code>.';
+    'Публикация с любого устройства сейчас не отвечает. ' +
+    'Запасной вариант на этом компьютере: <code>node scripts/cms-publish-server.mjs</code>.';
 }
 
 function showGithubConnected(info) {

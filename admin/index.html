@@ -110,14 +110,14 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
         <div class="publish-wizard">
           <h3>Настройка один раз</h3>
           <ol class="publish-wizard-steps">
-            <li>Войдите на <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" rel="noopener">github.com → создать токен</a> (галочка <strong>repo</strong>, аккаунт tolkachev14881488-beep).</li>
-            <li>Скопируйте токен и вставьте ниже.</li>
-            <li>Нажмите «Проверить токен» — готово. Дальше редактируйте с любого устройства.</li>
+            <li>Откройте админку на любом устройстве и войдите по паролю.</li>
+            <li>Меняйте товары, тексты и контакты.</li>
+            <li>Нажимайте «Опубликовать всё» — изменения отправятся прямо на by-milia.by.</li>
           </ol>
         </div>
         <p id="gh-connected" class="gh-connected hidden"></p>
         <details class="mod-details mod-details--advanced">
-          <summary>Технические параметры GitHub</summary>
+          <summary>Для разработчика: резервный режим через GitHub</summary>
           <div class="field-grid">
             <div class="field">
               <label for="gh-owner">Владелец</label>
@@ -134,15 +134,15 @@ https://www.wildberries.by/catalog/216496169/detail.aspx</textarea>
           </div>
         </details>
         <div class="field">
-          <label for="gh-token">Токен GitHub</label>
+          <label for="gh-token">GitHub-токен</label>
           <input id="gh-token" type="password" placeholder="ghp_… или github_pat_…" autocomplete="off">
         </div>
         <div class="admin-actions publish-actions">
-          <button type="button" class="btn btn-secondary" id="check-token-btn">Проверить токен</button>
-          <button type="button" class="btn btn-primary" id="test-github-btn">Тестовая публикация</button>
+          <button type="button" class="btn btn-secondary" id="check-token-btn">Проверить резервный токен</button>
+          <button type="button" class="btn btn-primary" id="test-github-btn">Тест резервной публикации</button>
           <button type="button" class="btn btn-secondary" id="download-json-btn">Скачать резерв (JSON)</button>
         </div>
-        <p class="hint">На своём компьютере можно без токена: запустите <code>start-cms-publish.bat</code> в папке проекта.</p>
+        <p class="hint">Обычная публикация идёт напрямую на by-milia.by. Локальный режим нужен только как запасной: <code>start-cms-publish.bat</code>.</p>
       </section>
     </div>
   </div>

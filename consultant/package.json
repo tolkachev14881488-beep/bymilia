@@ -1,0 +1,10 @@
+{
+  "name": "bymilia-ai-consultant",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ИИ-консультант By Milia — отдельный деплой на Vercel",
+  "type": "module",
+  "dependencies": {
+    "ssh2": "^1.17.0"
+  }
+}

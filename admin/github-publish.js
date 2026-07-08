@@ -230,6 +230,19 @@ export async function publishToGithub({ token, owner, repo, branch, siteJson, pr
 }
 
 const LOCAL_PUBLISH_URL = 'http://127.0.0.1:4567';
+const REMOTE_PUBLISH_URL = 'https://consultant-dusky.vercel.app/api/publish';
+
+export async function isRemotePublishAvailable() {
+  try {
+    const res = await fetch(REMOTE_PUBLISH_URL, {
+      method: 'OPTIONS',
+      signal: AbortSignal.timeout(2500),
+    });
+    return res.status === 204 || res.ok;
+  } catch {
+    return false;
+  }
+}
 
 export async function isLocalPublishAvailable() {
   try {
@@ -259,6 +272,37 @@ export async function publishViaLocalServer({ siteJson, productsJson, uploads = 
   }
   if (!res.ok || !data.ok) {
     throw new Error(data.error || 'Локальный сервер публикации не ответил');
+  }
+  return data.message;
+}
+
+export async function publishViaRemoteServer({ siteJson, productsJson, uploads = [] }) {
+  const cmsKey = getCmsPublishKey();
+  if (!cmsKey) throw new Error('Не настроен ключ публикации CMS');
+
+  const binaryFiles = [];
+  for (const { path, file } of uploads) {
+    binaryFiles.push({ path, base64: await fileToBase64(file) });
+  }
+
+  const res = await fetch(REMOTE_PUBLISH_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      key: cmsKey,
+      siteJson,
+      productsJson,
+      binaryFiles,
+    }),
+  });
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    /* ignore */
+  }
+  if (!res.ok || !data.ok) {
+    throw new Error(data.error || 'Удалённый publish API не ответил');
   }
   return data.message;
 }
@@ -298,6 +342,11 @@ export async function publishViaGithubApi(cfg, { siteJson, productsJson, uploads
 
 /** Публикует контент сайта (из любой точки мира — через GitHub API или Actions) */
 export async function publishSiteContent({ siteJson, productsJson, uploads = [] }) {
+  if (await isRemotePublishAvailable()) {
+    const message = await publishViaRemoteServer({ siteJson, productsJson, uploads });
+    return { mode: 'remote', message };
+  }
+
   if (await isLocalPublishAvailable()) {
     const message = await publishViaLocalServer({ siteJson, productsJson, uploads });
     return { mode: 'local', message };
