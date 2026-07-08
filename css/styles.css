@@ -3826,6 +3826,7 @@ body[data-page="contacts"] .page-content.prose ul {
   .site-nav a,
   .nav-toggle,
   .cart-link,
+  .fab-consultant,
   .fab-cart,
   .qty-control button {
     min-height: 44px;
@@ -3946,6 +3947,37 @@ body[data-page="contacts"] .page-content.prose ul {
   pointer-events: auto;
 }
 
+.fab-consultant {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.85rem 1rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--btn-shadow);
+}
+
+.fab-consultant-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+}
+
+.fab-consultant-label {
+  white-space: nowrap;
+  line-height: 1;
+}
+
 .fab-cart {
   position: relative;
   display: inline-flex;
@@ -3982,6 +4014,115 @@ body[data-page="contacts"] .page-content.prose ul {
   display: grid;
   place-items: center;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.consultant-modal[hidden] {
+  display: none;
+}
+
+.consultant-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+}
+
+.consultant-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(24, 16, 10, 0.52);
+  backdrop-filter: blur(8px);
+}
+
+.consultant-modal__dialog {
+  position: absolute;
+  right: max(1rem, var(--safe-right));
+  bottom: max(1rem, var(--safe-bottom));
+  width: min(27rem, calc(100vw - 1.5rem));
+  height: min(44rem, calc(100dvh - 2rem - var(--safe-top) - var(--safe-bottom)));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(18, 12, 8, 0.28);
+}
+
+.consultant-modal__header,
+.consultant-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.9rem;
+  background: #fff9f4;
+}
+
+.consultant-modal__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.consultant-modal__title {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.consultant-modal__close {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.consultant-modal__body {
+  min-height: 0;
+  background: #fff;
+}
+
+.consultant-modal__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  background: #fff;
+}
+
+.consultant-modal__footer {
+  justify-content: flex-end;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 85, 0, 0.12);
+}
+
+body.consultant-open {
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .fab-consultant {
+    padding: 0.82rem 0.95rem;
+  }
+
+  .fab-consultant-label {
+    display: none;
+  }
+
+  .consultant-modal__dialog {
+    right: 0.5rem;
+    left: 0.5rem;
+    width: auto;
+    bottom: 0.5rem;
+    height: min(42rem, calc(100dvh - 1rem - var(--safe-top) - var(--safe-bottom)));
+  }
 }
 
 .size-chart {

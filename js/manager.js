@@ -4,6 +4,7 @@ import { pageHref } from './layout.js';
 import { renderSizeChart } from './size-chart.js';
 
 const DEFAULT_WA_TEXT = 'Здравствуйте! Хочу заказать сапожки By Milia. Подскажите, пожалуйста.';
+const CONSULTANT_URL = 'https://consultant-dusky.vercel.app/';
 
 export function waUrl(text = DEFAULT_WA_TEXT) {
   return `https://wa.me/${CONTACTS.whatsapp}?text=${encodeURIComponent(text)}`;
@@ -70,6 +71,70 @@ export function updateFabCart() {
   }
 }
 
+function renderConsultantWidget() {
+  return `
+    <button class="fab-consultant" type="button" aria-label="Открыть ИИ-консультанта" aria-expanded="false" aria-controls="consultant-modal">
+      <span class="fab-consultant-icon" aria-hidden="true">AI</span>
+      <span class="fab-consultant-label">ИИ-консультант</span>
+    </button>
+    <div class="consultant-modal" id="consultant-modal" hidden>
+      <div class="consultant-modal__backdrop" data-consultant-close></div>
+      <section class="consultant-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="consultant-modal-title">
+        <header class="consultant-modal__header">
+          <div>
+            <p class="consultant-modal__eyebrow">By Milia</p>
+            <h2 class="consultant-modal__title" id="consultant-modal-title">ИИ-консультант</h2>
+          </div>
+          <button class="consultant-modal__close" type="button" aria-label="Закрыть" data-consultant-close>×</button>
+        </header>
+        <div class="consultant-modal__body">
+          <iframe
+            class="consultant-modal__frame"
+            src="${CONSULTANT_URL}"
+            title="ИИ-консультант By Milia"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allow="clipboard-write"
+          ></iframe>
+        </div>
+        <footer class="consultant-modal__footer">
+          <a href="${CONSULTANT_URL}" target="_blank" rel="noopener noreferrer">Открыть в новой вкладке</a>
+        </footer>
+      </section>
+    </div>
+  `;
+}
+
+function initConsultantWidget() {
+  const stack = document.getElementById('fab-stack');
+  if (!stack || stack.querySelector('.fab-consultant')) return;
+  stack.insertAdjacentHTML('afterbegin', renderConsultantWidget());
+
+  const button = stack.querySelector('.fab-consultant');
+  const modal = document.getElementById('consultant-modal');
+  const closeNodes = modal?.querySelectorAll('[data-consultant-close]') ?? [];
+
+  if (!button || !modal) return;
+
+  const setOpen = (open) => {
+    modal.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+    document.body.classList.toggle('consultant-open', open);
+  };
+
+  button.addEventListener('click', () => {
+    setOpen(modal.hidden);
+  });
+
+  closeNodes.forEach((node) => {
+    node.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !modal.hidden) setOpen(false);
+  });
+}
+
 /** Карточка «Связаться с менеджером» — одинаковая на всех страницах */
 export function renderManagerCard(opts = {}) {
   const {
@@ -109,6 +174,7 @@ export function mountGlobalContacts() {
   const fabHtml = renderFabCart();
   stack.innerHTML = fabHtml;
   document.body.classList.toggle('has-fab', Boolean(fabHtml.trim()));
+  initConsultantWidget();
 
   if (!window.__fabCartListener) {
     window.__fabCartListener = true;
