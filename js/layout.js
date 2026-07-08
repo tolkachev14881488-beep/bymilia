@@ -3,6 +3,8 @@ import { getSiteRoot } from './site-path.js';
 import { cartCount } from './cart.js';
 import { telUrl, mailUrl, waUrl } from './manager.js';
 
+const CONSULTANT_URL = 'https://consultant-dusky.vercel.app';
+
 const NAV = [
   { href: '/catalog.html', label: 'Каталог' },
   { href: '/pages/wholesale.html', label: 'Опт' },
@@ -118,6 +120,7 @@ function renderHeader() {
           </div>
         </nav>
         <div class="header-actions">
+          <a class="btn btn-secondary btn-sm header-consultant-link" href="${CONSULTANT_URL}" target="_blank" rel="noopener noreferrer">ИИ-консультант</a>
           <div class="header-phone-block">
             <a class="header-phone" href="${telUrl()}">${CONTACTS.phone}</a>
             <span class="header-phone-note">${CONTACTS.address}</span>
@@ -159,6 +162,7 @@ function renderFooter() {
             <li><a href="${pageHref('/pages/production.html')}">Производство</a></li>
             <li><a href="${pageHref('/pages/wholesale.html')}">Опт</a></li>
             <li><a href="${pageHref('/pages/news.html')}">Новости</a></li>
+            <li><a href="${CONSULTANT_URL}" target="_blank" rel="noopener noreferrer">ИИ-консультант</a></li>
           </ul>
         </div>
         <div>
