@@ -1,6 +1,33 @@
 {
   "products": [
     {
+      "colorHex": "#4fc3f7",
+      "colorName": "Сапожки для разогрева Единорог",
+      "paletteLabel": "Единорог",
+      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
+      "features": [
+        "6 размеров · 25–42 см",
+        "На WB: голубой, розовый, оранжевый, синий, черный",
+        "200 отзывов · рейтинг 5",
+        "Заказ на сайте или на Wildberries"
+      ],
+      "id": "wb-tropical",
+      "image": "assets/products/tropical-side.png",
+      "imageVersion": "3",
+      "images": [
+        "assets/products/tropical-side.png",
+        "assets/products/tropical-front.png",
+        "assets/products/tropical-back.png"
+      ],
+      "oldPrice": 175,
+      "price": 74,
+      "published": true,
+      "skuPrefix": "BM-216515622",
+      "wbNm": 216515622,
+      "wbPhoto": 1,
+      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx"
+    },
+    {
       "colorHex": "#1c1c1c",
       "colorName": "Сапожки для разогрева Чёрные",
       "paletteLabel": "Чёрные",
@@ -26,33 +53,6 @@
       "wbNm": 230183062,
       "wbPhoto": 1,
       "wbUrl": "https://www.wildberries.by/catalog/230183062/detail.aspx"
-    },
-    {
-      "colorHex": "#4fc3f7",
-      "colorName": "Сапожки для разогрева Единорог",
-      "paletteLabel": "Единорог",
-      "description": "Сапожки для разогрева By Milia — согревают стопы перед занятием, на репетиции и между номерами. Мягкий флис, удобная посадка, производство в Минске.",
-      "features": [
-        "6 размеров · 25–42 см",
-        "На WB: голубой, розовый, оранжевый, синий, черный",
-        "200 отзывов · рейтинг 5",
-        "Заказ на сайте или на Wildberries"
-      ],
-      "id": "wb-tropical",
-      "image": "assets/products/tropical-side.png",
-      "imageVersion": "2",
-      "images": [
-        "assets/products/tropical-side.png",
-        "assets/products/tropical-back.png",
-        "assets/products/tropical-front.png"
-      ],
-      "oldPrice": 175,
-      "price": 77,
-      "published": true,
-      "skuPrefix": "BM-216515622",
-      "wbNm": 216515622,
-      "wbPhoto": 1,
-      "wbUrl": "https://www.wildberries.by/catalog/216515622/detail.aspx"
     },
     {
       "colorHex": "#81d4fa",
@@ -107,17 +107,5 @@
       "wbPhoto": 1,
       "wbUrl": "https://www.wildberries.by/catalog/216496169/detail.aspx"
     }
-  ],
-  "productSpecs": {
-    "title": "Основная информация",
-    "items": [
-      { "label": "Состав", "value": "Экокожа; Флис; Синтепон; Оксфорд 210д, Оксфорд 600д" },
-      { "label": "Материал подкладки обуви", "value": "Флис" },
-      { "label": "Материал стельки", "value": "Изолон 10мм толщиной" },
-      { "label": "Материал подошвы обуви", "value": "Искусственная кожа" },
-      { "label": "Вид застежки", "value": "Резинка" },
-      { "label": "Страна производства", "value": "Беларусь" },
-      { "label": "Вес товара без упаковки (г)", "value": "285 г" }
-    ]
-  }
+  ]
 }
