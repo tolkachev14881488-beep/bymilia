@@ -3,8 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "node scripts/test-all.mjs",
+    "test:live": "node scripts/live-site-test.mjs",
+    "test:all": "node scripts/test-all.mjs && node scripts/live-site-test.mjs",
     "deploy:pack": "node scripts/make-hosting-zip.mjs",
-    "deploy:ftp": "node scripts/deploy-to-hosting.mjs"
+    "deploy:ftp": "node scripts/deploy-to-hosting.mjs",
+    "deploy:ssh": "node scripts/deploy-via-ssh.mjs"
   },
   "dependencies": {
     "basic-ftp": "^5.0.5"

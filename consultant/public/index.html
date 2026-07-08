@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>ИИ-консультант By Milia — тест</title>
+  <meta name="description" content="Пробный стенд ИИ-консультанта By Milia: подбор размера, расцветки, доставка.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=43">
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-badge">Тест · Vercel</div>
+      <h1>Консультант <em>By Milia</em></h1>
+      <p class="header-lead">Помогу подобрать размер и расцветку сапожек для разогрева стоп. Отдельный стенд — не встроен в сайт.</p>
+    </header>
+
+    <main class="chat" aria-live="polite">
+      <div class="messages" id="messages" role="log" aria-label="Переписка"></div>
+
+      <div class="quick-prompts" id="quick-prompts" role="group" aria-label="Быстрые вопросы">
+        <button type="button" class="chip" data-prompt="Помогите подобрать размер. Дочке 7 лет, стопа 19 см, без пуантов.">Подбор размера</button>
+        <button type="button" class="chip" data-prompt="Какая расцветка подойдёт девочке 5 лет, любит розовое?">Выбор расцветки</button>
+        <button type="button" class="chip" data-prompt="Сколько стоит доставка в Гомель и как долго ждать?">Доставка</button>
+        <button type="button" class="chip" data-prompt="Как оформить заказ на сайте?">Как заказать</button>
+        <button type="button" class="chip" data-prompt="Нужно 12 пар для танцевальной студии. Что по опту?">Опт</button>
+      </div>
+
+      <form class="composer" id="composer">
+        <label class="sr-only" for="input">Ваш вопрос</label>
+        <textarea
+          id="input"
+          rows="1"
+          placeholder="Спросите про размер, доставку или расцветку…"
+          maxlength="2000"
+          required
+        ></textarea>
+        <button type="submit" class="send" id="send" aria-label="Отправить">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </main>
+
+    <footer class="footer">
+      <p>Стенд для теста конверсионного консультанта · данные By Milia</p>
+    </footer>
+  </div>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
