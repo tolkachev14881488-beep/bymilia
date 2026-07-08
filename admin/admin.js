@@ -338,7 +338,10 @@ async function publishToSite({
     saveDraftToStorage();
     renderAll();
     setPublishUi('ok');
-    const tail = result.mode === 'local' ? ' Сайт обновится за 1–2 минуты.' : ' Сайт обновится за 2–3 минуты.';
+    const tail =
+      result.mode === 'local'
+        ? ' by-milia.by обновится сразу или за 1–2 минуты.'
+        : ' by-milia.by обновится за 2–3 минуты.';
     markPublishedNow();
     clearDraftUnsaved();
     await refreshPublishState();
@@ -370,7 +373,7 @@ async function updateGithubBanner() {
     el.classList.remove('hidden');
     el.className = 'github-banner github-banner--ok';
     el.innerHTML =
-      'Локальная публикация активна (<code>cms-publish-server</code>). Сохранение в админке сразу пушит на GitHub.';
+      'Локальная публикация активна (<code>cms-publish-server</code>). Сохранение в админке пушит на GitHub и обновляет by-milia.by.';
     return;
   }
   if (isGithubConfigured()) {

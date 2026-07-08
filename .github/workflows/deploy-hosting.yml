@@ -1,0 +1,29 @@
+name: Deploy to by-milia.by
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-hosting
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy site archive to hoster.by
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
+          port: 22
+          script_stop: true
+          script: |
+            wget -q https://github.com/tolkachev14881488-beep/bymilia/archive/refs/heads/main.zip -O /tmp/bm.zip
+            cd /tmp && unzip -o bm.zip
+            rm -rf ~/www/by-milia.by/* && cp -rf bymilia-main/* ~/www/by-milia.by/
+            find ~/www/by-milia.by -type f \( -name '*.html' -o -name '*.js' -o -name '*.xml' -o -name '*.txt' -o -name '*.json' -o -name '*.css' \) -exec sed -i 's|https://tolkachev14881488-beep.github.io/bymilia|https://by-milia.by|g' {} +
+            grep -m1 'Сертификат качества' ~/www/by-milia.by/data/site.json

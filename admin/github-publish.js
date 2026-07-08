@@ -292,7 +292,7 @@ export async function publishViaGithubApi(cfg, { siteJson, productsJson, uploads
   await publishToGithub({ ...cfg, siteJson, productsJson, skipVerify: true });
   return {
     mode: 'github',
-    message: 'Файлы обновлены в GitHub. Сайт обновится за 1–2 минуты.',
+    message: 'Файлы обновлены в GitHub. by-milia.by обновится за 2–3 минуты.',
   };
 }
 
@@ -319,7 +319,7 @@ export async function publishSiteContent({ siteJson, productsJson, uploads = [] 
       await publishViaActions({ ...cfg, cmsKey, siteJson, productsJson, uploads });
       return {
         mode: 'actions',
-        message: 'Изменения отправлены через GitHub Actions. Сайт обновится за 1–2 минуты.',
+        message: 'Изменения отправлены через GitHub Actions. by-milia.by обновится за 2–3 минуты.',
       };
     } catch (actionsErr) {
       throw new Error(`${apiErr.message}\n\nЗапасной способ (Actions): ${actionsErr.message}`);

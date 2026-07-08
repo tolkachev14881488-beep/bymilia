@@ -5,7 +5,7 @@
  * Админка на сайте шлёт сюда JSON → скрипт делает git commit + push.
  */
 import http from 'http';
-import { writeFileSync, mkdirSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
@@ -47,7 +47,18 @@ function publish(payload) {
   }
   execSync('git commit -m "CMS: publish from admin"', { cwd: ROOT, stdio: 'inherit' });
   execSync('git push', { cwd: ROOT, stdio: 'inherit' });
-  return 'Опубликовано на GitHub. Сайт обновится за 1–2 минуты.';
+
+  const envPath = join(ROOT, 'hosting.env');
+  if (existsSync(envPath)) {
+    try {
+      execSync('node scripts/deploy-via-ssh.mjs', { cwd: ROOT, stdio: 'inherit' });
+      return 'Опубликовано на GitHub и задеплоено на by-milia.by.';
+    } catch {
+      return 'Опубликовано на GitHub. Деплой на by-milia.by не удался — проверьте hosting.env.';
+    }
+  }
+
+  return 'Опубликовано на GitHub. by-milia.by обновится за 2–3 минуты.';
 }
 
 const server = http.createServer(async (req, res) => {
