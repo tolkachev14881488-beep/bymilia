@@ -962,14 +962,6 @@ body.nav-open {
     display: block;
   }
 
-  .consultant-banner {
-    grid-template-columns: 1fr;
-  }
-
-  .consultant-actions {
-    justify-content: flex-start;
-  }
-
   .page-home .hero-grid {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
@@ -1275,6 +1267,33 @@ body.nav-open {
   flex-wrap: wrap;
   gap: 0.9rem;
   justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+  .consultant-banner {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .consultant-copy {
+    min-width: 0;
+  }
+
+  .consultant-copy h2 {
+    max-width: none;
+    line-height: 1.2;
+  }
+
+  .consultant-actions {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .consultant-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .section-seo {
